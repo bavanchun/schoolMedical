@@ -1,8 +1,12 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.sql.Date;
 
 @AllArgsConstructor
@@ -30,11 +34,15 @@ public class Blog {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    @Column(name = "created_at", nullable = false,  updatable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @CreationTimestamp
+    private LocalDate createdAt;
 
     @Column(name = "last_updated_at", nullable = false)
-    private Date lastUpdatedAt;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @UpdateTimestamp
+    private LocalDate lastUpdatedAt;
 
     @Column(name = "status", nullable = false, length = 20)
     private String status;
@@ -44,5 +52,7 @@ public class Blog {
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
+
+
 
 }

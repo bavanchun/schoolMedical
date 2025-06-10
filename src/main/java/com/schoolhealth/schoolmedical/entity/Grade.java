@@ -1,10 +1,12 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,17 +26,17 @@ public class Grade {
     private String gradeName;
 
     @Column(name = "start_year", nullable = false)
-    private Date startYear;
+    private String startYear;
 
     @Column(name = "end_year", nullable = false)
-    private Date endYear;
+    private String endYear;
 
     @Enumerated(EnumType.STRING)
     private GradeLevel gradeLevel;
 
     @OneToMany(
             mappedBy = "grade",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             orphanRemoval = true
     )
     private List<Pupil> pupils;
