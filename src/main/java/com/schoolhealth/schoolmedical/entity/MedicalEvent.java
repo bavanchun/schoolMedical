@@ -52,5 +52,5 @@ public class MedicalEvent {
     private Pupil pupil;  // Thay đổi từ User sang Pupil
 
     @OneToMany(mappedBy = "medicalEvent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MedicalEventSupplyUsed> medicalEventSuppliesUsed;
+    private List<MedicalEventSupplyUsed> supplyUsages;
 }
