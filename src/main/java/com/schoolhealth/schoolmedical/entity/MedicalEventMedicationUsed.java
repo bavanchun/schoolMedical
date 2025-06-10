@@ -16,13 +16,13 @@ public class MedicalEventMedicationUsed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "medication_used_id")
-    private Integer medicationUsedId;
+    private int medicationUsedId;
 
     @Column(name = "medication_id", nullable = false)
-    private Integer medicationId;
+    private int medicationId;
 
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private int quantity;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive = true;

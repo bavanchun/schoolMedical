@@ -18,7 +18,7 @@ public class MedicalEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "medical_event_id")
-    private Integer medicalEventId;
+    private int medicalEventId;
 
     @Column(name = "school_nurse_id", nullable = false, length = 255)
     private String schoolNurseId;
@@ -52,5 +52,5 @@ public class MedicalEvent {
     private Pupil pupil;  // Thay đổi từ User sang Pupil
 
     @OneToMany(mappedBy = "medicalEvent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MedicalEventSupplyUsed> medicalEventSuppliesUsed;
+    private List<MedicalEventSupplyUsed> supplyUsages;
 }
