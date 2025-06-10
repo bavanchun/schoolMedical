@@ -64,7 +64,12 @@ public class HealCheckCampaign {
     )
     private List<HealthCheckConsentForm> healthCheckConsentForms;
 
-
+    @OneToMany(
+            mappedBy = "healthCheckCampaign",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private List<HealthCheckDisease> healthCheckDiseases;
 
     // Additional fields and methods can be added as needed
 }

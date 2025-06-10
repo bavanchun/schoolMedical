@@ -44,14 +44,13 @@ public class HealthCheckDisease {
     @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", insertable = false, updatable = false)
     private Disease disease;
 
-    // Các mối quan hệ sau sẽ cần được bổ sung khi các entity liên quan được tạo
-    /*
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "health_check_campaign_id", referencedColumnName = "campaign_id", insertable = false, updatable = false)
-    private HealthCheckCampaign healthCheckCampaign;
+    private HealCheckCampaign healthCheckCampaign;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "health_check_consent_form_id", referencedColumnName = "consent_form_id", insertable = false, updatable = false)
     private HealthCheckConsentForm healthCheckConsentForm;
-    */
+
 }
