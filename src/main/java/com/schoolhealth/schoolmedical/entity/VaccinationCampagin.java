@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -28,20 +29,16 @@ public class VaccinationCampagin {
     private int diseaseId;
 
     @Column(name = "sent_date")
-    @Temporal(TemporalType.DATE)
-    private Date sentDate;
+    private LocalDate sentDate;
 
     @Column(name = "start_date")
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "stop_date")
-    @Temporal(TemporalType.DATE)
-    private Date stopDate;
+    private LocalDate stopDate;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
