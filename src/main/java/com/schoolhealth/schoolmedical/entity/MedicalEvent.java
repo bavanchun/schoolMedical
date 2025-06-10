@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.schoolhealth.schoolmedical.entity.enums.MedicalEventStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -47,8 +48,8 @@ public class MedicalEvent {
     private User schoolNurse;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pupil_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    private User pupil;
+    @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id", insertable = false, updatable = false)
+    private Pupil pupil;  // Thay đổi từ User sang Pupil
 
     @OneToMany(mappedBy = "medicalEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicalEventSupplyUsed> medicalEventSuppliesUsed;
