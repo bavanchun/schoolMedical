@@ -56,4 +56,7 @@ public class Pupil {
     @OneToMany(mappedBy = "pupil", fetch = FetchType.LAZY)
     private List<MedicalEvent> medicalEvents;
 
+    @OneToMany(mappedBy = "pupil", fetch = FetchType.LAZY)
+    private List<VaccinationConsentForm> consentForms;
+
 }
