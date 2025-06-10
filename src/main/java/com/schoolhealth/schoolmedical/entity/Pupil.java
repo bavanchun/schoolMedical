@@ -46,11 +46,13 @@ public class Pupil {
     @JoinColumn(name = "grade_id", nullable = false)
     private Grade grade;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     @JoinColumn(name = "pupil_id")
     private List<SendMedication> sendMedications;
 
-    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<HealthConditionHistory> healthConditionHistories;
 
+    @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+    private List<HealthCheckConsentForm> healthCheckConsentForms;
 }

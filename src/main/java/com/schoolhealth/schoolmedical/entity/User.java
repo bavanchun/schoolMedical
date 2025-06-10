@@ -1,12 +1,15 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -28,7 +31,8 @@ public class User {
     private String firstName;
 
     @Column(name = "birth_date", nullable = false)
-    private Date birthDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate birthDate;
 
     @Column(nullable = false, length = 30)
     private String password;
@@ -45,8 +49,10 @@ public class User {
     @Column(nullable = true)
     private String avatar;
 
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    @Column(name = "created_at", nullable = false,  updatable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @CreationTimestamp
+    private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -54,11 +60,12 @@ public class User {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
-    @OneToMany(mappedBy = "authorId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "authorId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
     private List<Blog> blogs;
 
     @ManyToMany(mappedBy = "parents")
     private List<Pupil> pupils;
 
-
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
+    private List<UserNotification> userNotifications;
 }
