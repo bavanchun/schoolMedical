@@ -4,13 +4,13 @@ import com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "health_check_disease")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@Entity
+@Table(name = "health_check_disease")
 public class HealthCheckDisease {
 
     @Id
