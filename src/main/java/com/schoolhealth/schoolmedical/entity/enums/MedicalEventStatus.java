@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.entity;
+package com.schoolhealth.schoolmedical.entity.enums;
 
 public enum MedicalEventStatus {
     PENDING,

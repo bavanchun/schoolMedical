@@ -34,11 +34,11 @@ public class Pupil {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "pupil_parent",
-            joinColumns = @JoinColumn(name = "pupil_id"),
-            inverseJoinColumns = @JoinColumn(name = "parent_id")
+            joinColumns = @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id", referencedColumnName = "user_id")
     )
     private List<User> parents;
 
@@ -52,5 +52,8 @@ public class Pupil {
 
     @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<HealthConditionHistory> healthConditionHistories;
+
+    @OneToMany(mappedBy = "pupil", fetch = FetchType.LAZY)
+    private List<MedicalEvent> medicalEvents;
 
 }
