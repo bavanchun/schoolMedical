@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -50,11 +51,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
     @OneToMany(mappedBy = "authorId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Blog> blogs;
+
+    @ManyToMany(mappedBy = "parents")
+    private List<Pupil> pupils;
 
 
 }

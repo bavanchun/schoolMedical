@@ -42,7 +42,7 @@ public class Blog {
     @Column(name = "image_url", nullable = true, length = 255)
     private String imageUrl;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
 }
