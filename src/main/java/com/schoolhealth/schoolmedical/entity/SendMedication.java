@@ -1,10 +1,14 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,16 +35,21 @@ public class SendMedication {
 //    private String medicationSchedule;
 
     @Column(name = "confirmed_date", nullable = false)
-    private Date confirmedDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDate confirmedDate;
 
     @Column(name = "requested_date", nullable = false)
-    private Date requestedDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @CreationTimestamp
+    private LocalDate requestedDate;
 
     @Column(name = "start_date", nullable = false)
-    private Date startDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
-    private Date endDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     private StatusSendMedication status;
@@ -48,5 +57,11 @@ public class SendMedication {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
+    @OneToMany(
+            mappedBy = "sendMedication",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            orphanRemoval = true
+    )
+    private List<MedicationLogs> medicationLogs;
 
 }
