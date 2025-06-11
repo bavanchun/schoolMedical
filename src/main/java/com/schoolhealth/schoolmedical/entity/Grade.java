@@ -32,6 +32,7 @@ public class Grade {
     private String endYear;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "grade_level", nullable = false)
     private GradeLevel gradeLevel;
 
     @OneToMany(
