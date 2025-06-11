@@ -55,6 +55,7 @@ public class HealCheckCampaign {
     private boolean isActive;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status_health_campaign", nullable = false)
     private StatusHealthCampaign statusHealthCampaign;
 
     @OneToMany(

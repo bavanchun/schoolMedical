@@ -31,6 +31,7 @@ public class HealthConditionHistory {
     private boolean isActive;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_history", nullable = false)
     private HealthTypeHistory typeHistory;
 
     @ManyToOne(fetch = FetchType.LAZY)

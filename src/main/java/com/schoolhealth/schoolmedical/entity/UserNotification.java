@@ -34,6 +34,7 @@ public class UserNotification {
     private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_notification", nullable = false)
     private TypeNotification typeNotification;
 
     @Column(name = "source_id", nullable = false, unique = true)
