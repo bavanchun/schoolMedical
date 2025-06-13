@@ -1,0 +1,5 @@
+# Created at 2025-06-13T16:43:27.022
+Boot Manifest-JAR contains absolute paths in classpath 'E:\intelliji\schoolMedical\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
