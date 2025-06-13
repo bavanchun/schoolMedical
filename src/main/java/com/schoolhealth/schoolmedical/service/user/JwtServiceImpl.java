@@ -22,7 +22,7 @@ public class JwtServiceImpl implements JwtService {
     @Value("${spring.jwt.secret}")
     private String SECRET_KEY;
 
-    @Value("900000")
+    @Value("7200000")
     private long JWT_EXPIRATION;
     @Override
     public String extractUserName(String token) {
