@@ -39,7 +39,7 @@ public class User implements UserDetails{
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 72)
     private String password;
 
     @Email(message = "Email không hợp lệ")

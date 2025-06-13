@@ -30,13 +30,15 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
+                .userId("USER_" + System.currentTimeMillis()) // Tạo userId duy nhất
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword())) // Mã hóa password
                 .birthDate(request.getBirthDate())
-                .role(Role.PARENT)
+                .role(request.getRole() != null ? request.getRole() : Role.PARENT) // Sử dụng role từ request hoặc mặc định là PARENT
+                .isActive(true)
                 .build();
         userRepository.save(user);
 
