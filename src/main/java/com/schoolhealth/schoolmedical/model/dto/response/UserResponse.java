@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
@@ -32,7 +31,5 @@ public class UserResponse {
     private Role role;
     private boolean isActive;
 
-    // Chỉ trả về các ID của các quan hệ thay vì toàn bộ object
-    private List<String> blogIds;
-    private List<String> pupilIds;
+
 }
