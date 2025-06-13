@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Nationalized;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -23,12 +24,15 @@ public class SendMedication {
     private int sendMedicationId;
 
     @Column(name = "medication_img", nullable = true, length = 255)
+    @Nationalized
     private String medicationImg;
 
     @Column(name = "note", nullable = true, columnDefinition = "TEXT")
+    @Nationalized
     private String note;
 
     @Column(name = "unit_measure", nullable = false, length = 50)
+    @Nationalized
     private String unitMeasure;
 
 //    @Column(name = "medication_schedule", nullable = false, length = 255)

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,13 +22,15 @@ public class Pupil {
     private String pupilId;
 
     @Column(name = "last_name", nullable = false, length = 50)
+    @Nationalized
     private String lastName;
 
     @Column(name = "first_name", nullable = false, length = 50)
+    @Nationalized
     private String firstName;
 
     @Column(name = "birth_date", nullable = false)
-    private String birthDate;
+    private LocalDate birthDate;
 
     @Column(nullable = false)
     private char gender;

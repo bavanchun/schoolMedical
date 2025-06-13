@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class Grade {
     private Long gradeId;
 
     @Column(name = "grade_name", nullable = false, length = 50)
+    @Nationalized
     private String gradeName;
 
     @Column(name = "start_year", nullable = false)

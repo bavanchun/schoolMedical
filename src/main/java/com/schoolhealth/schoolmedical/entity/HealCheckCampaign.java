@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class HealCheckCampaign {
     private int campaignId;
 
     @Column(name = "address", nullable = false, length = 255)
+    @Nationalized
     private String address;
 
     @Column(name = "start_examination_date", nullable = false)
@@ -44,6 +46,7 @@ public class HealCheckCampaign {
     private LocalDate deadlineDate;
 
     @Column(name = "description", nullable = true, columnDefinition = "TEXT")
+    @Nationalized
     private String description;
 
     @Column(name = "created_at", nullable = false, updatable = false)

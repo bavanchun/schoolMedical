@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.entity;
 import com.schoolhealth.schoolmedical.entity.enums.HealthTypeHistory;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,12 +20,15 @@ public class HealthConditionHistory {
     private int conditionId;
 
     @Column(name = "name", nullable = false, length = 255)
+    @Nationalized
     private String name;
 
     @Column(name = "reaction_or_note", nullable = true, columnDefinition = "TEXT")
+    @Nationalized
     private String reactionOrNote;
 
     @Column(name = "image_url", nullable = true, length = 255)
+    @Nationalized
     private String imageUrl;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
