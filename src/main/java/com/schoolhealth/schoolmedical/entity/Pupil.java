@@ -48,6 +48,7 @@ public class Pupil {
     private Grade grade;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+
     @JoinColumn(name = "pupil_id")
     private List<SendMedication> sendMedications;
 
