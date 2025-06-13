@@ -2,7 +2,6 @@ package com.schoolhealth.schoolmedical.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 import java.util.List;
 
@@ -21,11 +20,9 @@ public class Disease {
     private int diseaseId;
 
     @Column(name = "name", nullable = false, length = 255)
-    @Nationalized
     private String name;
 
     @Column(name = "description", columnDefinition = "TEXT")
-    @Nationalized
     private String description;
 
     @Column(name = "is_injected_in_vaccination")

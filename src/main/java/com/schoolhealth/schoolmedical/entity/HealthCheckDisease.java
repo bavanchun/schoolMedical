@@ -3,7 +3,6 @@ package com.schoolhealth.schoolmedical.entity;
 import com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +28,6 @@ public class HealthCheckDisease {
     private int healthCheckConsentFormId;
 
     @Column(name = "note", columnDefinition = "TEXT")
-    @Nationalized
     private String note;
 
     @Enumerated(EnumType.STRING)

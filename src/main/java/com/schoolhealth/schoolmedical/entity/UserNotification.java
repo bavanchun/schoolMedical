@@ -5,7 +5,6 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Nationalized;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -24,7 +23,6 @@ public class UserNotification {
     private int notificationId;
 
     @Column(name = "message", nullable = false, columnDefinition = "TEXT")
-    @Nationalized
     private String message;
 
     @Column(name = "is_read", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
