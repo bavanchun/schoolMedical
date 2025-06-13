@@ -24,7 +24,7 @@ public class HealthCheckConsentForm {
     private Pupil pupil;
 
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "health_check_history_id", nullable = false)
+    @JoinColumn(name = "health_check_history_id", nullable = true)
     private HealthCheckHistory healthCheckHistory;
 
     @ManyToOne(fetch = FetchType.LAZY)
