@@ -1,6 +1,8 @@
 package com.schoolhealth.schoolmedical.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,6 +42,8 @@ public class Grade {
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             orphanRemoval = true
     )
+    @JsonIgnore
     private List<Pupil> pupils;
 
 }
+
