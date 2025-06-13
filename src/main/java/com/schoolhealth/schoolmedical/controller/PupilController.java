@@ -1,6 +1,8 @@
 package com.schoolhealth.schoolmedical.controller;
 
+import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.PupilDto;
+import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.service.PupilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,4 +51,12 @@ public class PupilController {
         pupilService.deletePupil(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("assign")
+    public ResponseEntity assignClassToPupil(@RequestBody AssignClassRequest assignRequest) {
+        Pupil pupil = pupilService.assignPupilClass(assignRequest);
+        return ResponseEntity.ok(pupil);
+    }
 }
+
+

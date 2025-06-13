@@ -44,7 +44,7 @@ public class Pupil {
     private List<User> parents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_id", nullable = false)
+    @JoinColumn(name = "grade_id" /*, nullable = true*/) // Thay đổi nullable = false thành nullable = true
     private Grade grade;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
@@ -61,3 +61,4 @@ public class Pupil {
     @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<HealthCheckConsentForm> healthCheckConsentForms;
 }
+

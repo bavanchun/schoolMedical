@@ -1,8 +1,11 @@
 package com.schoolhealth.schoolmedical.service;
 
+import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.PupilDto;
+import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
+import com.schoolhealth.schoolmedical.repository.GradeRepository;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,18 +18,20 @@ import java.util.Optional;
 @Service
 public class PupilImpl implements PupilService{
 
-    private final PupilRepo pupilRepo;
+    @Autowired
+    private PupilRepo pupilRepo;
 
-    private final PupilMapper pupilMapper;
+    @Autowired
+    private GradeRepository gradeRepository;
 
-    public PupilImpl(PupilRepo pupilRepo, PupilMapper pupilMapper) {
-        this.pupilRepo = pupilRepo;
-        this.pupilMapper = pupilMapper;
-    }
+    @Autowired
+    private PupilMapper pupilMapper;
+
 
     @Override
     public PupilDto createPupil(PupilDto dto) {
         Pupil entity = pupilMapper.toEntity(dto);
+
         // Đảm bảo học sinh mới luôn được đánh dấu là active
         entity.setActive(true);
         Pupil saved  = pupilRepo.save(entity);
@@ -83,5 +88,19 @@ public class PupilImpl implements PupilService{
         pupil.setActive(false);
         pupilRepo.save(pupil);
     }
+
+    @Override
+    public Pupil assignPupilClass(AssignClassRequest assignClassRequest) {
+        // pupilId => pupil
+        Pupil pupil = pupilRepo.findById(assignClassRequest.getPupilId()).get();
+
+        // gradeId => grade
+        Grade grade = gradeRepository.findById(assignClassRequest.getGradeId()).get();
+
+        pupil.setGrade(grade);
+
+        return pupilRepo.save(pupil);
+    }
 }
+
 
