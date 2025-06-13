@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-14T01:33:09+0700",
+    date = "2025-06-14T03:45:45+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -28,6 +28,7 @@ public class PupilMapperImpl implements PupilMapper {
         pupilDto.setFirstName( pupil.getFirstName() );
         pupilDto.setBirthDate( pupil.getBirthDate() );
         pupilDto.setGender( pupil.getGender() );
+        pupilDto.setParentPhoneNumber( pupil.getParentPhoneNumber() );
         pupilDto.setActive( pupil.isActive() );
 
         return pupilDto;
@@ -46,6 +47,7 @@ public class PupilMapperImpl implements PupilMapper {
         pupil.firstName( dto.getFirstName() );
         pupil.birthDate( dto.getBirthDate() );
         pupil.gender( dto.getGender() );
+        pupil.parentPhoneNumber( dto.getParentPhoneNumber() );
 
         return pupil.build();
     }
