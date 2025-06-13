@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HealCheckCampaignImpl implements HealthCheckCampaignService {
@@ -36,7 +37,16 @@ public class HealCheckCampaignImpl implements HealthCheckCampaignService {
     @Transactional(rollbackFor = Exception.class)
     public HealCheckCampaign saveHealthCheckCampaign(HealCheckCampaign healCheckCampaign) {
         HealCheckCampaign campaign = healthCheckCampaignRepo.save(healCheckCampaign);
-        List<Pupil> pupils = pupilService.getAll();
+//        List<Pupil> pupils = pupilService.getAll();
+        // Lấy danh sách DTO của học sinh, sau đó chuyển đổi thành danh sách Entity
+        List<Pupil> pupils = pupilService.getAllPupils().stream()
+                .map(dto -> {
+                    Pupil pupil = new Pupil();
+                    pupil.setPupilId(dto.getPupilId());
+                    // Đặt các thuộc tính cần thiết khác nếu cần
+                    return pupil;
+                })
+                .collect(Collectors.toList());
 
         List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
         for (Pupil pupil : pupils) {
@@ -59,3 +69,4 @@ public class HealCheckCampaignImpl implements HealthCheckCampaignService {
         return campaign;
     }
 }
+
