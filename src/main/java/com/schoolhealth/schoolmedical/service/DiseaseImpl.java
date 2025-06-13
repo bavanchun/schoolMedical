@@ -17,6 +17,7 @@ public class DiseaseImpl implements DiseaseService{
     @Override
     public List<Disease> getAllDiseases() {
         List<Disease> diseases = diseaseRepo.findAll();
+    // public List<Disease> getAllDiseases() {
         return diseaseRepo.findAll();
     }
 }

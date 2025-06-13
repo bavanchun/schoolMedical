@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -74,6 +75,24 @@ public class User implements UserDetails{
 
     @ManyToMany(mappedBy = "parents")
     private List<Pupil> pupils;
+
+//    // sau
+//    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<PupilParent> pupilParents;
+
+//    /**
+//     * Phương thức tiện ích để lấy danh sách tất cả học sinh của phụ huynh
+//     * @return Danh sách các Pupil (học sinh) mà User này là phụ huynh
+//     */
+//    @Transient
+//    public List<Pupil> getChildren() {
+//        if (pupilParents == null) {
+//            return new ArrayList<>();
+//        }
+//        return pupilParents.stream()
+//                          .map(PupilParent::getPupil)
+//                          .toList();
+//    }
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
     private List<UserNotification> userNotifications;
