@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,7 @@ public class Grade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grade_id", nullable = false, unique = true)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long gradeId;
 
     @Column(name = "grade_name", nullable = false, length = 50)

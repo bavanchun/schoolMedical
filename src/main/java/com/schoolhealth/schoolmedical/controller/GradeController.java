@@ -1,6 +1,6 @@
 package com.schoolhealth.schoolmedical.controller;
 
-import com.schoolhealth.schoolmedical.entity.Grade;
+import com.schoolhealth.schoolmedical.model.dto.GradeDTO;
 import com.schoolhealth.schoolmedical.service.grade.GradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,9 +37,9 @@ public class GradeController {
     @Operation(summary = "Lấy danh sách tất cả các lớp học",
                description = "Trả về danh sách tất cả các lớp học có trong hệ thống")
     @ApiResponse(responseCode = "200", description = "Lấy danh sách lớp học thành công",
-                 content = @Content(schema = @Schema(implementation = Grade.class)))
+                 content = @Content(schema = @Schema(implementation = GradeDTO.class)))
     @GetMapping
-    public List<Grade> listAll() {
+    public List<GradeDTO> listAll() {
         return service.getAllGrades();
     }
 
@@ -47,12 +47,12 @@ public class GradeController {
                description = "Trả về chi tiết thông tin của một lớp học dựa trên ID được cung cấp")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Tìm thấy lớp học",
-                    content = @Content(schema = @Schema(implementation = Grade.class))),
+                    content = @Content(schema = @Schema(implementation = GradeDTO.class))),
         @ApiResponse(responseCode = "404", description = "Không tìm thấy lớp học với ID đã cung cấp",
                     content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Grade> getOne(
+    public ResponseEntity<GradeDTO> getOne(
             @Parameter(description = "ID của lớp học cần tìm") @PathVariable Long id) {
         return ResponseEntity.ok(service.getGradeById(id));
     }
@@ -61,14 +61,14 @@ public class GradeController {
                description = "Tạo một lớp học mới với thông tin được cung cấp")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Lớp học được tạo thành công",
-                    content = @Content(schema = @Schema(implementation = Grade.class))),
+                    content = @Content(schema = @Schema(implementation = GradeDTO.class))),
         @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ",
                     content = @Content)
     })
     @PostMapping
-    public ResponseEntity<Grade> create(
-            @Parameter(description = "Thông tin lớp học cần tạo") @RequestBody Grade grade) {
-        Grade created = service.createGrade(grade);
+    public ResponseEntity<GradeDTO> create(
+            @Parameter(description = "Thông tin lớp học cần tạo") @RequestBody GradeDTO grade) {
+        GradeDTO created = service.createGrade(grade);
         return ResponseEntity
                 .status(201)
                 .body(created);
@@ -78,16 +78,16 @@ public class GradeController {
                description = "Cập nhật thông tin của một lớp học dựa trên ID cung cấp")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Cập nhật lớp học thành công",
-                    content = @Content(schema = @Schema(implementation = Grade.class))),
+                    content = @Content(schema = @Schema(implementation = GradeDTO.class))),
         @ApiResponse(responseCode = "404", description = "Không tìm thấy lớp học với ID đã cung cấp",
                     content = @Content),
         @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ",
                     content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Grade> update(
+    public ResponseEntity<GradeDTO> update(
             @Parameter(description = "ID của lớp học cần cập nhật") @PathVariable Long id,
-            @Parameter(description = "Thông tin lớp học mới") @RequestBody Grade grade) {
+            @Parameter(description = "Thông tin lớp học mới") @RequestBody GradeDTO grade) {
         return ResponseEntity.ok(service.updateGrade(id, grade));
     }
 

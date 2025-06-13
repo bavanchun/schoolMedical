@@ -1,13 +1,13 @@
 package com.schoolhealth.schoolmedical.service.grade;
 
-import com.schoolhealth.schoolmedical.entity.Grade;
+import com.schoolhealth.schoolmedical.model.dto.GradeDTO;
 
 import java.util.List;
 
 public interface GradeService {
-    Grade createGrade(Grade grade);
-    List<Grade> getAllGrades();
-    Grade getGradeById(Long id);
-    Grade updateGrade(Long id, Grade grade);
+    GradeDTO createGrade(GradeDTO grade);
+    List<GradeDTO> getAllGrades();
+    GradeDTO getGradeById(Long id);
+    GradeDTO updateGrade(Long id, GradeDTO grade);
     void deleteGrade(Long id);
 }
