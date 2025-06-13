@@ -21,7 +21,6 @@ public class Grade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grade_id", nullable = false, unique = true)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long gradeId;
 
     @Column(name = "grade_name", nullable = false, length = 50)
