@@ -22,10 +22,10 @@ public class Disease {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT", nullable = true)
     private String description;
 
-    @Column(name = "is_injected_in_vaccination")
+    @Column(name = "is_injected_in_vaccination", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isInjectedVaccination;
 
     @Column(name = "dose_quantity")
