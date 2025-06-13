@@ -32,13 +32,10 @@ public class HealthCheckDisease {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private HealthCheckDiseaseStatus status;
+    private HealthCheckDiseaseStatus status = HealthCheckDiseaseStatus.REJECTED;
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive = true;
-
-    @Column(name = "is_sensitive", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isSensitive = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", insertable = false, updatable = false)

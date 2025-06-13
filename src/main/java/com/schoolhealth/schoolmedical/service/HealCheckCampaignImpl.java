@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.*;
+import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
@@ -36,7 +37,7 @@ public class HealCheckCampaignImpl implements HealthCheckCampaignService {
     @Transactional(rollbackFor = Exception.class)
     public HealCheckCampaign saveHealthCheckCampaign(HealCheckCampaign healCheckCampaign) {
         HealCheckCampaign campaign = healthCheckCampaignRepo.save(healCheckCampaign);
-        List<Pupil> pupils = pupilService.getAll();
+        List<Pupil> pupils = pupilService.getAll().orElseThrow(() -> new NotFoundException("No pupils found in the system"));
 
         List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
         for (Pupil pupil : pupils) {
@@ -49,13 +50,16 @@ public class HealCheckCampaignImpl implements HealthCheckCampaignService {
 
         List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
         List<Disease> diseases = diseaseService.getAllDiseases();
-        for (Disease disease : diseases) {
-            HealthCheckDisease healthCheckDisease = new HealthCheckDisease();
-            healthCheckDisease.setHealthCheckCampaign(campaign);
-            healthCheckDisease.setDisease(disease);
-            healthCheckDiseases.add(healthCheckDisease);
+        List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getAllHealthCheckConsents();
+        for( HealthCheckConsentForm consentForm : consentForms) {
+            for (Disease disease : diseases) {
+                HealthCheckDisease healthCheckDisease = new HealthCheckDisease();
+                healthCheckDisease.setHealthCheckCampaign(campaign);
+                healthCheckDisease.setDisease(disease);
+                healthCheckDisease.setHealthCheckConsentForm(consentForm);
+                healthCheckDiseases.add(healthCheckDisease);
+            }
         }
-
         return campaign;
     }
 }
