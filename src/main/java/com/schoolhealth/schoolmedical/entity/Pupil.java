@@ -32,6 +32,12 @@ public class Pupil {
     @Column(nullable = false)
     private char gender;
 
+    /**
+     * Số điện thoại của phụ huynh để liên kết với tài khoản phụ huynh
+     */
+    @Column(name = "parent_phone_number", length = 15)
+    private String parentPhoneNumber;
+
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
@@ -65,5 +71,3 @@ public class Pupil {
     @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<HealthCheckConsentForm> healthCheckConsentForms;
 }
-
-
