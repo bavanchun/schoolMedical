@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.schoolhealth.schoolmedical.constant.ValidationConstants;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -41,10 +42,10 @@ public class User {
     @Column(nullable = true)
     private String email;
 
-    @Pattern(regexp = "^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-6|8|9]|9[0-9])[0-9]{7}$",
+    @Pattern(regexp = ValidationConstants.PHONE_NUMBER_REGEX,
             message = "Số điện thoại không hợp lệ")
-    @Column(name = "phone_number", nullable = false)
-    private int phoneNumber;
+    @Column(name = "phone_number", nullable = false, length = 12)
+    private String phoneNumber;
 
     @Column(nullable = true)
     private String avatar;
