@@ -3,6 +3,8 @@ package com.schoolhealth.schoolmedical.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -24,23 +26,24 @@ public class HealCheckCampaign {
     @Column(name = "campaign_id", nullable = false, unique = true)
     private int campaignId;
 
+    @NotBlank(message = "Address cannot be null")
     @Column(name = "address", nullable = false, length = 255)
     private String address;
 
+    @NotNull
     @Column(name = "start_examination_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime startExaminationDate;
 
+    @NotNull
     @Column(name = "end_examination_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime endExaminationDate;
 
+    @NotNull
     @Column(name = "publidation_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate publidationDate;
 
+    @NotNull
     @Column(name = "deadline_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate deadlineDate;
 
     @Column(name = "description", nullable = true, columnDefinition = "TEXT")
@@ -48,7 +51,6 @@ public class HealCheckCampaign {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate createdAt;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
