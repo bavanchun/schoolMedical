@@ -14,4 +14,11 @@ public interface PupilService {
     void deletePupil(String id);
 
     Pupil assignPupilClass(AssignClassRequest assignClassRequest);
+
+    /**
+     * Tìm danh sách học sinh theo số điện thoại phụ huynh
+     * @param phoneNumber Số điện thoại của phụ huynh
+     * @return Danh sách học sinh có số điện thoại phụ huynh trùng khớp
+     */
+    List<Pupil> findByParentPhoneNumber(String phoneNumber);
 }

@@ -101,6 +101,13 @@ public class PupilImpl implements PupilService{
 
         return pupilRepo.save(pupil);
     }
+
+    @Override
+    public List<Pupil> findByParentPhoneNumber(String phoneNumber) {
+        // Tìm học sinh theo số điện thoại phụ huynh trong trường parentPhoneNumber
+        return pupilRepo.findAll().stream()
+                .filter(pupil -> phoneNumber.equals(pupil.getParentPhoneNumber()))
+                .filter(Pupil::isActive) // Chỉ lấy học sinh đang active
+                .toList();
+    }
 }
-
-

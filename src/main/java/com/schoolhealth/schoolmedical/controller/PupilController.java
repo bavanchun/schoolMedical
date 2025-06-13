@@ -1,8 +1,12 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.User;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.PupilDto;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
+import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
+import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.service.PupilService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,13 +14,21 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/pupils")
@@ -25,6 +37,12 @@ public class PupilController {
 
     @Autowired
     private PupilService pupilService;
+
+    @Autowired
+    private PupilMapper pupilMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Operation(
             summary = "Lấy danh sách tất cả học sinh",
@@ -167,5 +185,79 @@ public class PupilController {
             @RequestBody AssignClassRequest assignRequest) {
         Pupil pupil = pupilService.assignPupilClass(assignRequest);
         return ResponseEntity.ok(pupil);
+    }
+
+    @Operation(
+            summary = "Lấy danh sách con của phụ huynh đang đăng nhập",
+            description = "API này dành cho phụ huynh để xem danh sách con của họ",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Thành công",
+                    content = @Content(schema = @Schema(implementation = PupilDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Không có quyền truy cập",
+                    content = @Content
+            )
+    })
+    @GetMapping("/my-children")
+    @PreAuthorize("hasAuthority('PARENT')")
+    public ResponseEntity<List<PupilDto>> getMyChildren() {
+        // Lấy thông tin người dùng hiện tại từ SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String phoneNumber = authentication.getName(); // Lấy số điện thoại từ authentication
+
+        // Tìm user từ repository để xác minh vai trò
+        User currentUser = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin người dùng"));
+
+        // Kiểm tra xem người dùng có phải là phụ huynh không
+        if (currentUser.getRole() != Role.PARENT) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Phương pháp 1: Lấy danh sách con từ mối quan hệ User-Pupil
+        List<Pupil> childrenFromRelationship = new ArrayList<>();
+        if (currentUser.getPupils() != null) {
+            childrenFromRelationship = currentUser.getPupils();
+        }
+
+        // Phương pháp 2: Tìm trực tiếp các học sinh có parentPhoneNumber trùng với số điện thoại phụ huynh
+        List<Pupil> childrenByPhoneNumber = pupilService.findByParentPhoneNumber(phoneNumber);
+
+        // Gộp hai danh sách và loại bỏ trùng lặp
+        Set<String> processedIds = new HashSet<>();
+        List<Pupil> allChildren = new ArrayList<>();
+
+        // Thêm học sinh từ mối quan hệ
+        for (Pupil child : childrenFromRelationship) {
+            if (!processedIds.contains(child.getPupilId())) {
+                allChildren.add(child);
+                processedIds.add(child.getPupilId());
+            }
+        }
+
+        // Thêm học sinh từ tìm kiếm theo số điện thoại
+        for (Pupil child : childrenByPhoneNumber) {
+            if (!processedIds.contains(child.getPupilId())) {
+                allChildren.add(child);
+                processedIds.add(child.getPupilId());
+            }
+        }
+
+        // Đảm bảo không bỏ sót học sinh nào - logging kiểm tra
+        System.out.println("Số lượng học sinh tìm thấy cho phụ huynh " + phoneNumber + ": " + allChildren.size());
+        System.out.println("Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
+
+        // Chuyển đổi danh sách Pupil thành PupilDto
+        List<PupilDto> childrenDtos = allChildren.stream()
+                .map(pupilMapper::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(childrenDtos);
     }
 }
