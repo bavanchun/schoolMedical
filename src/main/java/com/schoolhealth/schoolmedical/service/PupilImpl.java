@@ -47,9 +47,9 @@ public class PupilImpl implements PupilService{
                 .toList();
     }
 
-    @Override
-    public Optional<List<Pupil>> getAll() {
-        return Optional.ofNullable(pupilRepo.findAll());
+//    @Override
+//    public Optional<List<Pupil>> getAll() {
+//        return Optional.ofNullable(pupilRepo.findAll());
     public PupilDto getPupilById(String id) {
         Optional<Pupil> pupilOptional = pupilRepo.findById(id);
         if (pupilOptional.isEmpty() || !pupilOptional.get().isActive()) {
