@@ -1,15 +1,20 @@
 package com.schoolhealth.schoolmedical.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.schoolhealth.schoolmedical.constant.ValidationConstants;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -19,7 +24,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements UserDetails{
     @Id
     @Column(name = "user_id", nullable = false, unique = true)
     private String userId;
@@ -34,17 +39,17 @@ public class User {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 72)
     private String password;
 
     @Email(message = "Email không hợp lệ")
     @Column(nullable = true)
     private String email;
 
-    @Pattern(regexp = "^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-6|8|9]|9[0-9])[0-9]{7}$",
+    @Pattern(regexp = ValidationConstants.PHONE_NUMBER_REGEX,
             message = "Số điện thoại không hợp lệ")
-    @Column(name = "phone_number", nullable = false)
-    private int phoneNumber;
+    @Column(name = "phone_number", nullable = false, length = 12)
+    private String phoneNumber;
 
     @Column(nullable = true)
     private String avatar;
@@ -57,6 +62,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
@@ -68,4 +77,39 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
     private List<UserNotification> userNotifications;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return phoneNumber;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
 }
