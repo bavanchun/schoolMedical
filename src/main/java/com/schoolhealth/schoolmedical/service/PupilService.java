@@ -6,6 +6,9 @@ import com.schoolhealth.schoolmedical.model.dto.PupilDto;
 import java.util.List;
 
 public interface PupilService {
+    PupilDto createPupil(PupilDto dto);
     List<PupilDto> getAllPupils();
-    List<Pupil> getAll();
+    PupilDto getPupilById(String id);
+    PupilDto updatePupil(String id, PupilDto dto);
+    void deletePupil(String id);
 }

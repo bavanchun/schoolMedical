@@ -21,3 +21,4 @@ public class PupilDto {
     private char gender;
     private boolean isActive;
 }
+
