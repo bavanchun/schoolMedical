@@ -19,6 +19,7 @@ public class PupilDto {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     private char gender;
+    private String parentPhoneNumber;
     private boolean isActive;
 }
 
