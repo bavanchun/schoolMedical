@@ -13,12 +13,8 @@ import java.util.List;
 @RequestMapping("/api/v1/pupils")
 public class PupilController {
 
-    private final PupilService pupilService;
-
     @Autowired
-    public PupilController(PupilService pupilService) {
-        this.pupilService = pupilService;
-    }
+    private PupilService pupilService;
 
     @GetMapping
     public List<PupilDto> getAllPupil() {
