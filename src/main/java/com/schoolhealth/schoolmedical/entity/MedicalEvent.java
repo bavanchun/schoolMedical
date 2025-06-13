@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.MedicalEventStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class MedicalEvent {
     private String pupilId;
 
     @Column(name = "detailed_information", columnDefinition = "TEXT")
+    @Nationalized
     private String detailedInformation;
 
     @Enumerated(EnumType.STRING)

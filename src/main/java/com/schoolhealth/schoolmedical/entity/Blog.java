@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
@@ -29,9 +30,11 @@ public class Blog {
     private User verifierId;
 
     @Column(name = "title", nullable = false, length = 255)
+    @Nationalized
     private String title;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Nationalized
     private String content;
 
     @Column(name = "created_at", nullable = false,  updatable = false)
@@ -45,9 +48,11 @@ public class Blog {
     private LocalDate lastUpdatedAt;
 
     @Column(name = "status", nullable = false, length = 20)
+    @Nationalized
     private String status;
 
     @Column(name = "image_url", nullable = true, length = 255)
+    @Nationalized
     private String imageUrl;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")

@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.entity;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -41,6 +42,7 @@ public class VaccinationCampagin {
     private LocalDate stopDate;
 
     @Column(name = "notes", columnDefinition = "TEXT")
+    @Nationalized
     private String notes;
 
     @Enumerated(EnumType.STRING)

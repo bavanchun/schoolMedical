@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.entity;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationSource;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +38,7 @@ public class VaccinationHistory {
     private LocalDateTime vaccinatedAt;
 
     @Column(name = "notes", columnDefinition = "TEXT")
+    @Nationalized
     private String notes;
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
