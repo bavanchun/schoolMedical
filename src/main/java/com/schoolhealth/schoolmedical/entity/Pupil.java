@@ -35,17 +35,17 @@ public class Pupil {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    @JoinTable(
-//            name = "pupil_parent",
-//            joinColumns = @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id"),
-//            inverseJoinColumns = @JoinColumn(name = "parent_id", referencedColumnName = "user_id")
-//    )
-//    private List<User> parents;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "pupil_parent",
+            joinColumns = @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id", referencedColumnName = "user_id")
+    )
+    private List<User> parents;
 
-    // sau update
-    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PupilParent> pupilParents;
+//    // sau update
+//    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<PupilParent> pupilParents;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_id" /*, nullable = true*/) // Thay đổi nullable = false thành nullable = true
