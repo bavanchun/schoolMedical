@@ -10,14 +10,47 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/pupils")
 public class PupilController {
 
-    @Autowired
-    private PupilService pupilService;
+    private final PupilService pupilService;
 
-    @GetMapping("/pupils")
+    @Autowired
+    public PupilController(PupilService pupilService) {
+        this.pupilService = pupilService;
+    }
+
+    @GetMapping
     public List<PupilDto> getAllPupil() {
         return pupilService.getAllPupils();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PupilDto> getPupilById(@PathVariable String id) {
+        PupilDto dto = pupilService.getPupilById(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping
+    public ResponseEntity<PupilDto> createPupil(@RequestBody PupilDto dto) {
+        PupilDto created = pupilService.createPupil(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PupilDto> updatePupil(
+            @PathVariable String id,
+            @RequestBody PupilDto dto) {
+
+        PupilDto updated = pupilService.updatePupil(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePupil(@PathVariable String id) {
+        pupilService.deletePupil(id);
+        return ResponseEntity.noContent().build();
     }
 }
