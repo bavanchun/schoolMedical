@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.function.Function;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -17,6 +18,11 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String extractUserName(String token) {
         return "";
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
