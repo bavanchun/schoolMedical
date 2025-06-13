@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusMedLogs;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +20,6 @@ public class MedicationLogs {
     private int logId;
 
     @Column(nullable = true, columnDefinition = "TEXT")
-    @Nationalized
     private String note;
 
     @Column(name = "given_time", nullable = true)

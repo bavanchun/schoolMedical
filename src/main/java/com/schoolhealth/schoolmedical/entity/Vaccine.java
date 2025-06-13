@@ -2,7 +2,6 @@ package com.schoolhealth.schoolmedical.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 import java.util.List;
 
@@ -21,19 +20,15 @@ public class Vaccine {
     private int vaccineId;
 
     @Column(name = "name", nullable = false, length = 255)
-    @Nationalized
     private String name;
 
     @Column(name = "manufacturer", length = 255)
-    @Nationalized
     private String manufacturer;
 
     @Column(name = "recommended_age", length = 100)
-    @Nationalized
     private String recommendedAge;
 
     @Column(name = "description", columnDefinition = "TEXT")
-    @Nationalized
     private String description;
 
     @Column(name = "dose_number")

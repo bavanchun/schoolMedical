@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Nationalized;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -26,11 +25,9 @@ public class User {
     private String userId;
 
     @Column(name = "last_name", nullable = false, length = 50)
-    @Nationalized
     private String lastName;
 
     @Column(name = "first_name", nullable = false, length = 50)
-    @Nationalized
     private String firstName;
 
     @Column(name = "birth_date", nullable = false)
@@ -49,8 +46,7 @@ public class User {
     @Column(name = "phone_number", nullable = false)
     private int phoneNumber;
 
-    @Column(nullable = true, length = 255)
-    @Nationalized
+    @Column(nullable = true)
     private String avatar;
 
     @Column(name = "created_at", nullable = false,  updatable = false)
