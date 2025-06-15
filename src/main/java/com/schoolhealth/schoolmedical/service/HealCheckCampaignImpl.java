@@ -49,7 +49,7 @@ public class HealCheckCampaignImpl implements HealthCheckCampaignService {
         healthCheckConsentService.saveAll(healthCheckConsentForm);
 
         List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
-        List<Disease> diseases = diseaseService.getAllDiseases();
+        List<Disease> diseases = diseaseService.getAllDiseases().orElseThrow(() -> new NotFoundException("No diseases found in the system"));
         List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getAllHealthCheckConsents();
         for( HealthCheckConsentForm consentForm : consentForms) {
             for (Disease disease : diseases) {

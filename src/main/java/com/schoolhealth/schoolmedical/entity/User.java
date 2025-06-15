@@ -55,13 +55,11 @@ public class User implements UserDetails{
     private String avatar;
 
     @Column(name = "created_at", nullable = false,  updatable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @CreationTimestamp
     private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
     @Column(name = "updated_at")
     private Date updatedAt;

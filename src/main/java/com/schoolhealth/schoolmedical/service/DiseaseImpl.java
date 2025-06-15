@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiseaseImpl implements DiseaseService{
@@ -15,8 +16,7 @@ public class DiseaseImpl implements DiseaseService{
 
 
     @Override
-    public List<Disease> getAllDiseases() {
-        List<Disease> diseases = diseaseRepo.findAll();
-        return diseaseRepo.findAll();
+    public Optional<List<Disease>> getAllDiseases() {
+        return Optional.ofNullable(diseaseRepo.findAll());
     }
 }
