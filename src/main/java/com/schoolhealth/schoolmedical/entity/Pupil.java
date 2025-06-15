@@ -32,6 +32,12 @@ public class Pupil {
     @Column(nullable = false)
     private char gender;
 
+    /**
+     * Số điện thoại của phụ huynh để liên kết với tài khoản phụ huynh
+     */
+    @Column(name = "parent_phone_number", length = 15)
+    private String parentPhoneNumber;
+
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
@@ -43,11 +49,16 @@ public class Pupil {
     )
     private List<User> parents;
 
+//    // sau update
+//    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<PupilParent> pupilParents;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_id", nullable = false)
+    @JoinColumn(name = "grade_id" /*, nullable = true*/) // Thay đổi nullable = false thành nullable = true
     private Grade grade;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+
     @JoinColumn(name = "pupil_id")
     private List<SendMedication> sendMedications;
 
