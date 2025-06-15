@@ -1,10 +1,12 @@
 package com.schoolhealth.schoolmedical.service.authenticate;
 
+import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.AuthRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.RegisterRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.AuthenticationResponse;
+import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.service.user.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -12,23 +14,28 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticateServiceImpl implements  AuthenticateService {
 
     private final UserRepository userRepository;
-
+    private final PupilRepo pupilRepo;
     private final PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
 
     @Override
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
+        // Xây dựng đối tượng User từ request
         var user = User.builder()
                 .userId("USER_" + System.currentTimeMillis()) // Tạo userId duy nhất
                 .firstName(request.getFirstName())
@@ -40,8 +47,38 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
                 .role(request.getRole() != null ? request.getRole() : Role.PARENT) // Sử dụng role từ request hoặc mặc định là PARENT
                 .isActive(true)
                 .build();
-        userRepository.save(user);
 
+        // Lưu người dùng mới
+        User savedUser = userRepository.save(user);
+
+        // Nếu là PARENT, tìm và liên kết với các học sinh
+        if (savedUser.getRole() == Role.PARENT) {
+            // Tìm học sinh theo trường parentPhoneNumber
+            List<Pupil> childrenByDirectPhone = pupilRepo.findByParentPhoneNumber(request.getPhoneNumber());
+
+            // Tìm học sinh đã được liên kết qua bảng quan hệ
+            List<Pupil> childrenByRelation = pupilRepo.findByLinkedParentPhoneNumber(request.getPhoneNumber());
+
+            // Gộp và loại bỏ trùng lặp
+            List<Pupil> allChildren = Stream.concat(
+                childrenByDirectPhone.stream(),
+                childrenByRelation.stream()
+            ).distinct().collect(Collectors.toList());
+
+            if (!allChildren.isEmpty()) {
+                for (Pupil pupil : allChildren) {
+                    if (pupil.getParents() == null) {
+                        pupil.setParents(new ArrayList<>());
+                    }
+                    if (!pupil.getParents().contains(savedUser)) {
+                        pupil.getParents().add(savedUser);
+                    }
+                }
+                pupilRepo.saveAll(allChildren);
+            }
+        }
+
+        // Tạo JWT token
         var jwtToken = jwtService.generateToken(new HashMap<>(), user);
 
         return AuthenticationResponse
