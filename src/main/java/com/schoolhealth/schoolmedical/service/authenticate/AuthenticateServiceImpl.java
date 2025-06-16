@@ -8,6 +8,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.RegisterRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.AuthenticationResponse;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
+import com.schoolhealth.schoolmedical.service.UserIdGenerator;
 import com.schoolhealth.schoolmedical.service.user.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,20 +32,27 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserIdGenerator userIdGenerator;
 
     @Override
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
+        // Xác định role cho user mới
+        Role userRole = request.getRole() != null ? request.getRole() : Role.PARENT;
+
+        // Tạo userId tự động theo định dạng tương ứng với role
+        String userId = userIdGenerator.generateUserId(userRole);
+
         // Xây dựng đối tượng User từ request
         var user = User.builder()
-                .userId("USER_" + System.currentTimeMillis()) // Tạo userId duy nhất
+                .userId(userId) // Sử dụng ID tự động theo định dạng yêu cầu
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(request.getPassword())) // Mã hóa password
                 .birthDate(request.getBirthDate())
-                .role(request.getRole() != null ? request.getRole() : Role.PARENT) // Sử dụng role từ request hoặc mặc định là PARENT
+                .role(userRole) // Sử dụng role đã xác định
                 .isActive(true)
                 .build();
 
