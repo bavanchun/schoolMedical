@@ -1,6 +1,5 @@
 package com.schoolhealth.schoolmedical.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "heal_check_campaign")
-public class HealCheckCampaign {
+public class HealthCheckCampaign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +36,6 @@ public class HealCheckCampaign {
     @NotNull
     @Column(name = "end_examination_date", nullable = false)
     private LocalDateTime endExaminationDate;
-
-    @NotNull
-    @Column(name = "publidation_date", nullable = false)
-    private LocalDate publidationDate;
 
     @NotNull
     @Column(name = "deadline_date", nullable = false)
@@ -61,7 +56,7 @@ public class HealCheckCampaign {
     private StatusHealthCampaign statusHealthCampaign;
 
     @OneToMany(
-            mappedBy = "healCheckCampaign",
+            mappedBy = "healthCheckCampaign",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
