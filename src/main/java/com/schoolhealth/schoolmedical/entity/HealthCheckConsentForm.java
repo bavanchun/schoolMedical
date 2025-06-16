@@ -29,7 +29,7 @@ public class HealthCheckConsentForm {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id", nullable = false)
-    private HealCheckCampaign healCheckCampaign;
+    private HealthCheckCampaign healthCheckCampaign;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive;

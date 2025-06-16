@@ -5,6 +5,8 @@ import com.schoolhealth.schoolmedical.repository.HealthCheckDiseaseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HealthCheckDiseaseImpl implements HealthCheckDiseaseService{
 
@@ -12,7 +14,7 @@ public class HealthCheckDiseaseImpl implements HealthCheckDiseaseService{
     private HealthCheckDiseaseRepo healthCheckDiseaseRepo;
 
     @Override
-    public HealthCheckDisease saveHealthCheckDisease(HealthCheckDisease healthCheckDisease) {
-        return healthCheckDiseaseRepo.save(healthCheckDisease);
+    public List<HealthCheckDisease> saveHealthCheckDisease(List<HealthCheckDisease> healthCheckDisease) {
+        return healthCheckDiseaseRepo.saveAll(healthCheckDisease);
     }
 }

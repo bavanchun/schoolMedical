@@ -44,7 +44,7 @@ public class HealthCheckDisease {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "health_check_campaign_id", referencedColumnName = "campaign_id", insertable = false, updatable = false)
-    private HealCheckCampaign healthCheckCampaign;
+    private HealthCheckCampaign healthCheckCampaign;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "health_check_consent_form_id", referencedColumnName = "consent_form_id", insertable = false, updatable = false)

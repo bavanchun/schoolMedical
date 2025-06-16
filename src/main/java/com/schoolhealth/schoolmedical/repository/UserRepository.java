@@ -1,10 +1,12 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.User;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
@@ -20,4 +22,7 @@ public interface UserRepository extends JpaRepository<User, String> {
      */
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.pupils WHERE u.phoneNumber = :phoneNumber")
     Optional<User> findByPhoneNumberWithPupils(@Param("phoneNumber") String phoneNumber);
+
+    List<User> findAllByRole(Role role);
+
 }

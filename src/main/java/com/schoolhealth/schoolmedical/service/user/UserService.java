@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service.user;
 
 import com.schoolhealth.schoolmedical.entity.User;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 
@@ -12,4 +13,5 @@ public interface UserService {
     List<UserResponse> getAllUsers();
 
     UserResponse updateUserById(String userId, UserRequest userRequest);
+    List<User> findAllByRole(Role role);
 }

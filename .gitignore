@@ -3,7 +3,8 @@
 
 ### dotenv ###
 .env
-
+# Firebase credentials
+**/firebase/*.json
 ### Eclipse ###
 .metadata
 bin/
