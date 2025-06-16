@@ -74,6 +74,8 @@ public class User implements UserDetails{
     @ManyToMany(mappedBy = "parents")
     private List<Pupil> pupils;
 
+    @Column(name = "device_token", nullable = true, length = 255)
+    private String deviceToken;
 //    // sau
 //    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<PupilParent> pupilParents;
