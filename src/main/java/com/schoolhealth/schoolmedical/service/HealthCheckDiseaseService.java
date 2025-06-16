@@ -2,6 +2,9 @@ package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 
+import java.util.List;
+
 public interface HealthCheckDiseaseService {
-    HealthCheckDisease saveHealthCheckDisease(HealthCheckDisease healthCheckDisease);
+    List<HealthCheckDisease> saveHealthCheckDisease(List<HealthCheckDisease> healthCheckDisease);
+
 }

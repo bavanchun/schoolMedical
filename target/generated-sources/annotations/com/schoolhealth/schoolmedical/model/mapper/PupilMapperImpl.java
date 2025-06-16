@@ -2,21 +2,14 @@ package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.PupilDto;
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> 01e5dd6f011cadc9f05affa3a6420a6204ffd2be
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-<<<<<<< HEAD
-    date = "2025-06-14T16:32:18+0700",
-=======
-    date = "2025-06-14T04:47:13+0700",
->>>>>>> 01e5dd6f011cadc9f05affa3a6420a6204ffd2be
+    date = "2025-06-16T09:53:08+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -35,16 +28,11 @@ public class PupilMapperImpl implements PupilMapper {
         pupilDto.setFirstName( pupil.getFirstName() );
         pupilDto.setBirthDate( pupil.getBirthDate() );
         pupilDto.setGender( pupil.getGender() );
-<<<<<<< HEAD
-=======
         pupilDto.setParentPhoneNumber( pupil.getParentPhoneNumber() );
->>>>>>> 01e5dd6f011cadc9f05affa3a6420a6204ffd2be
         pupilDto.setActive( pupil.isActive() );
 
         return pupilDto;
     }
-<<<<<<< HEAD
-=======
 
     @Override
     public Pupil toEntity(PupilDto dto) {
@@ -91,5 +79,4 @@ public class PupilMapperImpl implements PupilMapper {
 
         return list;
     }
->>>>>>> 01e5dd6f011cadc9f05affa3a6420a6204ffd2be
 }
