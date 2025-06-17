@@ -17,13 +17,18 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
-@Table(name = "heal_check_campaign")
+@Table(name = "health_check_campaign")
 public class HealthCheckCampaign {
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "campaign_id", nullable = false, unique = true)
+//    private int campaignId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "campaign_id", nullable = false, unique = true)
-    private int campaignId;
+    private Long campaignId;
 
     @NotBlank(message = "Address cannot be null")
     @Column(name = "address", nullable = false, length = 255)

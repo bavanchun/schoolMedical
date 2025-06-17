@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
+import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.repository.DiseaseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,11 @@ public class DiseaseImpl implements DiseaseService{
 
 
     @Override
-    public Optional<List<Disease>> getAllDiseases() {
-        return Optional.ofNullable(diseaseRepo.findAll());
+    public List<Disease> getAllDiseases() {
+        List<Disease> diseases = diseaseRepo.findAllByisActiveTrue();
+        if (diseases.isEmpty()) {
+            throw new NotFoundException("No diseases found");
+        }
+        return diseases;
     }
 }
