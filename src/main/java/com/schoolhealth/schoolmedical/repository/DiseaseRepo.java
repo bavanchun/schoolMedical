@@ -10,3 +10,4 @@ import java.util.List;
 public interface DiseaseRepo extends JpaRepository<Disease, Integer> {
     List<Disease> findAllByisActiveTrue();
 }
+

@@ -53,9 +53,8 @@ public class DiseaseServiceImpl implements DiseaseService{
 
     @Override
     public List<DiseaseResponse> getAllDiseases() {
-        return diseaseRepository.findAll()
+        return diseaseRepository.findAllByisActiveTrue()
                 .stream()
-                .filter(disease -> disease.isActive())  // Chỉ lấy các bệnh có isActive = true
                 .map(diseaseMapper::toDto)
                 .collect(Collectors.toList());
     }
