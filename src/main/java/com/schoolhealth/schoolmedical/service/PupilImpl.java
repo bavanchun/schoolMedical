@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.PupilDto;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
@@ -60,8 +61,12 @@ public class PupilImpl implements PupilService{
 
 
     @Override
-    public Optional<List<Pupil>> getAll() {
-        return Optional.ofNullable(pupilRepo.findAll());
+    public List<Pupil> getAll() {
+        List<Pupil> pupils = pupilRepo.findAll();
+        if( pupils.isEmpty()) {
+            throw new NotFoundException("No pupils found");
+        }
+        return pupils;
     }
 
 

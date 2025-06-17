@@ -22,7 +22,7 @@ public class JwtServiceImpl implements JwtService {
     @Value("${spring.jwt.secret}")
     private String SECRET_KEY;
 
-    @Value("7200000")
+    @Value("${spring.jwt.expiration}")
     private long JWT_EXPIRATION;
     @Override
     public String extractUserName(String token) {
@@ -46,9 +46,21 @@ public class JwtServiceImpl implements JwtService {
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
+//
+//    @Override
+//    public String generateToken(Map<String, Objects> extraClaims, UserDetails userDetails) {
+//        return Jwts
+//                .builder()
+//                .setClaims(extraClaims)
+//                .setSubject(userDetails.getUsername())
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
+//                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+//                .compact();
+//    }
 
     @Override
-    public String generateToken(Map<String, Objects> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

@@ -22,7 +22,7 @@ public class UserNotification {
     @Column(name = "notification_id", nullable = false, unique = true)
     private int notificationId;
 
-    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "message", nullable = true, columnDefinition = "TEXT")
     private String message;
 
     @Column(name = "is_read", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
@@ -37,8 +37,8 @@ public class UserNotification {
     @Column(name = "type_notification", nullable = false)
     private TypeNotification typeNotification;
 
-    @Column(name = "source_id", nullable = false, unique = true)
-    private int sourceId;
+    @Column(name = "source_id", nullable = false)
+    private Long sourceId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
