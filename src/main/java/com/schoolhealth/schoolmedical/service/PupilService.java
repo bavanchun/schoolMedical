@@ -22,5 +22,5 @@ public interface PupilService {
      * @return Danh sách học sinh có số điện thoại phụ huynh trùng khớp
      */
     List<Pupil> findByParentPhoneNumber(String phoneNumber);
-    Optional<List<Pupil>> getAll();
+    List<Pupil> getAll();
 }

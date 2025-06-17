@@ -2,9 +2,12 @@ package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
+import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +28,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     List<User> findAllByRole(Role role);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.deviceToken = :deviceToken WHERE u.userId = :userId")
+    int updateDeviceToken(@Param("userId") String userId, @Param("deviceToken") String deviceToken);
 }

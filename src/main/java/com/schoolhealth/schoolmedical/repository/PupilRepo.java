@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PupilRepo extends JpaRepository<Pupil, String> {
@@ -24,4 +25,5 @@ public interface PupilRepo extends JpaRepository<Pupil, String> {
      * @return Danh sách học sinh có số điện thoại phụ huynh trùng với tham số
      */
     List<Pupil> findByParentPhoneNumber(String phoneNumber);
+    List<Pupil> findAllByisActiveTrue();
 }

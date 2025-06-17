@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiseaseService {
-    Optional<List<Disease>> getAllDiseases();
+    List<Disease> getAllDiseases();
 }

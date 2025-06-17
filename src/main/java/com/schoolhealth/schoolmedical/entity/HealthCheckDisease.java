@@ -18,15 +18,6 @@ public class HealthCheckDisease {
     @Column(name = "health_check_disease_id")
     private int healthCheckDiseaseId;
 
-    @Column(name = "health_check_campaign_id")
-    private int healthCheckCampaignId;
-
-    @Column(name = "disease_id")
-    private int diseaseId;
-
-    @Column(name = "health_check_consent_form_id")
-    private int healthCheckConsentFormId;
-
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
 
@@ -38,16 +29,16 @@ public class HealthCheckDisease {
     private boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", insertable = false, updatable = false)
+    @JoinColumn(name = "disease_id")
     private Disease disease;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "health_check_campaign_id", referencedColumnName = "campaign_id", insertable = false, updatable = false)
+    @JoinColumn(name = "health_check_campaign_id")
     private HealthCheckCampaign healthCheckCampaign;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "health_check_consent_form_id", referencedColumnName = "consent_form_id", insertable = false, updatable = false)
+    @JoinColumn(name = "health_check_consent_form_id")
     private HealthCheckConsentForm healthCheckConsentForm;
 
 }
