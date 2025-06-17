@@ -30,7 +30,7 @@ public class FirebaseConfig {
 
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
-            }
+                }
         } catch (IOException e) {
             throw new RuntimeException("Firebase initialization failed", e);
         }
