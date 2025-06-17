@@ -2,7 +2,9 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
 import com.schoolhealth.schoolmedical.service.disease.DiseaseService;
+import com.schoolhealth.schoolmedical.service.diseaseVaccine.DiseaseVaccineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DiseaseController {
     private final DiseaseService diseaseService;
+    private final DiseaseVaccineService diseaseVaccineService;
 
     @PostMapping
     public ResponseEntity<DiseaseResponse> create(@RequestBody DiseaseRequest request) {
@@ -46,5 +49,10 @@ public class DiseaseController {
     @GetMapping
     public ResponseEntity<List<DiseaseResponse>> getAll() {
         return ResponseEntity.ok(diseaseService.getAllDiseases());
+    }
+
+    @GetMapping("/{diseaseId}/vaccines")
+    public ResponseEntity<List<VaccineResponse>> getVaccinesByDiseaseId(@PathVariable int diseaseId) {
+        return ResponseEntity.ok(diseaseVaccineService.getVaccinesByDiseaseId(diseaseId));
     }
 }
