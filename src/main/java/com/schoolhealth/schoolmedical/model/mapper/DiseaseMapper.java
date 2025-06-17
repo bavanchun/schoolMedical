@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -17,5 +18,5 @@ public interface DiseaseMapper {
     })
     Disease toEntity(DiseaseRequest request);
 
-    DiseaseRequest toDto(Disease disease);
+    DiseaseResponse toDto(Disease disease);
 }
