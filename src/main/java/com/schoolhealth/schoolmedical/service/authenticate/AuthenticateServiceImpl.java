@@ -8,7 +8,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.RegisterRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.AuthenticationResponse;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
-import com.schoolhealth.schoolmedical.service.UserIdGenerator;
+import com.schoolhealth.schoolmedical.service.user.UserIdGenerator;
 import com.schoolhealth.schoolmedical.service.user.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
