@@ -26,7 +26,7 @@ public class Disease {
     private String description;
 
     @Column(name = "is_injected_in_vaccination", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean isInjectedVaccination;
+    private Boolean isInjectedVaccination;
 
     @Column(name = "dose_quantity")
     private int doseQuantity;
@@ -39,5 +39,4 @@ public class Disease {
 
     @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL)
     private List<DiseaseVaccine> diseaseVaccines;
-
 }

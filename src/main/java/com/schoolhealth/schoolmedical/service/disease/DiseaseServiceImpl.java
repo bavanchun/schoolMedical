@@ -30,7 +30,7 @@ public class DiseaseServiceImpl implements DiseaseService{
                 .orElseThrow(() -> new EntityNotFoundException("Disease not found"));
         existing.setName(request.getName());
         existing.setDescription(request.getDescription());
-        existing.setInjectedVaccination(request.isInjectedVaccination());
+        existing.setIsInjectedVaccination(request.isInjectedVaccination());
         existing.setDoseQuantity(request.getDoseQuantity());
         return diseaseMapper.toDto(diseaseRepository.save(existing));
     }
@@ -55,6 +55,7 @@ public class DiseaseServiceImpl implements DiseaseService{
     public List<DiseaseResponse> getAllDiseases() {
         return diseaseRepository.findAll()
                 .stream()
+                .filter(disease -> disease.isActive())  // Chỉ lấy các bệnh có isActive = true
                 .map(diseaseMapper::toDto)
                 .collect(Collectors.toList());
     }
