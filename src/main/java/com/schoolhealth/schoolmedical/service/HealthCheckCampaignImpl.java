@@ -8,6 +8,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignResponse;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
+import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.Notification.FCMService;
 import com.schoolhealth.schoolmedical.service.Notification.UserNotificationService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     @Autowired
     private HealthCheckCampaignMapper healthCheckCampaignMapper;
 
+    @Autowired
+    private HealthCheckHistoryService healthCheckHistoryService;
 
     @Override
     public HealthCheckCampaign getHealthCheckCampaignById() {
@@ -56,24 +60,29 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
     // This method saves a health check campaign and creates consent forms for all pupils
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public HealthCheckCampaignResponse saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign) {
-        HealthCheckCampaign campaign = healthCheckCampaignRepo.save(
+        List<Pupil> pupils = pupilService.getAll();
+
+        HealthCheckCampaign campaign = healthCheckCampaignRepo.saveAndFlush(
                 healthCheckCampaignMapper.toEntity(healthCheckCampaign)
         );
-        List<Pupil> pupils = pupilService.getAll().orElseThrow(() -> new NotFoundException("No pupils found in the system"));
 
         List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
         for (Pupil pupil : pupils) {
             HealthCheckConsentForm consentForm = new HealthCheckConsentForm();
             consentForm.setPupil(pupil);
+//            HealthCheckHistory history = new HealthCheckHistory();
+//            history = healthCheckHistoryService.saveHealthCheckHistory(history);
+//            consentForm.setHealthCheckHistory(history);
+            consentForm.setSchoolYear(Year.now().getValue());
             consentForm.setHealthCheckCampaign(campaign);
             healthCheckConsentForm.add(consentForm);
         }
         healthCheckConsentService.saveAll(healthCheckConsentForm);
 
         List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
-        List<Disease> diseases = diseaseService.getAllDiseases().orElseThrow(() -> new NotFoundException("No diseases found in the system"));
+        List<Disease> diseases = diseaseService.getAllDiseases();
         List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getAllHealthCheckConsents();
         for( HealthCheckConsentForm consentForm : consentForms) {
             for (Disease disease : diseases) {
@@ -101,9 +110,20 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 .map(User::getDeviceToken)
                 .filter(token -> token != null && !token.isEmpty())
                 .toList();
-        fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
+
+        // Add null/empty check before using getFirst()
+        if (!listNotification.isEmpty()) {
+            fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
+        }
 
         return healthCheckCampaignMapper.toDto(campaign);
+    }
+
+    @Override
+    public List<HealthCheckCampaignResponse> getAllHealthCheckCampaigns() {
+        return healthCheckCampaignRepo.findAll().stream()
+                .map(healthCheckCampaignMapper::toDto)
+                .toList();
     }
 }
 
