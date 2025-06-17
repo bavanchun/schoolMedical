@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +16,14 @@ public class DiseaseResponse {
     private int diseaseId;
     private String name;
     private String description;
-    private boolean isInjectedVaccination;
-    private int doseQuantity;
-    private boolean isActive;
 
+    // Đảm bảo trường này luôn được JSON hóa là "injectedVaccination"
+    @JsonProperty("injectedVaccination")
+    private boolean isInjectedVaccination;
+
+    private int doseQuantity;
+
+    // Đảm bảo trường này luôn được JSON hóa là "active"
+    @JsonProperty("active")
+    private boolean isActive;
 }

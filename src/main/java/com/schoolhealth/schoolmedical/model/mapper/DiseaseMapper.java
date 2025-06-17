@@ -14,7 +14,8 @@ public interface DiseaseMapper {
             @Mapping(target = "diseaseId", ignore = true),
             @Mapping(target = "isActive", constant = "true"),
             @Mapping(target = "campaigns", ignore = true),
-            @Mapping(target = "diseaseVaccines", ignore = true)
+            @Mapping(target = "diseaseVaccines", ignore = true),
+            @Mapping(target = "isInjectedVaccination", source = "injectedVaccination"),
     })
     Disease toEntity(DiseaseRequest request);
 
