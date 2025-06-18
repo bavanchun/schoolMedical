@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface DiseaseRepo extends JpaRepository<Disease, Integer> {
-    @Query(value = "SELECT * FROM disease", countQuery = "SELECT COUNT(*) FROM disease", nativeQuery = true)
-    Page<Disease> findAllByisActiveTrue(Pageable pageable);
+    @Query(value = "SELECT * FROM disease d where d.is_active =?1", countQuery = "SELECT COUNT(*) FROM disease d where d.is_active =?1", nativeQuery = true)
+    Page<Disease> findAllByisActiveTrue(boolean isActive, Pageable pageable);
 
     List<Disease> findAllByisActiveTrue();
 

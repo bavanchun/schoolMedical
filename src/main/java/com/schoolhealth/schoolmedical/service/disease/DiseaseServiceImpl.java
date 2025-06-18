@@ -74,9 +74,9 @@ public class DiseaseServiceImpl implements DiseaseService{
     }
 
     @Override
-    public Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize) {
+    public Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize, boolean isActive) {
         Pageable pageable = PageRequest.of(pageNo-1, pageSize);
-        Page<Disease> diseasePage = diseaseRepository.findAllByisActiveTrue(pageable);
+        Page<Disease> diseasePage = diseaseRepository.findAllByisActiveTrue(isActive, pageable);
         return diseasePage.map(diseaseMapper::toDto);
     }
 
