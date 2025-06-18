@@ -2,11 +2,11 @@ package com.schoolhealth.schoolmedical.service.disease;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.exception.DiseaseAlreadyExistsException;
+import com.schoolhealth.schoolmedical.exception.EntityNotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.repository.DiseaseRepo;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,19 +37,19 @@ public class DiseaseServiceImpl implements DiseaseService{
 
     @Override
     public DiseaseResponse updateDisease(int id, DiseaseRequest request) {
-        Disease existing = diseaseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Disease not found"));
-        existing.setName(request.getName());
-        existing.setDescription(request.getDescription());
-        existing.setIsInjectedVaccination(request.isInjectedVaccination());
-        existing.setDoseQuantity(request.getDoseQuantity());
-        return diseaseMapper.toDto(diseaseRepository.save(existing));
+        Disease existingDisease = diseaseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Disease", "id", id));
+        existingDisease.setName(request.getName());
+        existingDisease.setDescription(request.getDescription());
+        existingDisease.setIsInjectedVaccination(request.isInjectedVaccination());
+        existingDisease.setDoseQuantity(request.getDoseQuantity());
+        return diseaseMapper.toDto(diseaseRepository.save(existingDisease));
     }
 
     @Override
     public void deleteDisease(int id) {
         Disease existing = diseaseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Disease not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Disease", "id", id));
         existing.setActive(false);
         diseaseRepository.save(existing);
 
@@ -58,7 +58,7 @@ public class DiseaseServiceImpl implements DiseaseService{
     @Override
     public DiseaseResponse getDiseaseById(int id) {
         Disease disease = diseaseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Disease not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Disease", "id", id));
         return diseaseMapper.toDto(disease);
     }
 
