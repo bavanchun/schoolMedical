@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service.disease;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
+import com.schoolhealth.schoolmedical.exception.DiseaseAlreadyExistsException;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
@@ -19,9 +20,19 @@ public class DiseaseServiceImpl implements DiseaseService{
     private final DiseaseRepo diseaseRepository;
     private final DiseaseMapper diseaseMapper;
     @Override
+    /*
     public DiseaseResponse createDisease(DiseaseRequest request) {
         Disease disease = diseaseMapper.toEntity(request);
         return diseaseMapper.toDto(diseaseRepository.save(disease));
+    }
+     */
+    public DiseaseResponse createDisease(DiseaseRequest request) {
+        if (diseaseRepository.findByNameIgnoreCase(request.getName()).isPresent()) {
+            throw new DiseaseAlreadyExistsException("Disease with name " + request.getName() + " already exists");
+        }
+        Disease disease = diseaseMapper.toEntity(request);
+        Disease savedDisease = diseaseRepository.save(disease);
+        return diseaseMapper.toDto(savedDisease);
     }
 
     @Override
