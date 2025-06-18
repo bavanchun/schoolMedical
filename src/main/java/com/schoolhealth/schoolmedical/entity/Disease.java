@@ -27,6 +27,7 @@ public class Disease {
 
     @Column(name = "is_injected_in_vaccination", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isInjectedVaccination;
+    // boolean
 
     @Column(name = "dose_quantity")
     private int doseQuantity;
