@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -108,15 +110,21 @@ public class DiseaseController {
 
     @Operation(
         summary = "Get All Diseases REST API",
-        description = "Retrieve all diseases from the database"
+        description = "Retrieve all diseases from the database with pagination"
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Diseases retrieved successfully"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
-    public ResponseEntity<List<DiseaseResponse>> getAll() {
-        List<DiseaseResponse> diseases = diseaseService.getAllDiseases();
+    public ResponseEntity<Page<DiseaseResponse>> getAll(
+            @Parameter(description = "Page number (starting from 1)", example = "1")
+            @RequestParam(defaultValue = "1") int page,
+
+            @Parameter(description = "Page size (number of records per page)", example = "10")
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Page<DiseaseResponse> diseases = diseaseService.getAllDiseases(page, size);
         return ResponseEntity.ok(diseases);
     }
 
