@@ -12,5 +12,5 @@ public interface DiseaseService {
     void deleteDisease(int id);
     DiseaseResponse getDiseaseById(int id);
     List<DiseaseResponse> getAllDiseases();
-    Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize);
+    Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize, boolean isActive);
 }

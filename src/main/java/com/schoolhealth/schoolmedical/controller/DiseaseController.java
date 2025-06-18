@@ -121,10 +121,13 @@ public class DiseaseController {
             @Parameter(description = "Page number (starting from 1)", example = "1")
             @RequestParam(defaultValue = "1") int page,
 
-            @Parameter(description = "Page size (number of records per page)", example = "10")
-            @RequestParam(defaultValue = "20") int size
+            @Parameter(description = "Page size (number of records per page)", example = "20")
+            @RequestParam(defaultValue = "20") int size,
+
+            @Parameter(description = "Filter by active status", example = "true")
+            @RequestParam(defaultValue = "true") boolean isActive
     ) {
-        Page<DiseaseResponse> diseases = diseaseService.getAllDiseases(page, size);
+        Page<DiseaseResponse> diseases = diseaseService.getAllDiseases(page, size, isActive);
         return ResponseEntity.ok(diseases);
     }
 
