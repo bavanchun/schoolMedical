@@ -8,6 +8,9 @@ import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.repository.DiseaseRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,4 +72,13 @@ public class DiseaseServiceImpl implements DiseaseService{
                 .map(diseaseMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        Page<Disease> diseasePage = diseaseRepository.findAllByisActiveTrue(pageable);
+        return diseasePage.map(diseaseMapper::toDto);
+    }
+
+
 }
