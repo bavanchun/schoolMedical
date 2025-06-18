@@ -13,15 +13,12 @@ public interface VaccinationHistoryMapper {
             @Mapping(target = "historyId", ignore = true),
             @Mapping(target = "isActive", constant = "true"),
             @Mapping(target = "vaccine", ignore = true),
-            @Mapping(target = "pupil", ignore = true),
-            @Mapping(target = "campaign", ignore = true),
-            @Mapping(target = "disease", ignore = true)
+            @Mapping(target = "pupil", ignore = true)
     })
     VaccinationHistory toEntity(VaccinationHistoryRequest request);
 
     @Mappings({
-            @Mapping(target = "vaccineName", source = "vaccine.name"),
-            @Mapping(target = "diseaseName", source = "disease.name")
+            @Mapping(target = "vaccineName", source = "vaccine.name")
     })
     VaccinationHistoryResponse toDto(VaccinationHistory entity);
 }
