@@ -10,8 +10,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DiseaseVaccineRepository extends JpaRepository<DiseaseVaccine, DiseaseVaccineId> {
-    // Phương thức để lấy tất cả DiseaseVaccine có isActive = true
     List<DiseaseVaccine> findByIsActiveTrue();
+
+    boolean existsById(DiseaseVaccineId id);
 
     // Tìm vaccine theo diseaseId
     @Query("SELECT dv.vaccine FROM DiseaseVaccine dv WHERE dv.disease.diseaseId = :diseaseId AND dv.isActive = true")
