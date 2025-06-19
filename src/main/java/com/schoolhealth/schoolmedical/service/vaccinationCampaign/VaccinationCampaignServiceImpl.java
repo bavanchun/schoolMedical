@@ -48,9 +48,9 @@ public class VaccinationCampaignServiceImpl implements VaccinationCampaignServic
     @Override
     @Transactional(readOnly = true)
     public VaccinationCampaignResponse getCampaignById(int id) {
-        return campaignRepository.findById(id)
-                .map(campaignMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Campaign", "id", request.getCampaignId()));
+        return vaccinationCampaignRepo.findById(id)
+                .map(vaccinationCampaignMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Campaign", "id", id));
     }
 
     @Override
