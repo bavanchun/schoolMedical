@@ -13,14 +13,13 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class   PupilDto {
-    private String pupilId;
+    private Integer id;
     private String lastName;
     private String firstName;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     private char gender;
-    private String parentPhoneNumber;
-    private boolean isActive;
+    private String className;
 }
 
 

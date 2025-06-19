@@ -3,7 +3,8 @@ package com.schoolhealth.schoolmedical.model.mapper;
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
+
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
@@ -36,12 +37,12 @@ public class HealthCheckCampaignMapperImpl implements HealthCheckCampaignMapper 
     }
 
     @Override
-    public HealthCheckCampaignResponse toDto(HealthCheckCampaign healthCheckCampaign) {
+    public HealthCheckCampaignRes toDto(HealthCheckCampaign healthCheckCampaign) {
         if ( healthCheckCampaign == null ) {
             return null;
         }
 
-        HealthCheckCampaignResponse.HealthCheckCampaignResponseBuilder healthCheckCampaignResponse = HealthCheckCampaignResponse.builder();
+        HealthCheckCampaignRes.HealthCheckCampaignResponseBuilder healthCheckCampaignResponse = HealthCheckCampaignRes.builder();
 
         healthCheckCampaignResponse.address( healthCheckCampaign.getAddress() );
         healthCheckCampaignResponse.description( healthCheckCampaign.getDescription() );
