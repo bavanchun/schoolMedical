@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-17T19:06:13+0700",
+    date = "2025-06-19T16:33:07+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -40,6 +40,7 @@ public class DiseaseVaccineMapperImpl implements DiseaseVaccineMapper {
 
         diseaseVaccineResponse.diseaseId( entity.getDiseaseId() );
         diseaseVaccineResponse.vaccineId( entity.getVaccineId() );
+        diseaseVaccineResponse.isActive( entity.isActive() );
 
         return diseaseVaccineResponse.build();
     }
