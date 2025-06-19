@@ -11,14 +11,17 @@ import org.mapstruct.Mappings;
 public interface VaccinationCampaignMapper {
     @Mappings({
             @Mapping(target = "campaignId", ignore = true),
-            @Mapping(target = "vaccinationHistories", ignore = true),
-            @Mapping(target = "consentForms", ignore = true),
             @Mapping(target = "disease", ignore = true),
             @Mapping(target = "vaccine", ignore = true),
-            @Mapping(target = "isActive", constant = "true"),
             @Mapping(target = "status", source = "status", defaultValue = "PENDING")
     })
     VaccinationCampagin toEntity(VaccinationCampaignRequest request);
 
+    @Mappings({
+            @Mapping(source = "campaignId", target = "campaignId"),
+            @Mapping(source = disease.diseaseName", target = "diseaseName"),
+            @Mapping(source = "vaccine.vaccineName", target = "vaccineName"),
+            @Mapping(source = "note", target = "notes")
+    })
     VaccinationCampaignResponse toDto(VaccinationCampagin campaign);
 }
