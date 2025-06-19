@@ -6,9 +6,13 @@ import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignResp
 import java.util.List;
 
 public interface VaccinationCampaignService {
-    VaccinationCampaignResponse create(VaccinationCampaignRequest request);
-    VaccinationCampaignResponse update(int id, VaccinationCampaignRequest request);
-    VaccinationCampaignResponse getById(int id);
-    List<VaccinationCampaignResponse> getAll();
-    void delete(int id);
+    VaccinationCampaignResponse createCampaign(VaccinationCampaignRequest request);
+
+    VaccinationCampaignResponse getCampaignById(int id);
+
+    List<VaccinationCampaignResponse> getAllCampaigns();
+
+    VaccinationCampaignResponse updateCampaign(int id, VaccinationCampaignRequest request);
+
+    void deleteCampaign(int id);
 }
