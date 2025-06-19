@@ -7,6 +7,9 @@ import com.schoolhealth.schoolmedical.model.mapper.VaccineMapper;
 import com.schoolhealth.schoolmedical.repository.VaccineRepo;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,11 +54,17 @@ public class VaccineServiceImpl implements VaccineService{
         return vaccineMapper.toDto(vaccine);
     }
 
+//    @Override
+//    public List<VaccineResponse> getAllVaccines() {
+//        return vaccineRepository.findByIsActiveTrue()
+//                .stream()
+//                .map(vaccineMapper::toDto)
+//                .collect(Collectors.toList());
+//    }
     @Override
-    public List<VaccineResponse> getAllVaccines() {
-        return vaccineRepository.findByIsActiveTrue()
-                .stream()
-                .map(vaccineMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<VaccineResponse> getAllVaccines(int pageNo, int pageSize, boolean isActive) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        Page<Vaccine> vaccinePage = vaccineRepository.findByIsActiveTrue(isActive, pageable);
+        return vaccinePage.map(vaccineMapper::toDto);
     }
 }
