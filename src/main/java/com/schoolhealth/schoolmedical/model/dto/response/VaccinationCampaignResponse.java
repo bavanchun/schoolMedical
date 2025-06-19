@@ -15,20 +15,17 @@ import java.time.LocalDate;
 public class VaccinationCampaignResponse {
     private int campaignId;
     private String titleCampaign;
-    private int vaccineId;
-    private int diseaseId;
+    private String vaccineId;
+    private String diseaseId;
     private int doseNumber;
-
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
-
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
-
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate formDeadline;
-
     private String notes;
-    private VaccinationCampaignStatus status;
+//    private VaccinationCampaignStatus status;
+    private String status;
     private boolean isActive;
 }
