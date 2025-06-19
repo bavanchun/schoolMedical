@@ -3,9 +3,8 @@ package com.schoolhealth.schoolmedical.service;
 import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
-import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
@@ -61,7 +60,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     // This method saves a health check campaign and creates consent forms for all pupils
     @Override
     @Transactional
-    public HealthCheckCampaignResponse saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign) {
+    public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign) {
         List<Pupil> pupils = pupilService.getAll();
 
         HealthCheckCampaign campaign = healthCheckCampaignRepo.saveAndFlush(
@@ -120,7 +119,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     }
 
     @Override
-    public List<HealthCheckCampaignResponse> getAllHealthCheckCampaigns() {
+    public List<HealthCheckCampaignRes> getAllHealthCheckCampaigns() {
         return healthCheckCampaignRepo.findAll().stream()
                 .map(healthCheckCampaignMapper::toDto)
                 .toList();
