@@ -17,5 +17,10 @@ public interface DiseaseVaccineMapper {
     })
     DiseaseVaccine toEntity(DiseaseVaccineRequest request);
 
+    @Mappings({
+            @Mapping(source = "diseaseId", target = "diseaseId"),
+            @Mapping(source = "vaccineId", target = "vaccineId"),
+            @Mapping(source = "isActive", target = "isActive")
+    })
     DiseaseVaccineResponse toDto(DiseaseVaccine entity);
 }
