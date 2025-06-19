@@ -23,6 +23,9 @@ public class VaccinationHistory {
     @Column(name = "vaccine_id")
     private int vaccineId;
 
+    @Column(name = "disease_id")
+    private int diseaseId;
+
     @Column(name = "pupil_id", length = 255)
     private String pupilId;
 
@@ -56,4 +59,8 @@ public class VaccinationHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id", insertable = false, updatable = false)
     private VaccinationCampagin campaign;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", insertable = false, updatable = false)
+    private Disease disease;
 }
