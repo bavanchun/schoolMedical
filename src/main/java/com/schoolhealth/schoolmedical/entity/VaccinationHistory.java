@@ -33,6 +33,9 @@ public class VaccinationHistory {
     @Column(name = "source")
     private VaccinationSource source;
 
+    @Column(name = "dose_number")
+    private int doseNumber;
+
     @Column(name = "vaccinated_at")
     private LocalDateTime vaccinatedAt;
 

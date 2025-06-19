@@ -29,6 +29,9 @@ public class VaccinationConsentForm {
     @Column(name = "vaccine_id")
     private int vaccineId;
 
+    @Column(name = "dose_number")
+    private int doseNumber;
+
     @Column(name = "responded_at")
     private LocalDateTime respondedAt;
 
