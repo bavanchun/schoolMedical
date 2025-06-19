@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PupilDto {
+public class   PupilDto {
     private String pupilId;
     private String lastName;
     private String firstName;
