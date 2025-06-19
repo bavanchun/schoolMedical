@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -30,6 +29,10 @@ public class VaccinationCampagin {
 
     @Column(name = "disease_id")
     private int diseaseId;
+
+    @Column(name = "dose_number")
+    private int doseNumber;
+
 
     @Column(name = "start_date")
     private LocalDate startDate;
