@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -34,7 +35,7 @@ public class VaccinationCampaignRequest {
     private Integer doseNumber;
 
     @NotNull(message = "Start date is required")
-    @FutureOrPresent
+    @FutureOrPresent(message = "Start date must be in the present or future")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
 
@@ -48,4 +49,14 @@ public class VaccinationCampaignRequest {
 
     private String notes;
     private VaccinationCampaignStatus status;
+
+    @AssertTrue(message = "Date sequence is invalid. Required: Start Date < Form Deadline < End Date.")
+    private boolean isDateSequenceValid() {
+        // check if startDate, formDeadline, and endDate are not null
+        if (startDate == null || formDeadline == null || endDate == null) {
+            return true;
+        }
+        // check if startDate is before formDeadline and formDeadline is before endDate
+        return startDate.isBefore(formDeadline) && formDeadline.isBefore(endDate);
+    }
 }
