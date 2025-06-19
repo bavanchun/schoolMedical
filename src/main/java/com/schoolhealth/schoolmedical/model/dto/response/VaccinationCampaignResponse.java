@@ -15,8 +15,8 @@ import java.time.LocalDate;
 public class VaccinationCampaignResponse {
     private int campaignId;
     private String titleCampaign;
-    private String vaccineId;
-    private String diseaseId;
+    private String vaccineName;
+    private String diseaseName;
     private int doseNumber;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;

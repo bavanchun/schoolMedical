@@ -13,15 +13,16 @@ public interface VaccinationCampaignMapper {
             @Mapping(target = "campaignId", ignore = true),
             @Mapping(target = "disease", ignore = true),
             @Mapping(target = "vaccine", ignore = true),
-            @Mapping(target = "status", source = "status", defaultValue = "PENDING")
+            @Mapping(target = "status", ignore = true),
+            @Mapping(source = "notes", target = "notes")
     })
     VaccinationCampagin toEntity(VaccinationCampaignRequest request);
 
     @Mappings({
             @Mapping(source = "campaignId", target = "campaignId"),
-            @Mapping(source = disease.diseaseName", target = "diseaseName"),
-            @Mapping(source = "vaccine.vaccineName", target = "vaccineName"),
-            @Mapping(source = "note", target = "notes")
+            @Mapping(source = "disease.name", target = "diseaseName"),
+            @Mapping(source = "vaccine.name", target = "vaccineName"),
+            @Mapping(source = "notes", target = "notes")
     })
     VaccinationCampaignResponse toDto(VaccinationCampagin campaign);
 }
