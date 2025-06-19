@@ -1,8 +1,10 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -21,14 +23,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class VaccinationCampaignRequest {
-    @NotBlank(message = "Title is required")
+    @NotBlank(message = "Campaign title is required")
     private String titleCampaign;
-
-    @NotNull(message = "Vaccine ID is required")
-    private Integer vaccineId;
 
     @NotNull(message = "Disease ID is required")
     private Integer diseaseId;
+
+    @NotNull(message = "Vaccine ID is required")
+    private Integer vaccineId;
 
     @NotNull(message = "Dose number is required")
     @Min(value = 1, message = "Dose number must be >= 1")
@@ -40,16 +42,19 @@ public class VaccinationCampaignRequest {
     private LocalDate startDate;
 
     @NotNull(message = "End date is required")
+    @Future(message = "End date must be in the future")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
 
     @NotNull(message = "Form deadline is required")
+    @FutureOrPresent(message = "Form deadline must be in the present or future")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate formDeadline;
 
     private String notes;
-    private VaccinationCampaignStatus status;
+//    private VaccinationCampaignStatus status;
 
+    @JsonIgnore
     @AssertTrue(message = "Date sequence is invalid. Required: Start Date < Form Deadline < End Date.")
     private boolean isDateSequenceValid() {
         // check if startDate, formDeadline, and endDate are not null
