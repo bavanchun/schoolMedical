@@ -19,28 +19,10 @@ public interface DiseaseService {
 //    List<DiseaseResponse> getAllDiseases();
     Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize, Boolean isActive);
 
-    /**
-     * Assign a vaccine to a disease
-     *
-     * @param request Contains diseaseId and vaccineId
-     * @return DiseaseVaccineResponse with information about the operation result
-     */
     DiseaseVaccineResponse assignVaccineToDisease(DiseaseVaccineRequest request);
 
-    /**
-     * Get list of all vaccines assigned to a disease
-     *
-     * @param diseaseId ID of the disease
-     * @return List of vaccines assigned to the disease
-     */
     List<VaccineResponse> getVaccinesByDiseaseId(Long diseaseId);
 
-    /**
-     * Remove a vaccine from a disease
-     *
-     * @param request Contains diseaseId and vaccineId
-     * @return DiseaseVaccineResponse with information about the operation result
-     */
     DiseaseVaccineResponse removeVaccineFromDisease(DiseaseVaccineRequest request);
 
     List<Disease> getAllDiseases();
