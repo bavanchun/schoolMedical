@@ -24,15 +24,8 @@ public class VaccinationCampagin {
     @Column(name = "title_campaign", length = 255, nullable = false)
     private String titleCampaign;
 
-    @Column(name = "vaccine_id")
-    private int vaccineId;
-
-    @Column(name = "disease_id")
-    private int diseaseId;
-
     @Column(name = "dose_number")
     private int doseNumber;
-
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -54,11 +47,11 @@ public class VaccinationCampagin {
     private boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vaccine_id", referencedColumnName = "vaccine_id", insertable = false, updatable = false)
+    @JoinColumn(name = "vaccine_id", referencedColumnName = "vaccine_id", nullable = false)
     private Vaccine vaccine;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", insertable = false, updatable = false)
+    @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", nullable = false)
     private Disease disease;
 
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL)
