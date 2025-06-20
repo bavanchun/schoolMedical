@@ -1,6 +1,7 @@
     package com.schoolhealth.schoolmedical.controller;
 
     import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
+    import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusHealthCampaignReq;
     import com.schoolhealth.schoolmedical.service.HealthCheckCampaignService;
     import jakarta.validation.Valid;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,11 @@
             // Logic to get all health check campaigns
             return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignDetails(campaignId));
         }
-
+        @PatchMapping
+        public ResponseEntity<?> updateStatusHealthCheckCampaign(@RequestBody @Valid UpdateStatusHealthCampaignReq status, @PathVariable Long campaignId) {
+            healthCheckCampaignService.updateStatusHealthCheckCampaign(campaignId, status.getStatusHealthCampaign());
+            return ResponseEntity.ok().build();
+        }
 
 
     }
