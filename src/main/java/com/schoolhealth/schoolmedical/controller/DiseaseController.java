@@ -1,7 +1,10 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
+import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
 import com.schoolhealth.schoolmedical.service.DiseaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -124,5 +129,78 @@ public class DiseaseController {
     ) {
         Page<DiseaseResponse> diseases = diseaseService.getAllDiseases(page, size, isActive);
         return ResponseEntity.ok(diseases);
+    }
+
+    @PostMapping("/assign-vaccine")
+    @Operation(
+            summary = "Assign vaccine to disease",
+            description = "This API assigns a specific vaccine to a disease based on DiseaseVaccineRequest"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Vaccine assigned successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Disease or vaccine not found"),
+            @ApiResponse(responseCode = "409", description = "Vaccine is already assigned to this disease")
+    })
+    public ResponseEntity<DiseaseVaccineResponse> assignVaccineToDisease(@RequestBody @Valid DiseaseVaccineRequest request) {
+        DiseaseVaccineResponse response = diseaseService.assignVaccineToDisease(request);
+
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            // Return appropriate status code based on the error message
+            if (response.getMessage().contains("not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            } else if (response.getMessage().contains("already assigned")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }
+    }
+
+    @GetMapping("/{diseaseId}/vaccines")
+    @Operation(
+            summary = "Get list of vaccines for a disease",
+            description = "This API returns a list of all vaccines assigned to a specific disease"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Disease not found with the provided ID")
+    })
+    public ResponseEntity<List<VaccineResponse>> getVaccinesByDiseaseId(
+            @Parameter(description = "ID of the disease", required = true)
+            @PathVariable Long diseaseId) {
+        List<VaccineResponse> vaccines = diseaseService.getVaccinesByDiseaseId(diseaseId);
+        return ResponseEntity.ok(vaccines);
+    }
+
+    @DeleteMapping("/remove-vaccine")
+    @Operation(
+            summary = "Remove vaccine from disease",
+            description = "This API removes a specific vaccine from a disease based on DiseaseVaccineRequest"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Vaccine removed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Disease or vaccine not found"),
+            @ApiResponse(responseCode = "409", description = "Vaccine does not exist in this disease's list")
+    })
+    public ResponseEntity<DiseaseVaccineResponse> removeVaccineFromDisease(@RequestBody @Valid DiseaseVaccineRequest request) {
+        DiseaseVaccineResponse response = diseaseService.removeVaccineFromDisease(request);
+
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            // Return appropriate status code based on the error message
+            if (response.getMessage().contains("not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            } else if (response.getMessage().contains("not assigned") ||
+                      response.getMessage().contains("doesn't have any vaccines")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }
     }
 }
