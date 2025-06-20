@@ -5,9 +5,11 @@ import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.VaccinationHistoryResponse;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.service.PupilService;
+//import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,6 +45,9 @@ public class PupilController {
 
     @Autowired
     private UserRepository userRepository;
+
+//    @Autowired
+//    private VaccinationHistoryService vaccinationHistoryService;
 
     @Operation(
             summary = "Lấy danh sách tất cả học sinh",
@@ -206,58 +211,53 @@ public class PupilController {
     })
     @GetMapping("/my-children")
     @PreAuthorize("hasAuthority('PARENT')")
+<<<<<<< HEAD
     public ResponseEntity<List<PupilRes>> getMyChildren() {
         // Lấy thông tin người dùng hiện tại từ SecurityContext
+=======
+    public ResponseEntity<List<PupilDto>> getMyChildren() {
+>>>>>>> 51379ca89e9eaf167f624b00b56622c98906f515
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String phoneNumber = authentication.getName(); // Lấy số điện thoại từ authentication
+        String phoneNumber = authentication.getName();
 
-        // Tìm user từ repository để xác minh vai trò
         User currentUser = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin người dùng"));
 
-        // Kiểm tra xem người dùng có phải là phụ huynh không
         if (currentUser.getRole() != Role.PARENT) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // Phương pháp 1: Lấy danh sách con từ mối quan hệ User-Pupil
-        List<Pupil> childrenFromRelationship = new ArrayList<>();
-        if (currentUser.getPupils() != null) {
-            childrenFromRelationship = currentUser.getPupils();
-        }
-
-        // Phương pháp 2: Tìm trực tiếp các học sinh có parentPhoneNumber trùng với số điện thoại phụ huynh
-        List<Pupil> childrenByPhoneNumber = pupilService.findByParentPhoneNumber(phoneNumber);
-
-        // Gộp hai danh sách và loại bỏ trùng lặp
         Set<String> processedIds = new HashSet<>();
         List<Pupil> allChildren = new ArrayList<>();
 
-        // Thêm học sinh từ mối quan hệ
-        for (Pupil child : childrenFromRelationship) {
-            if (!processedIds.contains(child.getPupilId())) {
-                allChildren.add(child);
-                processedIds.add(child.getPupilId());
-            }
+        // Thu thập từ mối quan hệ User-Pupil
+        if (currentUser.getPupils() != null) {
+            currentUser.getPupils().stream()
+                .filter(child -> processedIds.add(child.getPupilId()))
+                .forEach(allChildren::add);
         }
 
-        // Thêm học sinh từ tìm kiếm theo số điện thoại
-        for (Pupil child : childrenByPhoneNumber) {
-            if (!processedIds.contains(child.getPupilId())) {
-                allChildren.add(child);
-                processedIds.add(child.getPupilId());
-            }
-        }
+        // Thu thập từ parentPhoneNumber
+        pupilService.findByParentPhoneNumber(phoneNumber).stream()
+                .filter(child -> processedIds.add(child.getPupilId()))
+                .forEach(allChildren::add);
 
+<<<<<<< HEAD
         // Đảm bảo không bỏ sót học sinh nào - logging kiểm tra
         System.out.println("Số lượng học sinh tìm thấy cho phụ huynh " + phoneNumber + ": " + allChildren.size());
         System.out.println("Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
 
         // Chuyển đổi danh sách Pupil thành PupilDto
         List<PupilRes> childrenDtos = allChildren.stream()
+=======
+        return ResponseEntity.ok(allChildren.stream()
+>>>>>>> 51379ca89e9eaf167f624b00b56622c98906f515
                 .map(pupilMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(childrenDtos);
+                .collect(Collectors.toList()));
     }
+
+//    @GetMapping("/{id}/vaccinations/{historyId}")
+//    public ResponseEntity<VaccinationHistoryResponse> getById(@PathVariable int historyId) {
+//        return ResponseEntity.ok(vaccinationHistoryService.getById(historyId));
+//    }
 }
