@@ -38,6 +38,11 @@ public class Disease {
     @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL)
     private List<VaccinationCampagin> campaigns;
 
-    @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL)
-    private List<DiseaseVaccine> diseaseVaccines;
+    @ManyToMany
+    @JoinTable(
+            name = "disease_vaccine",
+            joinColumns = @JoinColumn(name = "disease_id"),
+            inverseJoinColumns = @JoinColumn(name = "vaccine_id")
+    )
+    private List<Vaccine> vaccines;
 }

@@ -9,7 +9,7 @@ import com.schoolhealth.schoolmedical.model.dto.response.VaccinationHistoryRespo
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.service.PupilService;
-import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
+//import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,8 +46,8 @@ public class PupilController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private VaccinationHistoryService vaccinationHistoryService;
+//    @Autowired
+//    private VaccinationHistoryService vaccinationHistoryService;
 
     @Operation(
             summary = "Lấy danh sách tất cả học sinh",
@@ -242,8 +242,8 @@ public class PupilController {
                 .collect(Collectors.toList()));
     }
 
-    @GetMapping("/{id}/vaccinations/{historyId}")
-    public ResponseEntity<VaccinationHistoryResponse> getById(@PathVariable int historyId) {
-        return ResponseEntity.ok(vaccinationHistoryService.getById(historyId));
-    }
+//    @GetMapping("/{id}/vaccinations/{historyId}")
+//    public ResponseEntity<VaccinationHistoryResponse> getById(@PathVariable int historyId) {
+//        return ResponseEntity.ok(vaccinationHistoryService.getById(historyId));
+//    }
 }
