@@ -13,13 +13,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class DiseaseResponse {
-    private int diseaseId;
+    private Long diseaseId;
     private String name;
     private String description;
 
     // Đảm bảo trường này luôn được JSON hóa là "injectedVaccination"
     @JsonProperty("injectedVaccination")
-    private boolean isInjectedVaccination;
+    private Boolean isInjectedVaccination;
 
     private int doseQuantity;
 

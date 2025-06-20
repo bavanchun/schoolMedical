@@ -48,13 +48,13 @@ public class UserIdGenerator {
     private String getRolePrefix(Role role) {
         switch (role) {
             case ADMIN:
-                return "A";
+                return "AD";
             case MANAGER:
-                return "M";
+                return "MN";
             case SCHOOL_NURSE:
-                return "S";
+                return "SN";
             case PARENT:
-                return "P";
+                return "PP";
             default:
                 throw new IllegalArgumentException("Role không hợp lệ: " + role);
         }
