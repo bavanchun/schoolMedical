@@ -18,7 +18,7 @@ public class MedicalEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "medical_event_id")
-    private int medicalEventId;
+    private Long medicalEventId;
 
     @Column(name = "school_nurse_id", nullable = false, length = 255)
     private String schoolNurseId;

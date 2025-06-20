@@ -18,7 +18,9 @@ import java.sql.Date;
 @Table(name = "blog")
 public class Blog {
     @Id
-    private String blogId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "blog_id", nullable = false, unique = true)
+    private Long blogId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)

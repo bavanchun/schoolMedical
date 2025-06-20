@@ -16,7 +16,7 @@ public class HealthConditionHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "condition_history_id", nullable = false, unique = true)
-    private int conditionId;
+    private Long conditionId;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;

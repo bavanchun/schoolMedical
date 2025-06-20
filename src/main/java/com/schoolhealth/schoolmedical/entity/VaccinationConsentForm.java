@@ -18,7 +18,7 @@ public class VaccinationConsentForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consent_form_id")
-    private int consentFormId;
+    private Long consentFormId;
 
     @Column(name = "campaign_id")
     private int campaignId;
