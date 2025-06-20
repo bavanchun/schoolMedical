@@ -46,6 +46,6 @@ public class Vaccine {
     @OneToMany(mappedBy = "vaccine", cascade = CascadeType.ALL)
     private List<VaccinationConsentForm> consentForms;
 
-    @OneToMany(mappedBy = "vaccine", cascade = CascadeType.ALL)
-    private List<DiseaseVaccine> diseaseVaccines;
+    @ManyToMany(mappedBy = "vaccines")
+    private List<Disease> diseases;
 }
