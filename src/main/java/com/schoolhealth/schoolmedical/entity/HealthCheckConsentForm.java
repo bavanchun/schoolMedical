@@ -3,6 +3,8 @@ package com.schoolhealth.schoolmedical.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -30,6 +32,9 @@ public class HealthCheckConsentForm {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id", nullable = false)
     private HealthCheckCampaign healthCheckCampaign;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "healthCheckConsentForm")
+    private List<HealthCheckDisease> healthCheckDiseases;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive;

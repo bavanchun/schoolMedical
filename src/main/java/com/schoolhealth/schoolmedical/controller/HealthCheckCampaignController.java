@@ -19,10 +19,12 @@
             // Logic to create a health check campaign
             return ResponseEntity.ok(healthCheckCampaignService.saveHealthCheckCampaign(campaign));
         }
-        @GetMapping
-        public ResponseEntity<?> getAllHealthCheckCampaigns() {
+        @GetMapping("/{campaignId}")
+        public ResponseEntity<?> getHealthCheckCampaigns(@PathVariable Long campaignId) {
             // Logic to get all health check campaigns
-            return ResponseEntity.ok(healthCheckCampaignService.getAllHealthCheckCampaigns());
+            return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignDetails(campaignId));
         }
+
+
 
     }

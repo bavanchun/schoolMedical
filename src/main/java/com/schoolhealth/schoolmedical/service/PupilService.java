@@ -1,17 +1,16 @@
 package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
-import com.schoolhealth.schoolmedical.model.dto.PupilDto;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PupilService {
-    PupilDto createPupil(PupilDto dto);
-    List<PupilDto> getAllPupils();
-    PupilDto getPupilById(String id);
-    PupilDto updatePupil(String id, PupilDto dto);
+    PupilRes createPupil(PupilRes dto);
+    List<PupilRes> getAllPupils();
+    PupilRes getPupilById(String id);
+    PupilRes updatePupil(String id, PupilRes dto);
     void deletePupil(String id);
 
     Pupil assignPupilClass(AssignClassRequest assignClassRequest);

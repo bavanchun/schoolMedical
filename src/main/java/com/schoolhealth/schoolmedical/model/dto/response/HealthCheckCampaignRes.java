@@ -1,10 +1,12 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
+import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +22,7 @@ public class HealthCheckCampaignRes {
     private LocalDateTime endExaminationDate;
     private LocalDate createdAt;
     private StatusHealthCampaign statusHealthCampaign;
-
+    private List<HealthCheckConsentForm> consentForms;
+    private List<String> diseaseNames;
 }
 

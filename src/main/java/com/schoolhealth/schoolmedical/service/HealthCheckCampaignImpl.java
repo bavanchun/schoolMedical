@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
@@ -52,10 +53,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     @Autowired
     private HealthCheckHistoryService healthCheckHistoryService;
 
-    @Override
-    public HealthCheckCampaign getHealthCheckCampaignById() {
-        return null;
-    }
 
     // This method saves a health check campaign and creates consent forms for all pupils
     @Override
@@ -119,10 +116,8 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     }
 
     @Override
-    public List<HealthCheckCampaignRes> getAllHealthCheckCampaigns() {
-        return healthCheckCampaignRepo.findAll().stream()
-                .map(healthCheckCampaignMapper::toDto)
-                .toList();
+    public List<HealthCheckCampaignFlatData> getHealthCheckCampaignDetails(Long campaignId) {
+        return healthCheckCampaignRepo.findHealthCheckCampaignDetails(campaignId);
     }
 }
 

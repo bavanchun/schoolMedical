@@ -25,7 +25,7 @@ public class Grade {
     private Long gradeId;
 
     @Column(name = "class_name", nullable = false, length = 50)
-    private String className;
+    private String gradeName;
 
     @Column(name = "start_year", nullable = false)
     private String startYear;
