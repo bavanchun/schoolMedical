@@ -2,7 +2,9 @@ package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
+import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
+import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
@@ -90,27 +92,26 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             }
         }
         healthCheckDiseaseService.saveHealthCheckDisease(healthCheckDiseases);
-        List<User> parents = userService.findAllByRole(Role.PARENT);
-        List<UserNotification> listNotification = new ArrayList<>();
-        for( User parent : parents) {
-            UserNotification notification = UserNotification.builder()
-                    .message("Chiến dịch kiểm tra sức khỏe mới")
-                    .sourceId(campaign.getCampaignId())
-                    .typeNotification(TypeNotification.health_check_campaign)
-                    .user(parent)
-                    .build();
-            listNotification.add(notification);
-        }
-        userNotificationService.saveAllUserNotifications(listNotification);
-        List<String> tokens = parents.stream()
-                .map(User::getDeviceToken)
-                .filter(token -> token != null && !token.isEmpty())
-                .toList();
-
-        // Add null/empty check before using getFirst()
-        if (!listNotification.isEmpty()) {
-            fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
-        }
+//        List<User> parents = userService.findAllByRole(Role.PARENT);
+//        List<UserNotification> listNotification = new ArrayList<>();
+//        for( User parent : parents) {
+//            UserNotification notification = UserNotification.builder()
+//                    .message("Chiến dịch kiểm tra sức khỏe mới")
+//                    .sourceId(campaign.getCampaignId())
+//                    .typeNotification(TypeNotification.health_check_campaign)
+//                    .user(parent)
+//                    .build();
+//            listNotification.add(notification);
+//        }
+//        userNotificationService.saveAllUserNotifications(listNotification);
+//        List<String> tokens = parents.stream()
+//                .map(User::getDeviceToken)
+//                .filter(token -> token != null && !token.isEmpty())
+//                .toList();
+//
+//        if (!listNotification.isEmpty()) {
+//            fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
+//        }
 
         return healthCheckCampaignMapper.toDto(campaign);
     }
@@ -118,6 +119,36 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     @Override
     public List<HealthCheckCampaignFlatData> getHealthCheckCampaignDetails(Long campaignId) {
         return healthCheckCampaignRepo.findHealthCheckCampaignDetails(campaignId);
+    }
+
+    @Override
+    public void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign) {
+        HealthCheckCampaign campaign = healthCheckCampaignRepo.findById(campaignId).orElseThrow(() -> new NotFoundException("campaign not found to update status"));
+        campaign.setStatusHealthCampaign(statusHealthCampaign);
+        healthCheckCampaignRepo.save(campaign);
+        if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
+            List<User> parents = userService.findAllByRole(Role.PARENT);
+            List<UserNotification> listNotification = new ArrayList<>();
+            for( User parent : parents) {
+                UserNotification notification = UserNotification.builder()
+                        .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
+                        .sourceId(campaign.getCampaignId())
+                        .typeNotification(TypeNotification.health_check_campaign)
+                        .user(parent)
+                        .build();
+                listNotification.add(notification);
+            }
+            userNotificationService.saveAllUserNotifications(listNotification);
+            List<String> tokens = parents.stream()
+                    .map(User::getDeviceToken)
+                    .filter(token -> token != null && !token.isEmpty())
+                    .toList();
+
+            // Add null/empty check before using getFirst()
+            if (!listNotification.isEmpty()) {
+                fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
+            }
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
+import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
@@ -11,5 +12,5 @@ public interface HealthCheckCampaignService {
 
     HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign);
     List<HealthCheckCampaignFlatData> getHealthCheckCampaignDetails(Long campaignId);
-
+    void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign);
 }
