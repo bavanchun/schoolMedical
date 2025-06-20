@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface DiseaseService {
     DiseaseResponse createDisease(DiseaseRequest request);
     DiseaseResponse updateDisease(Long id, DiseaseRequest request);
-    void deleteDisease(int id);
-    DiseaseResponse getDiseaseById(int id);
+    void deleteDisease(Long id);
+    DiseaseResponse getDiseaseById(Long id);
 //    List<DiseaseResponse> getAllDiseases();
     Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize, Boolean isActive);
 
