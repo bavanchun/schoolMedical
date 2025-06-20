@@ -24,7 +24,7 @@ public class DiseaseRequest {
     private String description;
 
     @JsonProperty("injectedVaccination")
-    private boolean isInjectedVaccination;
+    private Boolean isInjectedVaccination;
 
     @Min(value = 0, message = "Dose quantity must be a non-negative integer")
     private int doseQuantity;
