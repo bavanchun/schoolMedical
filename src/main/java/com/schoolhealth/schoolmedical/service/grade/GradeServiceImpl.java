@@ -54,7 +54,7 @@ public class GradeServiceImpl implements GradeService{
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
 
         // apply updates
-        existing.setClassName(dto.getGradeName());
+        existing.setGradeName(dto.getGradeName());
         existing.setStartYear(dto.getStartYear());
         existing.setEndYear(dto.getEndYear());
         existing.setGradeLevel(dto.getGradeLevel());

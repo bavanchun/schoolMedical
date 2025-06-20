@@ -118,7 +118,11 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
     @Override
     public List<HealthCheckCampaignFlatData> getHealthCheckCampaignDetails(Long campaignId) {
-        return healthCheckCampaignRepo.findHealthCheckCampaignDetails(campaignId);
+        List<HealthCheckCampaignFlatData> rs = healthCheckCampaignRepo.findHealthCheckCampaignDetails(campaignId);
+        if(rs.isEmpty()) {
+            throw new NotFoundException("Campaign not found");
+        }
+        return rs;
     }
 
     @Override

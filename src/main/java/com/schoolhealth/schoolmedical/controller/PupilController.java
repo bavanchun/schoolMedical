@@ -192,72 +192,73 @@ public class PupilController {
         return ResponseEntity.ok(pupil);
     }
 
-    @Operation(
-            summary = "Lấy danh sách con của phụ huynh đang đăng nhập",
-            description = "API này dành cho phụ huynh để xem danh sách con của họ",
-            security = @SecurityRequirement(name = "bearerAuth")
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Thành công",
-                    content = @Content(schema = @Schema(implementation = PupilRes.class))
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Không có quyền truy cập",
-                    content = @Content
-            )
-    })
-    @GetMapping("/my-children")
-    @PreAuthorize("hasAuthority('PARENT')")
-<<<<<<< HEAD
-    public ResponseEntity<List<PupilRes>> getMyChildren() {
-        // Lấy thông tin người dùng hiện tại từ SecurityContext
-=======
-    public ResponseEntity<List<PupilDto>> getMyChildren() {
->>>>>>> 51379ca89e9eaf167f624b00b56622c98906f515
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String phoneNumber = authentication.getName();
-
-        User currentUser = userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin người dùng"));
-
-        if (currentUser.getRole() != Role.PARENT) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        Set<String> processedIds = new HashSet<>();
-        List<Pupil> allChildren = new ArrayList<>();
-
-        // Thu thập từ mối quan hệ User-Pupil
-        if (currentUser.getPupils() != null) {
-            currentUser.getPupils().stream()
-                .filter(child -> processedIds.add(child.getPupilId()))
-                .forEach(allChildren::add);
-        }
-
-        // Thu thập từ parentPhoneNumber
-        pupilService.findByParentPhoneNumber(phoneNumber).stream()
-                .filter(child -> processedIds.add(child.getPupilId()))
-                .forEach(allChildren::add);
-
-<<<<<<< HEAD
-        // Đảm bảo không bỏ sót học sinh nào - logging kiểm tra
-        System.out.println("Số lượng học sinh tìm thấy cho phụ huynh " + phoneNumber + ": " + allChildren.size());
-        System.out.println("Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
-
-        // Chuyển đổi danh sách Pupil thành PupilDto
-        List<PupilRes> childrenDtos = allChildren.stream()
-=======
-        return ResponseEntity.ok(allChildren.stream()
->>>>>>> 51379ca89e9eaf167f624b00b56622c98906f515
-                .map(pupilMapper::toDto)
-                .collect(Collectors.toList()));
-    }
-
-//    @GetMapping("/{id}/vaccinations/{historyId}")
-//    public ResponseEntity<VaccinationHistoryResponse> getById(@PathVariable int historyId) {
-//        return ResponseEntity.ok(vaccinationHistoryService.getById(historyId));
+//    @Operation(
+//            summary = "Lấy danh sách con của phụ huynh đang đăng nhập",
+//            description = "API này dành cho phụ huynh để xem danh sách con của họ",
+//            security = @SecurityRequirement(name = "bearerAuth")
+//    )
+//    @ApiResponses({
+//            @ApiResponse(
+//                    responseCode = "200",
+//                    description = "Thành công",
+//                    content = @Content(schema = @Schema(implementation = PupilRes.class))
+//            ),
+//            @ApiResponse(
+//                    responseCode = "403",
+//                    description = "Không có quyền truy cập",
+//                    content = @Content
+//            )
+//    })
+//    @GetMapping("/my-children")
+//    @PreAuthorize("hasAuthority('PARENT')")
+//<<<<<<<HEAD
+//
+//    public ResponseEntity<List<PupilRes>> getMyChildren() {
+//        // Lấy thông tin người dùng hiện tại từ SecurityContext
+//=======
+//        public ResponseEntity<List<PupilDto>> getMyChildren () {
+//>>>>>>>51379 ca89e9eaf167f624b00b56622c98906f515
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            String phoneNumber = authentication.getName();
+//
+//            User currentUser = userRepository.findByPhoneNumber(phoneNumber)
+//                    .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin người dùng"));
+//
+//            if (currentUser.getRole() != Role.PARENT) {
+//                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//            }
+//
+//            Set<String> processedIds = new HashSet<>();
+//            List<Pupil> allChildren = new ArrayList<>();
+//
+//            // Thu thập từ mối quan hệ User-Pupil
+//            if (currentUser.getPupils() != null) {
+//                currentUser.getPupils().stream()
+//                        .filter(child -> processedIds.add(child.getPupilId()))
+//                        .forEach(allChildren::add);
+//            }
+//
+//            // Thu thập từ parentPhoneNumber
+//            pupilService.findByParentPhoneNumber(phoneNumber).stream()
+//                    .filter(child -> processedIds.add(child.getPupilId()))
+//                    .forEach(allChildren::add);
+//
+//
+//            // Đảm bảo không bỏ sót học sinh nào - logging kiểm tra
+//            System.out.println("Số lượng học sinh tìm thấy cho phụ huynh " + phoneNumber + ": " + allChildren.size());
+//            System.out.println("Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
+//
+//            // Chuyển đổi danh sách Pupil thành PupilDto
+//            List<PupilRes> childrenDtos = allChildren.stream()
+//            return ResponseEntity.ok(allChildren.stream()
+//
+//                    .map(pupilMapper::toDto)
+//                    .collect(Collectors.toList()));
+//        }
+//
+////    @GetMapping("/{id}/vaccinations/{historyId}")
+////    public ResponseEntity<VaccinationHistoryResponse> getById(@PathVariable int historyId) {
+////        return ResponseEntity.ok(vaccinationHistoryService.getById(historyId));
+////    }
 //    }
 }
