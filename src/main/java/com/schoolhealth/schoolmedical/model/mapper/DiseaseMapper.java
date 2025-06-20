@@ -12,11 +12,19 @@ public interface DiseaseMapper {
 
     @Mappings({
             @Mapping(target = "diseaseId", ignore = true),
-            @Mapping(target = "isActive", constant = "true"),
+            @Mapping(target = "vaccines", ignore = true),
             @Mapping(target = "campaigns", ignore = true),
-            @Mapping(target = "isInjectedVaccination", source = "injectedVaccination"),
+            @Mapping(target = "isActive", constant = "true")
     })
     Disease toEntity(DiseaseRequest request);
 
+    @Mappings({
+            @Mapping(source = "diseaseId", target = "diseaseId"),
+            @Mapping(source = "name", target = "name"),
+            @Mapping(source = "description", target = "description"),
+            @Mapping(source = "isInjectedVaccination", target = "isInjectedVaccination"),
+            @Mapping(source = "doseQuantity", target = "doseQuantity"),
+            @Mapping(source = "isActive", target = "active")
+    })
     DiseaseResponse toDto(Disease disease);
 }
