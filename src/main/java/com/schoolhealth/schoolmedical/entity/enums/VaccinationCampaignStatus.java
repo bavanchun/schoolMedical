@@ -2,7 +2,8 @@ package com.schoolhealth.schoolmedical.entity.enums;
 
 public enum VaccinationCampaignStatus {
     PENDING,
-    INPROGRESS,
+    PUBLISHED,
+    IN_PROGRESS,
     COMPLETED,
     CANCELED
 }
