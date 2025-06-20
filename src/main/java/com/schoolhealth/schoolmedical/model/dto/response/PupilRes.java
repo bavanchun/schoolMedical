@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.model.dto;
+package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class   PupilDto {
-    private Integer id;
+public class PupilRes {
+    private String pupilId;
     private String lastName;
     private String firstName;
     @JsonFormat(pattern = "dd-MM-yyyy")

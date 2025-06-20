@@ -1,7 +1,7 @@
 package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
-import com.schoolhealth.schoolmedical.model.dto.PupilDto;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -9,33 +9,31 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-17T00:00:03+0700",
+    date = "2025-06-20T13:46:26+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
 public class PupilMapperImpl implements PupilMapper {
 
     @Override
-    public PupilDto toDto(Pupil pupil) {
+    public PupilRes toDto(Pupil pupil) {
         if ( pupil == null ) {
             return null;
         }
 
-        PupilDto pupilDto = new PupilDto();
+        PupilRes pupilRes = new PupilRes();
 
-        pupilDto.setPupilId( pupil.getPupilId() );
-        pupilDto.setLastName( pupil.getLastName() );
-        pupilDto.setFirstName( pupil.getFirstName() );
-        pupilDto.setBirthDate( pupil.getBirthDate() );
-        pupilDto.setGender( pupil.getGender() );
-        pupilDto.setParentPhoneNumber( pupil.getParentPhoneNumber() );
-        pupilDto.setActive( pupil.isActive() );
+        pupilRes.setPupilId( pupil.getPupilId() );
+        pupilRes.setLastName( pupil.getLastName() );
+        pupilRes.setFirstName( pupil.getFirstName() );
+        pupilRes.setBirthDate( pupil.getBirthDate() );
+        pupilRes.setGender( pupil.getGender() );
 
-        return pupilDto;
+        return pupilRes;
     }
 
     @Override
-    public Pupil toEntity(PupilDto dto) {
+    public Pupil toEntity(PupilRes dto) {
         if ( dto == null ) {
             return null;
         }
@@ -47,18 +45,17 @@ public class PupilMapperImpl implements PupilMapper {
         pupil.firstName( dto.getFirstName() );
         pupil.birthDate( dto.getBirthDate() );
         pupil.gender( dto.getGender() );
-        pupil.parentPhoneNumber( dto.getParentPhoneNumber() );
 
         return pupil.build();
     }
 
     @Override
-    public List<PupilDto> toDtoList(List<Pupil> pupils) {
+    public List<PupilRes> toDtoList(List<Pupil> pupils) {
         if ( pupils == null ) {
             return null;
         }
 
-        List<PupilDto> list = new ArrayList<PupilDto>( pupils.size() );
+        List<PupilRes> list = new ArrayList<PupilRes>( pupils.size() );
         for ( Pupil pupil : pupils ) {
             list.add( toDto( pupil ) );
         }
@@ -67,14 +64,14 @@ public class PupilMapperImpl implements PupilMapper {
     }
 
     @Override
-    public List<Pupil> toEntityList(List<PupilDto> dtos) {
+    public List<Pupil> toEntityList(List<PupilRes> dtos) {
         if ( dtos == null ) {
             return null;
         }
 
         List<Pupil> list = new ArrayList<Pupil>( dtos.size() );
-        for ( PupilDto pupilDto : dtos ) {
-            list.add( toEntity( pupilDto ) );
+        for ( PupilRes pupilRes : dtos ) {
+            list.add( toEntity( pupilRes ) );
         }
 
         return list;

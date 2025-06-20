@@ -3,7 +3,7 @@ package com.schoolhealth.schoolmedical.service;
 import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
-import com.schoolhealth.schoolmedical.model.dto.PupilDto;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.GradeRepository;
@@ -30,7 +30,7 @@ public class PupilImpl implements PupilService{
 
 
     @Override
-    public PupilDto createPupil(PupilDto dto) {
+    public PupilRes createPupil(PupilRes dto) {
         Pupil entity = pupilMapper.toEntity(dto);
 
         // Đảm bảo học sinh mới luôn được đánh dấu là active
@@ -40,7 +40,7 @@ public class PupilImpl implements PupilService{
     }
 
     @Override
-    public List<PupilDto> getAllPupils() {
+    public List<PupilRes> getAllPupils() {
         // Chỉ lấy các học sinh có isActive = true
         return pupilRepo.findAll().stream()
                 .filter(Pupil::isActive) // Lọc những học sinh đang active
@@ -51,7 +51,7 @@ public class PupilImpl implements PupilService{
 //    @Override
 //    public Optional<List<Pupil>> getAll() {
 //        return Optional.ofNullable(pupilRepo.findAll());
-    public PupilDto getPupilById(String id) {
+    public PupilRes getPupilById(String id) {
         Optional<Pupil> pupilOptional = pupilRepo.findById(id);
         if (pupilOptional.isEmpty() || !pupilOptional.get().isActive()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pupil not found");
@@ -71,7 +71,7 @@ public class PupilImpl implements PupilService{
 
 
     @Override
-    public PupilDto updatePupil(String id, PupilDto dto) {
+    public PupilRes updatePupil(String id, PupilRes dto) {
         Optional<Pupil> existingOptional = pupilRepo.findById(id);
         if (existingOptional.isEmpty() || !existingOptional.get().isActive()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pupil not found");

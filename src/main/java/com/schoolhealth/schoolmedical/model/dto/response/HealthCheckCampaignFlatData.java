@@ -20,5 +20,13 @@ public class HealthCheckCampaignFlatData {
     private LocalDateTime endExaminationDate;
     private LocalDate createdAt;
     private StatusHealthCampaign statusHealthCampaign;
-
+    private Long healthCheckConsentId;
+    private int schoolYear;
+    private String pupilId;
+    private String lastName;
+    private String firstName;
+    private LocalDate birthDate;
+    private char gender;
+    private String gradeName;
+    private String diseaseName;
 }

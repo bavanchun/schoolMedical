@@ -3,7 +3,7 @@ package com.schoolhealth.schoolmedical.controller;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
-import com.schoolhealth.schoolmedical.model.dto.PupilDto;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
@@ -51,10 +51,10 @@ public class PupilController {
     @ApiResponse(
             responseCode = "200",
             description = "Thành công",
-            content = @Content(schema = @Schema(implementation = PupilDto.class))
+            content = @Content(schema = @Schema(implementation = PupilRes.class))
     )
     @GetMapping
-    public List<PupilDto> getAllPupil() {
+    public List<PupilRes> getAllPupil() {
         return pupilService.getAllPupils();
     }
 
@@ -66,7 +66,7 @@ public class PupilController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Tìm thấy học sinh",
-                    content = @Content(schema = @Schema(implementation = PupilDto.class))
+                    content = @Content(schema = @Schema(implementation = PupilRes.class))
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -75,10 +75,10 @@ public class PupilController {
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<PupilDto> getPupilById(
+    public ResponseEntity<PupilRes> getPupilById(
             @Parameter(description = "ID của học sinh cần tìm")
             @PathVariable String id) {
-        PupilDto dto = pupilService.getPupilById(id);
+        PupilRes dto = pupilService.getPupilById(id);
         return ResponseEntity.ok(dto);
     }
 
@@ -90,7 +90,7 @@ public class PupilController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Học sinh được tạo thành công",
-                    content = @Content(schema = @Schema(implementation = PupilDto.class))
+                    content = @Content(schema = @Schema(implementation = PupilRes.class))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -99,10 +99,10 @@ public class PupilController {
             )
     })
     @PostMapping
-    public ResponseEntity<PupilDto> createPupil(
+    public ResponseEntity<PupilRes> createPupil(
             @Parameter(description = "Thông tin học sinh cần tạo")
-            @RequestBody PupilDto dto) {
-        PupilDto created = pupilService.createPupil(dto);
+            @RequestBody PupilRes dto) {
+        PupilRes created = pupilService.createPupil(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(created);
@@ -116,7 +116,7 @@ public class PupilController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Cập nhật học sinh thành công",
-                    content = @Content(schema = @Schema(implementation = PupilDto.class))
+                    content = @Content(schema = @Schema(implementation = PupilRes.class))
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -130,13 +130,13 @@ public class PupilController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<PupilDto> updatePupil(
+    public ResponseEntity<PupilRes> updatePupil(
             @Parameter(description = "ID của học sinh cần cập nhật")
             @PathVariable String id,
             @Parameter(description = "Thông tin học sinh mới")
-            @RequestBody PupilDto dto) {
+            @RequestBody PupilRes dto) {
 
-        PupilDto updated = pupilService.updatePupil(id, dto);
+        PupilRes updated = pupilService.updatePupil(id, dto);
         return ResponseEntity.ok(updated);
     }
 
@@ -196,7 +196,7 @@ public class PupilController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Thành công",
-                    content = @Content(schema = @Schema(implementation = PupilDto.class))
+                    content = @Content(schema = @Schema(implementation = PupilRes.class))
             ),
             @ApiResponse(
                     responseCode = "403",
@@ -206,7 +206,7 @@ public class PupilController {
     })
     @GetMapping("/my-children")
     @PreAuthorize("hasAuthority('PARENT')")
-    public ResponseEntity<List<PupilDto>> getMyChildren() {
+    public ResponseEntity<List<PupilRes>> getMyChildren() {
         // Lấy thông tin người dùng hiện tại từ SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String phoneNumber = authentication.getName(); // Lấy số điện thoại từ authentication
@@ -254,7 +254,7 @@ public class PupilController {
         System.out.println("Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
 
         // Chuyển đổi danh sách Pupil thành PupilDto
-        List<PupilDto> childrenDtos = allChildren.stream()
+        List<PupilRes> childrenDtos = allChildren.stream()
                 .map(pupilMapper::toDto)
                 .collect(Collectors.toList());
 
