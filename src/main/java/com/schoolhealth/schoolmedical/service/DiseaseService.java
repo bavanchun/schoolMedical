@@ -1,10 +1,20 @@
 package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
+import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DiseaseService {
+    DiseaseResponse createDisease(DiseaseRequest request);
+    DiseaseResponse updateDisease(Long id, DiseaseRequest request);
+    void deleteDisease(int id);
+    DiseaseResponse getDiseaseById(int id);
+//    List<DiseaseResponse> getAllDiseases();
+    Page<DiseaseResponse> getAllDiseases(int pageNo, int pageSize, Boolean isActive);
+
     List<Disease> getAllDiseases();
 }
