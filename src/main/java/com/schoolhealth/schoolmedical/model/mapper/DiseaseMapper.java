@@ -24,7 +24,6 @@ public interface DiseaseMapper {
             @Mapping(source = "description", target = "description"),
             @Mapping(source = "isInjectedVaccination", target = "isInjectedVaccination"),
             @Mapping(source = "doseQuantity", target = "doseQuantity"),
-            @Mapping(source = "isActive", target = "active")
     })
     DiseaseResponse toDto(Disease disease);
 }
