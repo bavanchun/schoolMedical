@@ -16,10 +16,10 @@ public class MedicalEventEquipmentUsed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "equipment_used_id")
-    private int equipmentUsedId;
+    private Long equipmentUsedId;
 
-    @Column(name = "equipment_id", nullable = false)
-    private int equipmentId;
+    @Column(name = "name_equipment", nullable = false)
+    private String nameEquipment;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;

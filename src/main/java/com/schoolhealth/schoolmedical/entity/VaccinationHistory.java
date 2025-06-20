@@ -18,19 +18,7 @@ public class VaccinationHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "history_id")
-    private int historyId;
-
-    @Column(name = "vaccine_id")
-    private int vaccineId;
-
-    @Column(name = "disease_id")
-    private int diseaseId;
-
-    @Column(name = "pupil_id", length = 255)
-    private String pupilId;
-
-    @Column(name = "campaign_id")
-    private int campaignId;
+    private Long historyId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "source")
@@ -49,18 +37,18 @@ public class VaccinationHistory {
     private boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vaccine_id", referencedColumnName = "vaccine_id", insertable = false, updatable = false)
+    @JoinColumn(name = "vaccine_id", referencedColumnName = "vaccine_id", nullable = false)
     private Vaccine vaccine;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id", insertable = false, updatable = false)
+    @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id", nullable = false)
     private Pupil pupil;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id", insertable = false, updatable = false)
+    @JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id", nullable = false)
     private VaccinationCampagin campaign;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", insertable = false, updatable = false)
+    @JoinColumn(name = "disease_id", referencedColumnName = "disease_id", nullable = false)
     private Disease disease;
 }
