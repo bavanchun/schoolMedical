@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-20T19:03:10+0700",
+    date = "2025-06-20T20:56:02+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -22,9 +22,9 @@ public class DiseaseMapperImpl implements DiseaseMapper {
 
         Disease.DiseaseBuilder disease = Disease.builder();
 
-        disease.isInjectedVaccination( request.isInjectedVaccination() );
         disease.name( request.getName() );
         disease.description( request.getDescription() );
+        disease.isInjectedVaccination( request.getIsInjectedVaccination() );
         disease.doseQuantity( request.getDoseQuantity() );
 
         disease.isActive( true );
@@ -40,14 +40,10 @@ public class DiseaseMapperImpl implements DiseaseMapper {
 
         DiseaseResponse.DiseaseResponseBuilder diseaseResponse = DiseaseResponse.builder();
 
-        if ( disease.getDiseaseId() != null ) {
-            diseaseResponse.diseaseId( disease.getDiseaseId().intValue() );
-        }
+        diseaseResponse.diseaseId( disease.getDiseaseId() );
         diseaseResponse.name( disease.getName() );
         diseaseResponse.description( disease.getDescription() );
-        if ( disease.getIsInjectedVaccination() != null ) {
-            diseaseResponse.isInjectedVaccination( disease.getIsInjectedVaccination() );
-        }
+        diseaseResponse.isInjectedVaccination( disease.getIsInjectedVaccination() );
         diseaseResponse.doseQuantity( disease.getDoseQuantity() );
 
         return diseaseResponse.build();
