@@ -25,7 +25,7 @@
             // Logic to get all health check campaigns
             return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignDetails(campaignId));
         }
-        @PatchMapping
+        @PatchMapping("/{campaignId}/status")
         public ResponseEntity<?> updateStatusHealthCheckCampaign(@RequestBody @Valid UpdateStatusHealthCampaignReq status, @PathVariable Long campaignId) {
             healthCheckCampaignService.updateStatusHealthCheckCampaign(campaignId, status.getStatusHealthCampaign());
             return ResponseEntity.ok().build();

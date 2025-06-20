@@ -18,8 +18,8 @@ public class MedicalEventMedicationUsed {
     @Column(name = "medication_used_id")
     private Long medicationUsedId;
 
-    @Column(name = "medication_id", nullable = false)
-    private int medicationId;
+    @Column(name = "name_medication", nullable = false)
+    private String nameMedication;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;

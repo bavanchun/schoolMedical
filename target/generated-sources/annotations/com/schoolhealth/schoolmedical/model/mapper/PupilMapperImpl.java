@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
+<<<<<<< HEAD
     date = "2025-06-20T13:46:26+0700",
+=======
+    date = "2025-06-20T19:03:10+0700",
+>>>>>>> 51379ca89e9eaf167f624b00b56622c98906f515
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -23,11 +27,18 @@ public class PupilMapperImpl implements PupilMapper {
 
         PupilRes pupilRes = new PupilRes();
 
+<<<<<<< HEAD
         pupilRes.setPupilId( pupil.getPupilId() );
         pupilRes.setLastName( pupil.getLastName() );
         pupilRes.setFirstName( pupil.getFirstName() );
         pupilRes.setBirthDate( pupil.getBirthDate() );
         pupilRes.setGender( pupil.getGender() );
+=======
+        pupilDto.setLastName( pupil.getLastName() );
+        pupilDto.setFirstName( pupil.getFirstName() );
+        pupilDto.setBirthDate( pupil.getBirthDate() );
+        pupilDto.setGender( pupil.getGender() );
+>>>>>>> 51379ca89e9eaf167f624b00b56622c98906f515
 
         return pupilRes;
     }
@@ -40,7 +51,6 @@ public class PupilMapperImpl implements PupilMapper {
 
         Pupil.PupilBuilder pupil = Pupil.builder();
 
-        pupil.pupilId( dto.getPupilId() );
         pupil.lastName( dto.getLastName() );
         pupil.firstName( dto.getFirstName() );
         pupil.birthDate( dto.getBirthDate() );

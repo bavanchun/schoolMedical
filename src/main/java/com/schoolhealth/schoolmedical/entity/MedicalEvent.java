@@ -20,12 +20,6 @@ public class MedicalEvent {
     @Column(name = "medical_event_id")
     private Long medicalEventId;
 
-    @Column(name = "school_nurse_id", nullable = false, length = 255)
-    private String schoolNurseId;
-
-    @Column(name = "pupil_id", nullable = false, length = 255)
-    private String pupilId;
-
     @Column(name = "detailed_information", columnDefinition = "TEXT")
     private String detailedInformation;
 
@@ -37,19 +31,16 @@ public class MedicalEvent {
     @JsonFormat(pattern = "dd/MM/yyyy: HH:mm:ss")
     private LocalDateTime dateTime;
 
-    @Column(name = "medical_event_supply_used_id")
-    private Integer medicalEventSupplyUsedId;
-
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "school_nurse_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "school_nurse_id", referencedColumnName = "user_id", nullable = false)
     private User schoolNurse;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id", insertable = false, updatable = false)
-    private Pupil pupil;  // Thay đổi từ User sang Pupil
+    @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id", nullable = false)
+    private Pupil pupil;
 
     @OneToMany(mappedBy = "medicalEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicalEventSupplyUsed> supplyUsages;
