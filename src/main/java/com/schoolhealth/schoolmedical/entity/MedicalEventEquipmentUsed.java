@@ -16,7 +16,7 @@ public class MedicalEventEquipmentUsed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "equipment_used_id")
-    private int equipmentUsedId;
+    private Long equipmentUsedId;
 
     @Column(name = "equipment_id", nullable = false)
     private int equipmentId;

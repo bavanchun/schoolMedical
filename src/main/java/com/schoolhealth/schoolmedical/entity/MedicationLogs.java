@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class MedicationLogs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int logId;
+    private Long logId;
 
     @Column(nullable = true, columnDefinition = "TEXT")
     private String note;

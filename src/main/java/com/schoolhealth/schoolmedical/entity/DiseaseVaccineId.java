@@ -12,7 +12,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 public class DiseaseVaccineId implements Serializable {
 
-    private int diseaseId;
-    private int vaccineId;
+    private Long diseaseId;
+    private Long vaccineId;
 
 }

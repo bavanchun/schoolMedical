@@ -16,7 +16,7 @@ public class HealthCheckHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "health_check_history_id", nullable = false, unique = true)
-    private int healthId;
+    private Long healthId;
 
     @Column(name = "height", precision = 5, scale = 2, nullable = true)
     private BigDecimal height;

@@ -20,7 +20,7 @@ public class UserNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id", nullable = false, unique = true)
-    private int notificationId;
+    private Long notificationId;
 
     @Column(name = "message", nullable = true, columnDefinition = "TEXT")
     private String message;

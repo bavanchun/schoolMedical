@@ -13,7 +13,7 @@ public class MedicalEventSupplyUsed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supply_used_id")
-    private int supplyUsedId;
+    private Long supplyUsedId;
 
     @Column(name = "equipment_used_id")
     private int equipmentUsedId;

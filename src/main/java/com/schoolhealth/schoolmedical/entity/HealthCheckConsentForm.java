@@ -14,7 +14,7 @@ public class HealthCheckConsentForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consent_form_id", nullable = false, unique = true)
-    private int consentFormId;
+    private Long consentFormId;
 
     @Column(name = "school_year", nullable = false)
     private int schoolYear;

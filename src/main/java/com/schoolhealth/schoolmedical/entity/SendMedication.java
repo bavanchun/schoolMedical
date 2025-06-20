@@ -20,7 +20,7 @@ import java.util.List;
 public class SendMedication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sendMedicationId;
+    private Long sendMedicationId;
 
     @Column(name = "medication_img", nullable = true, length = 255)
     private String medicationImg;

@@ -16,7 +16,7 @@ public class HealthCheckDisease {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "health_check_disease_id")
-    private int healthCheckDiseaseId;
+    private Long healthCheckDiseaseId;
 
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;

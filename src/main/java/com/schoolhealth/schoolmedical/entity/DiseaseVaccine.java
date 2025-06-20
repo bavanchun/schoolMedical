@@ -15,7 +15,8 @@ public class DiseaseVaccine {
 
     @Id
     @Column(name = "disease_id")
-    private int diseaseId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long diseaseId;
 
     @Id
     @Column(name = "vaccine_id")
