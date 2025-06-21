@@ -8,6 +8,8 @@ import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
@@ -117,12 +119,46 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     }
 
     @Override
-    public List<HealthCheckCampaignFlatData> getHealthCheckCampaignDetails(Long campaignId) {
+    public HealthCheckCampaignRes getHealthCheckCampaignDetailsById(Long campaignId) {
         List<HealthCheckCampaignFlatData> rs = healthCheckCampaignRepo.findHealthCheckCampaignDetails(campaignId);
-        if(rs.isEmpty()) {
+        if (rs.isEmpty()) {
             throw new NotFoundException("Campaign not found");
         }
-        return rs;
+        List<HealthCheckConsentRes> healthCheckConsentResList = new ArrayList<>();
+        List<String> diseaseNames = new ArrayList<>();
+        for (HealthCheckCampaignFlatData r : rs) {
+            // Create PupilRes object
+            PupilRes pupilRes = PupilRes.builder()
+                    .pupilId(r.getPupilId())
+                    .lastName(r.getLastName())
+                    .firstName(r.getFirstName())
+                    .birthDate(r.getBirthDate())
+                    .gender(r.getGender())
+                    .gradeName(r.getGradeName())
+                    .build();
+            // Create HealthCheckConsentRes object
+            HealthCheckConsentRes healthCheckConsentRes = HealthCheckConsentRes.builder()
+                    .healthCheckConsentId(r.getHealthCheckConsentId())
+                    .schoolYear(r.getSchoolYear())
+                    .pupilRes(pupilRes)
+                    .build();
+            // Add disease names to the list
+            diseaseNames.add(r.getDiseaseName());
+            healthCheckConsentResList.add(healthCheckConsentRes);
+        }
+        // Create HealthCheckCampaignRes object
+        return  HealthCheckCampaignRes.builder()
+                    .title(rs.getFirst().getTitle())
+                    .address(rs.getFirst().getAddress())
+                    .description(rs.getFirst().getDescription())
+                    .deadlineDate(rs.getFirst().getDeadlineDate())
+                    .startExaminationDate(rs.getFirst().getStartExaminationDate())
+                    .endExaminationDate(rs.getFirst().getEndExaminationDate())
+                    .createdAt(rs.getFirst().getCreatedAt())
+                    .statusHealthCampaign(rs.getFirst().getStatusHealthCampaign())
+                    .consentForms(healthCheckConsentResList)
+                    .diseaseNames(diseaseNames)
+                    .build();
     }
 
     @Override

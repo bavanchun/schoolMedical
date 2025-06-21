@@ -17,13 +17,15 @@
 
         @PostMapping()
         public ResponseEntity<?> createHealthCheckCampaign(@RequestBody @Valid HealthCheckCampaginReq campaign) {
+            System.out.println(campaign);
+            System.out.println("sasdfsf");
             // Logic to create a health check campaign
             return ResponseEntity.ok(healthCheckCampaignService.saveHealthCheckCampaign(campaign));
         }
         @GetMapping("/{campaignId}")
         public ResponseEntity<?> getHealthCheckCampaigns(@PathVariable Long campaignId) {
             // Logic to get all health check campaigns
-            return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignDetails(campaignId));
+            return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignDetailsById(campaignId));
         }
         @PatchMapping("/{campaignId}/status")
         public ResponseEntity<?> updateStatusHealthCheckCampaign(@RequestBody @Valid UpdateStatusHealthCampaignReq status, @PathVariable Long campaignId) {

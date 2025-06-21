@@ -16,13 +16,14 @@ import java.util.List;
 public class HealthCheckCampaignRes {
     private Long campaignId;
     private String address;
+    private String title;
     private String description;
     private LocalDate deadlineDate;
     private LocalDateTime startExaminationDate;
     private LocalDateTime endExaminationDate;
     private LocalDate createdAt;
     private StatusHealthCampaign statusHealthCampaign;
-    private List<HealthCheckConsentForm> consentForms;
+    private List<HealthCheckConsentRes> consentForms;
     private List<String> diseaseNames;
 }
 

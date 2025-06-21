@@ -11,6 +11,6 @@ import java.util.List;
 public interface HealthCheckCampaignService {
 
     HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign);
-    List<HealthCheckCampaignFlatData> getHealthCheckCampaignDetails(Long campaignId);
+    HealthCheckCampaignRes getHealthCheckCampaignDetailsById(Long campaignId);
     void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign);
 }

@@ -46,6 +46,9 @@ public class HealthCheckCampaign {
     @Column(name = "deadline_date", nullable = false)
     private LocalDate deadlineDate;
 
+    @Column(name = "title", nullable = false, length = 100)
+    private String title;
+
     @Column(name = "description", nullable = true, columnDefinition = "TEXT")
     private String description;
 
