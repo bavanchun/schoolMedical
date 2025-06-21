@@ -6,10 +6,7 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
-import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
@@ -23,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
@@ -125,29 +125,41 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             throw new NotFoundException("Campaign not found");
         }
         List<HealthCheckConsentRes> healthCheckConsentResList = new ArrayList<>();
-        List<String> diseaseNames = new ArrayList<>();
-        for (HealthCheckCampaignFlatData r : rs) {
+
+        Map<String, List<HealthCheckCampaignFlatData>> groupedData = rs.stream()
+                .collect(Collectors.groupingBy(HealthCheckCampaignFlatData::getPupilId));
+
+        for (Map.Entry<String, List<HealthCheckCampaignFlatData>> entry : groupedData.entrySet()) {
+            String pupilId = entry.getKey();
+            List<HealthCheckCampaignFlatData> dataList = entry.getValue();
+
             // Create PupilRes object
             PupilRes pupilRes = PupilRes.builder()
-                    .pupilId(r.getPupilId())
-                    .lastName(r.getLastName())
-                    .firstName(r.getFirstName())
-                    .birthDate(r.getBirthDate())
-                    .gender(r.getGender())
-                    .gradeName(r.getGradeName())
+                    .pupilId(dataList.getFirst().getPupilId())
+                    .lastName(dataList.getFirst().getLastName())
+                    .firstName(dataList.getFirst().getFirstName())
+                    .birthDate(dataList.getFirst().getBirthDate())
+                    .gender(dataList.getFirst().getGender())
+                    .gradeName(dataList.getFirst().getGradeName())
                     .build();
-            // Create HealthCheckConsentRes object
+            // Collect disease names for this pupil
+            List<HealthCheckDiseaseRes> diseaseForPupil = dataList.stream()
+                    .map(data -> HealthCheckDiseaseRes.builder()
+                            .healthCheckDiseaseId(data.getHealthCheckDiseaseId())
+                            .diseaseName(data.getDiseaseName())
+                            .build())
+                    .toList();
             HealthCheckConsentRes healthCheckConsentRes = HealthCheckConsentRes.builder()
-                    .healthCheckConsentId(r.getHealthCheckConsentId())
-                    .schoolYear(r.getSchoolYear())
+                    .healthCheckConsentId(dataList.getFirst().getHealthCheckConsentId())
+                    .schoolYear(dataList.getFirst().getSchoolYear())
                     .pupilRes(pupilRes)
+                    .disease(diseaseForPupil)
                     .build();
-            // Add disease names to the list
-            diseaseNames.add(r.getDiseaseName());
             healthCheckConsentResList.add(healthCheckConsentRes);
         }
         // Create HealthCheckCampaignRes object
         return  HealthCheckCampaignRes.builder()
+                    .campaignId(rs.getFirst().getCampaignId())
                     .title(rs.getFirst().getTitle())
                     .address(rs.getFirst().getAddress())
                     .description(rs.getFirst().getDescription())
@@ -157,7 +169,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                     .createdAt(rs.getFirst().getCreatedAt())
                     .statusHealthCampaign(rs.getFirst().getStatusHealthCampaign())
                     .consentForms(healthCheckConsentResList)
-                    .diseaseNames(diseaseNames)
                     .build();
     }
 
