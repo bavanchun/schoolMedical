@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 public class HealthCheckCampaginReq {
     @NotBlank
     private String address;
+
+    private String title;
     @NotBlank
     private String description;
     @NotNull
@@ -24,5 +26,6 @@ public class HealthCheckCampaginReq {
     private LocalDateTime startExaminationDate;
     @NotNull
     private LocalDateTime endExaminationDate;
+
 
 }

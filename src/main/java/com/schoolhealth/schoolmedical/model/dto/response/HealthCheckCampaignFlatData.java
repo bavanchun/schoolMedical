@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class HealthCheckCampaignFlatData {
     private Long campaignId;
+    private String title;
     private String address;
     private String description;
     private LocalDate deadlineDate;
