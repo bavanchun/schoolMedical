@@ -17,4 +17,5 @@ public interface PupilMapper {
 
     List<PupilRes> toDtoList(List<Pupil> pupils);
     List<Pupil>    toEntityList(List<PupilRes> dtos);
+    List<PupilRes> toPupilGradeDtoList(List<Pupil> pupils);
 }

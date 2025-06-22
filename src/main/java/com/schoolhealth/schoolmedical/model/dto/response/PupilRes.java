@@ -18,6 +18,8 @@ public class PupilRes {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     private char gender;
+    private String avatar;
+    private Long GradeId;
     private GradeLevel gradeLevel;
     private String gradeName;
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-22T14:06:22+0700",
+    date = "2025-06-22T15:14:13+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -28,6 +28,7 @@ public class PupilMapperImpl implements PupilMapper {
         pupilRes.firstName( pupil.getFirstName() );
         pupilRes.birthDate( pupil.getBirthDate() );
         pupilRes.gender( pupil.getGender() );
+        pupilRes.avatar( pupil.getAvatar() );
 
         return pupilRes.build();
     }
@@ -45,6 +46,7 @@ public class PupilMapperImpl implements PupilMapper {
         pupil.firstName( dto.getFirstName() );
         pupil.birthDate( dto.getBirthDate() );
         pupil.gender( dto.getGender() );
+        pupil.avatar( dto.getAvatar() );
 
         return pupil.build();
     }
@@ -72,6 +74,20 @@ public class PupilMapperImpl implements PupilMapper {
         List<Pupil> list = new ArrayList<Pupil>( dtos.size() );
         for ( PupilRes pupilRes : dtos ) {
             list.add( toEntity( pupilRes ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<PupilRes> toPupilGradeDtoList(List<Pupil> pupils) {
+        if ( pupils == null ) {
+            return null;
+        }
+
+        List<PupilRes> list = new ArrayList<PupilRes>( pupils.size() );
+        for ( Pupil pupil : pupils ) {
+            list.add( toDto( pupil ) );
         }
 
         return list;

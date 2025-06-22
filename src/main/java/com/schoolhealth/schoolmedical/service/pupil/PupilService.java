@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.pupil;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
@@ -22,4 +22,5 @@ public interface PupilService {
      */
     List<Pupil> findByParentPhoneNumber(String phoneNumber);
     List<Pupil> getAll();
+    List<PupilRes> getAllPupilsByGrade();
 }

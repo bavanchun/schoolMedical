@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.pupil;
 
 import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PupilImpl implements PupilService{
+public class PupilImpl implements PupilService {
 
     @Autowired
     private PupilRepo pupilRepo;
@@ -67,6 +67,11 @@ public class PupilImpl implements PupilService{
             throw new NotFoundException("No pupils found");
         }
         return pupils;
+    }
+
+    @Override
+    public List<PupilRes> getAllPupilsByGrade() {
+        return List.of();
     }
 
 

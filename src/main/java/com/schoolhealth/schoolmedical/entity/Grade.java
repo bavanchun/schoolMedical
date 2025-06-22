@@ -27,9 +27,6 @@ public class Grade {
     @Column(name = "grade_name", nullable = false, length = 50)
     private String gradeName;
 
-    @Column(name = "start_year", nullable = false)
-    private String startYear;
-
     @Column(name = "end_year", nullable = false)
     private String endYear;
 
@@ -44,6 +41,13 @@ public class Grade {
     )
     @JsonIgnore
     private List<Pupil> pupils;
+
+    @OneToMany(
+            mappedBy = "grade",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            orphanRemoval = true
+    )
+    private List<PupilGrade> pupilGrade;
 
 }
 
