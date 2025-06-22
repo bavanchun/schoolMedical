@@ -88,10 +88,13 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
 
         // Tạo JWT token
         var jwtToken = jwtService.generateToken(new HashMap<>(), user);
+        String fullName = savedUser.getLastName() + " " + savedUser.getFirstName();
 
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
+                .role(savedUser.getRole().name())
+                .fullName(fullName)
                 .build();
     }
 
@@ -106,10 +109,13 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
         var user = userRepository.findByPhoneNumber(request.getPhoneNumber())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(new HashMap<>(), user);
+        String fullName = user.getLastName() + " " + user.getFirstName();
 
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
+                .role(user.getRole().name())
+                .fullName(fullName)
                 .build();
     }
 }
