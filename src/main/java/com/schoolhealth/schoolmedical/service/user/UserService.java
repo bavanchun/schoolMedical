@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +17,5 @@ public interface UserService {
     UserResponse updateUserById(String userId, UserRequest userRequest);
     List<User> findAllByRole(Role role);
     boolean updateDeviceToken(String userId, String deviceToken);
+    String getCurrentUserId(HttpServletRequest request);
 }

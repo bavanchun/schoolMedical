@@ -25,7 +25,18 @@ public interface PupilRepo extends JpaRepository<Pupil, String> {
      * @return Danh sách học sinh có số điện thoại phụ huynh trùng với tham số
      */
     List<Pupil> findByParentPhoneNumber(String phoneNumber);
-    List<Pupil> findAllByisActiveTrue();
-    List<Pupil> findAllByGradeIsNotNull();
+
+    @Query("""
+SELECT p FROM Pupil p
+JOIN FETCH p.pupilGrade pg
+JOIN FETCH pg.grade
+WHERE pg.startYear = (
+    SELECT MAX(sub_pg.startYear)
+    FROM PupilGrade sub_pg
+    WHERE sub_pg.pupil.pupilId = p.pupilId
+)
+""")
+    List<Pupil> getAllPupilsByGrade();
+
 
 }

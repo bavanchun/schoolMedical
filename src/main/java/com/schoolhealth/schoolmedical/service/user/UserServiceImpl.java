@@ -6,6 +6,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Override
     public UserResponse getUserById(String userId) {
@@ -42,6 +44,16 @@ public class UserServiceImpl implements UserService {
     public boolean updateDeviceToken(String userId, String deviceToken) {
         int result = userRepository.updateDeviceToken(userId, deviceToken) ;
         return result > 0;
+    }
+
+    @Override
+    public String getCurrentUserId(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            return jwtService.extractUserId(token);
+        }
+        return null;
     }
 
 }

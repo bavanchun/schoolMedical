@@ -31,12 +31,13 @@ public class PupilImpl implements PupilService {
 
     @Override
     public PupilRes createPupil(PupilRes dto) {
-        Pupil entity = pupilMapper.toEntity(dto);
-
-        // Đảm bảo học sinh mới luôn được đánh dấu là active
-        entity.setActive(true);
-        Pupil saved  = pupilRepo.save(entity);
-        return pupilMapper.toDto(saved);
+//        Pupil entity = pupilMapper.toEntity(dto);
+//
+//        // Đảm bảo học sinh mới luôn được đánh dấu là active
+//        entity.setActive(true);
+//        Pupil saved  = pupilRepo.save(entity);
+//        return pupilMapper.toDto(saved);
+        return new PupilRes();
     }
 
     @Override
@@ -71,7 +72,9 @@ public class PupilImpl implements PupilService {
 
     @Override
     public List<PupilRes> getAllPupilsByGrade() {
-        return List.of();
+        List<Pupil> pupil = pupilRepo.getAllPupilsByGrade();
+
+        return pupilMapper.toPupilGradeDtoList(pupil);
     }
 
 
