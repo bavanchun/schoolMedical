@@ -17,16 +17,16 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData(" +
             "hcc.campaignId, hcc.address, hcc.title, hcc.description, hcc.deadlineDate, hcc.startExaminationDate, hcc.endExaminationDate, hcc.createdAt, hcc.statusHealthCampaign, " +
             "hccs.consentFormId, hccs.schoolYear, " +
-            "pp.pupilId, pp.lastName, pp.firstName, pp.birthDate, pp.gender, pp.avatar,g.gradeId, g.gradeLevel,g.gradeName, " +
+            "pp.pupilId, pp.lastName, pp.firstName, pp.birthDate, pp.gender, pp.avatar,pg.grade.gradeId, g.gradeLevel,g.gradeName, " +
             "hcd.healthCheckDiseaseId,d.name) " +
             "FROM HealthCheckCampaign hcc " +
             "LEFT JOIN hcc.healthCheckConsentForms hccs " +
             "LEFT JOIN hccs.pupil pp " +
             "LEFT JOIN pp.pupilGrade pg " +
             "LEFT JOIN pg.grade g " +
-            "LEFT JOIN hccs.healthCheckDiseases hcd " +
+            "LEFT JOIN hccs.healthCheckDiseases hcd ON hcd.status = com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus.APPROVED " +
             "LEFT JOIN hcd.disease d " +
-            " where hcc.active = true AND hcd.status = com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus.APPROVED AND hcc.campaignId = :campaignId")
+            " where hcc.active = true AND hcc.campaignId = :campaignId")
     List<HealthCheckCampaignFlatData> findHealthCheckCampaignDetails(@Param("campaignId") Long campaignId);
 
     @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckPupilListRes(" +

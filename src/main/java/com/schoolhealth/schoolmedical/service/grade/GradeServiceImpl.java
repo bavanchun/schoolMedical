@@ -56,7 +56,6 @@ public class GradeServiceImpl implements GradeService{
         // apply updates
         existing.setGradeName(dto.getGradeName());
 //        existing.setStartYear(dto.getStartYear());
-        existing.setEndYear(dto.getEndYear());
         existing.setGradeLevel(dto.getGradeLevel());
 
         Grade updated = gradeRepository.save(existing);

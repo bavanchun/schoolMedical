@@ -17,8 +17,6 @@
 
         @PostMapping()
         public ResponseEntity<?> createHealthCheckCampaign(@RequestBody @Valid HealthCheckCampaginReq campaign) {
-            System.out.println(campaign);
-            System.out.println("sasdfsf");
             // Logic to create a health check campaign
             return ResponseEntity.ok(healthCheckCampaignService.saveHealthCheckCampaign(campaign));
         }

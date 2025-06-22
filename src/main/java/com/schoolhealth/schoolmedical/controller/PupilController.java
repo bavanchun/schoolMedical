@@ -253,8 +253,9 @@ public class PupilController {
 ////    }
 //    }
     @GetMapping("/listPupils")
-    public ResponseEntity<?> getLatestPupil() {
-        List<PupilRes> pupil = pupilService.getAllPupilsByGrade();
+    public ResponseEntity<?> getLatestPupil(HttpServletRequest request) {
+        String parentId = userService.getCurrentUserId(request);
+        List<PupilRes> pupil = pupilService.getAllPupilsByParent(parentId);
         return ResponseEntity.ok(pupil);
     }
     @Autowired

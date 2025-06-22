@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;

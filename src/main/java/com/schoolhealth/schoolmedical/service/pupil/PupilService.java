@@ -22,5 +22,5 @@ public interface PupilService {
      */
     List<Pupil> findByParentPhoneNumber(String phoneNumber);
     List<Pupil> getAll();
-    List<PupilRes> getAllPupilsByGrade();
+    List<PupilRes> getAllPupilsByParent(String parentId);
 }
