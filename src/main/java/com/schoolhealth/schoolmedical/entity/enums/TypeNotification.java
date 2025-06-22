@@ -3,7 +3,8 @@ package com.schoolhealth.schoolmedical.entity.enums;
 public enum TypeNotification {
     med_event("Sự kiện y tế"),
     health_check_campaign("Kiểm tra sức khỏe"),
-    send_medication("Gửi thuốc");
+    send_medication("Gửi thuốc"),
+    VACCINATION_CAMPAIGN("Chiến dịch tiêm chủng");
     private final String description;
     TypeNotification(String description) {
         this.description = description;
