@@ -57,7 +57,7 @@ public class HealthCheckCampaign {
     private LocalDate createdAt;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean isActive;
+    private boolean active;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_health_campaign", nullable = false)

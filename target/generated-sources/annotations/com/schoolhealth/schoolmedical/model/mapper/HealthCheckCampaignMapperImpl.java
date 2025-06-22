@@ -4,13 +4,14 @@ import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
+import com.schoolhealth.schoolmedical.model.dto.response.LatestHealthCheckCampaignRes;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-21T13:44:13+0700",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.5 (Oracle Corporation)"
+    date = "2025-06-22T14:06:22+0700",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
 public class HealthCheckCampaignMapperImpl implements HealthCheckCampaignMapper {
@@ -30,7 +31,7 @@ public class HealthCheckCampaignMapperImpl implements HealthCheckCampaignMapper 
         healthCheckCampaign1.title( healthCheckCampaign.getTitle() );
         healthCheckCampaign1.description( healthCheckCampaign.getDescription() );
 
-        healthCheckCampaign1.isActive( true );
+        healthCheckCampaign1.active( true );
         healthCheckCampaign1.statusHealthCampaign( StatusHealthCampaign.PENDING );
 
         return healthCheckCampaign1.build();
@@ -55,5 +56,26 @@ public class HealthCheckCampaignMapperImpl implements HealthCheckCampaignMapper 
         healthCheckCampaignRes.statusHealthCampaign( healthCheckCampaign.getStatusHealthCampaign() );
 
         return healthCheckCampaignRes.build();
+    }
+
+    @Override
+    public LatestHealthCheckCampaignRes toLatestDto(HealthCheckCampaign healthCheckCampaign) {
+        if ( healthCheckCampaign == null ) {
+            return null;
+        }
+
+        LatestHealthCheckCampaignRes.LatestHealthCheckCampaignResBuilder latestHealthCheckCampaignRes = LatestHealthCheckCampaignRes.builder();
+
+        latestHealthCheckCampaignRes.campaignId( healthCheckCampaign.getCampaignId() );
+        latestHealthCheckCampaignRes.title( healthCheckCampaign.getTitle() );
+        latestHealthCheckCampaignRes.description( healthCheckCampaign.getDescription() );
+        latestHealthCheckCampaignRes.address( healthCheckCampaign.getAddress() );
+        latestHealthCheckCampaignRes.startExaminationDate( healthCheckCampaign.getStartExaminationDate() );
+        latestHealthCheckCampaignRes.endExaminationDate( healthCheckCampaign.getEndExaminationDate() );
+        latestHealthCheckCampaignRes.deadlineDate( healthCheckCampaign.getDeadlineDate() );
+        latestHealthCheckCampaignRes.createdAt( healthCheckCampaign.getCreatedAt() );
+        latestHealthCheckCampaignRes.statusHealthCampaign( healthCheckCampaign.getStatusHealthCampaign() );
+
+        return latestHealthCheckCampaignRes.build();
     }
 }

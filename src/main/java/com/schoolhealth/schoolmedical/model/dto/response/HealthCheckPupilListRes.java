@@ -12,16 +12,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class HealthCheckCampaignFlatData {
+public class HealthCheckPupilListRes {
     private Long campaignId;
     private String title;
     private String address;
-    private String description;
     private LocalDate deadlineDate;
     private LocalDateTime startExaminationDate;
     private LocalDateTime endExaminationDate;
-    private LocalDate createdAt;
-    private StatusHealthCampaign statusHealthCampaign;
     private Long healthCheckConsentId;
     private int schoolYear;
     private String pupilId;
