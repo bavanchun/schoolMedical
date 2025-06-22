@@ -9,29 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-22T15:21:44+0700",
+    date = "2025-06-22T18:22:12+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
 public class PupilMapperImpl implements PupilMapper {
-
-    @Override
-    public PupilRes toDto(Pupil pupil) {
-        if ( pupil == null ) {
-            return null;
-        }
-
-        PupilRes.PupilResBuilder pupilRes = PupilRes.builder();
-
-        pupilRes.pupilId( pupil.getPupilId() );
-        pupilRes.lastName( pupil.getLastName() );
-        pupilRes.firstName( pupil.getFirstName() );
-        pupilRes.birthDate( pupil.getBirthDate() );
-        pupilRes.gender( pupil.getGender() );
-        pupilRes.avatar( pupil.getAvatar() );
-
-        return pupilRes.build();
-    }
 
     @Override
     public Pupil toEntity(PupilRes dto) {
@@ -52,20 +34,6 @@ public class PupilMapperImpl implements PupilMapper {
     }
 
     @Override
-    public List<PupilRes> toDtoList(List<Pupil> pupils) {
-        if ( pupils == null ) {
-            return null;
-        }
-
-        List<PupilRes> list = new ArrayList<PupilRes>( pupils.size() );
-        for ( Pupil pupil : pupils ) {
-            list.add( toDto( pupil ) );
-        }
-
-        return list;
-    }
-
-    @Override
     public List<Pupil> toEntityList(List<PupilRes> dtos) {
         if ( dtos == null ) {
             return null;
@@ -77,6 +45,29 @@ public class PupilMapperImpl implements PupilMapper {
         }
 
         return list;
+    }
+
+    @Override
+    public PupilRes toDto(Pupil pupil) {
+        if ( pupil == null ) {
+            return null;
+        }
+
+        PupilRes.PupilResBuilder pupilRes = PupilRes.builder();
+
+        pupilRes.pupilId( pupil.getPupilId() );
+        pupilRes.lastName( pupil.getLastName() );
+        pupilRes.firstName( pupil.getFirstName() );
+        pupilRes.birthDate( pupil.getBirthDate() );
+        pupilRes.gender( pupil.getGender() );
+        pupilRes.avatar( pupil.getAvatar() );
+
+        pupilRes.gradeId( pupil.getPupilGrade().getFirst().getPupilGradeId().getGradeId() );
+        pupilRes.startYear( pupil.getPupilGrade().getFirst().getStartYear() );
+        pupilRes.gradeLevel( pupil.getPupilGrade().getFirst().getGrade().getGradeLevel() );
+        pupilRes.gradeName( pupil.getPupilGrade().getFirst().getGrade().getGradeName() );
+
+        return pupilRes.build();
     }
 
     @Override

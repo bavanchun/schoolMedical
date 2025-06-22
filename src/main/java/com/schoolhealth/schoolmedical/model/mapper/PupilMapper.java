@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.model.mapper;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -10,12 +11,21 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PupilMapper {
 
-    PupilMapper INSTANCE = Mappers.getMapper(PupilMapper.class);
+    //PupilMapper INSTANCE = Mappers.getMapper(PupilMapper.class);
+   // PupilRes toDto(Pupil pupil);
+
+    Pupil toEntity(PupilRes dto);
+
+    List<Pupil>    toEntityList(List<PupilRes> dtos);
+
+
+
+    @Mapping(target = "gradeId", expression = "java(pupil.getPupilGrade().getFirst().getPupilGradeId().getGradeId())")
+    @Mapping(target = "startYear", expression = "java(pupil.getPupilGrade().getFirst().getStartYear())")
+    @Mapping(target = "gradeLevel", expression = "java(pupil.getPupilGrade().getFirst().getGrade().getGradeLevel())")
+    @Mapping(target = "gradeName", expression = "java(pupil.getPupilGrade().getFirst().getGrade().getGradeName())")
     PupilRes toDto(Pupil pupil);
 
-    Pupil    toEntity(PupilRes dto);
-
-    List<PupilRes> toDtoList(List<Pupil> pupils);
-    List<Pupil>    toEntityList(List<PupilRes> dtos);
     List<PupilRes> toPupilGradeDtoList(List<Pupil> pupils);
+
 }

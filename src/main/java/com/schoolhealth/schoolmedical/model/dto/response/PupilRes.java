@@ -19,7 +19,8 @@ public class PupilRes {
     private LocalDate birthDate;
     private char gender;
     private String avatar;
-    private Long GradeId;
+    private Long gradeId;
+    private int startYear;
     private GradeLevel gradeLevel;
     private String gradeName;
 }

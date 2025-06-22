@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -108,7 +109,10 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
         );
         var user = userRepository.findByPhoneNumber(request.getPhoneNumber())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(new HashMap<>(), user);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", user.getUserId());
+        extraClaims.put("role", user.getRole().name());
+        var jwtToken = jwtService.generateToken(extraClaims, user);
         String fullName = user.getLastName() + " " + user.getFirstName();
 
         return AuthenticationResponse

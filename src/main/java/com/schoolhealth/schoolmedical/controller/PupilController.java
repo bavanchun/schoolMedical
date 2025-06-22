@@ -7,6 +7,7 @@ import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 //import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
+import com.schoolhealth.schoolmedical.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -250,4 +252,15 @@ public class PupilController {
 ////        return ResponseEntity.ok(vaccinationHistoryService.getById(historyId));
 ////    }
 //    }
+    @GetMapping("/listPupils")
+    public ResponseEntity<?> getLatestPupil() {
+        List<PupilRes> pupil = pupilService.getAllPupilsByGrade();
+        return ResponseEntity.ok(pupil);
+    }
+    @Autowired
+    private UserService userService;
+    @GetMapping("/all")
+    public ResponseEntity<?> test(HttpServletRequest request) {
+        return ResponseEntity.ok( userService.getCurrentUserId( request));
+    }
 }
