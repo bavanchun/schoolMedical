@@ -1,7 +1,10 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
+import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckPupilListRes;
+import com.schoolhealth.schoolmedical.model.dto.response.LatestHealthCheckCampaignRes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +17,7 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData(" +
             "hcc.campaignId, hcc.address, hcc.title, hcc.description, hcc.deadlineDate, hcc.startExaminationDate, hcc.endExaminationDate, hcc.createdAt, hcc.statusHealthCampaign, " +
             "hccs.consentFormId, hccs.schoolYear, " +
-            "pp.pupilId, pp.lastName, pp.firstName, pp.birthDate, pp.gender, g.gradeName, " +
+            "pp.pupilId, pp.lastName, pp.firstName, pp.birthDate, pp.gender, g.gradeLevel,g.gradeName, " +
             "hcd.healthCheckDiseaseId,d.name) " +
             "FROM HealthCheckCampaign hcc " +
             "LEFT JOIN hcc.healthCheckConsentForms hccs " +
@@ -22,6 +25,22 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
             "LEFT JOIN pp.grade g " +
             "LEFT JOIN hccs.healthCheckDiseases hcd " +
             "LEFT JOIN hcd.disease d " +
-            " where hcc.isActive = true AND hcd.status = com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus.APPROVED AND hcc.campaignId = :campaignId")
+            " where hcc.active = true AND hcd.status = com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus.APPROVED AND hcc.campaignId = :campaignId")
     List<HealthCheckCampaignFlatData> findHealthCheckCampaignDetails(@Param("campaignId") Long campaignId);
+
+    @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckPupilListRes(" +
+            "hcc.campaignId, hcc.address, hcc.title, hcc.deadlineDate, hcc.startExaminationDate, hcc.endExaminationDate, " +
+            "hccs.consentFormId, hccs.schoolYear, " +
+            "pp.pupilId, pp.lastName, pp.firstName, pp.birthDate, pp.gender, g.gradeLevel,g.gradeName, " +
+            "hcd.healthCheckDiseaseId,d.name) " +
+            "FROM HealthCheckConsentForm hccs " +
+            "LEFT JOIN hccs.healthCheckCampaign hcc " +
+            "LEFT JOIN hccs.pupil pp " +
+            "LEFT JOIN pp.grade g " +
+            "LEFT JOIN hccs.healthCheckDiseases hcd " +
+            "LEFT JOIN hcd.disease d " +
+            "where hcc.active = true AND hcd.status = com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus.APPROVED " +
+            "AND g.gradeLevel= :gradeLevel AND hccs.schoolYear= :schoolYear" )
+    List<HealthCheckPupilListRes> findHealthCheckCampaignByGradeLevelAndSchoolYear(@Param("gradeLevel") GradeLevel gradeLevel, @Param("schoolYear") int schoolYear);
+    HealthCheckCampaign findTopByActiveTrueOrderByCreatedAtDesc();
 }

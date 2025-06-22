@@ -1,36 +1,30 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
-import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class HealthCheckCampaignFlatData {
+public class LatestHealthCheckCampaignRes {
     private Long campaignId;
     private String title;
-    private String address;
     private String description;
-    private LocalDate deadlineDate;
+    private String address;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime startExaminationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime endExaminationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate deadlineDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate createdAt;
     private StatusHealthCampaign statusHealthCampaign;
-    private Long healthCheckConsentId;
-    private int schoolYear;
-    private String pupilId;
-    private String lastName;
-    private String firstName;
-    private LocalDate birthDate;
-    private char gender;
-    private GradeLevel gradeLevel;
-    private String gradeName;
-    private Long healthCheckDiseaseId;
-    private String diseaseName;
 }

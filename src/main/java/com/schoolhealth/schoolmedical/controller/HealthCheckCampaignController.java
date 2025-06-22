@@ -9,7 +9,7 @@
     import org.springframework.web.bind.annotation.*;
 
     @RestController
-    @RequestMapping("/api/v1/management")
+    @RequestMapping("/api/v1/management/health-check-campaigns")
     public class HealthCheckCampaignController {
 
         @Autowired
@@ -32,6 +32,9 @@
             healthCheckCampaignService.updateStatusHealthCheckCampaign(campaignId, status.getStatusHealthCampaign());
             return ResponseEntity.ok().build();
         }
-
+        @GetMapping("/latest")
+        public ResponseEntity<?> getLatestHealthCheckCampaign() {
+            return ResponseEntity.ok(healthCheckCampaignService.getLatestHealthCheckCampaign());
+        }
 
     }

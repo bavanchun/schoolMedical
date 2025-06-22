@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ public class PupilRes {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     private char gender;
+    private GradeLevel gradeLevel;
     private String gradeName;
 }
 
