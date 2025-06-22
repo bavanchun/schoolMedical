@@ -40,7 +40,7 @@ WHERE parent.userId = :parentId AND pg.startYear = (
     List<Pupil> getAllPupilsByParent(@Param("parentId") String parentId);
 
 
-    List<Pupil> findByGradeId(Long gradeId);
+    List<Pupil> findByGrade_GradeId(Long gradeId);
 
     @Query("SELECT p FROM Pupil p WHERE p.isActive = true AND " +
             "(SELECT COUNT(vh.historyId) FROM VaccinationHistory vh " +
