@@ -62,6 +62,7 @@ public class VaccinationCampaignRequest {
             return true;
         }
         // check if startDate is before formDeadline and formDeadline is before endDate
-        return startDate.isBefore(formDeadline) && formDeadline.isBefore(endDate);
+//        return startDate.isBefore(formDeadline) && formDeadline.isBefore(endDate);
+        return formDeadline.isBefore(startDate) && startDate.isBefore(endDate);
     }
 }
