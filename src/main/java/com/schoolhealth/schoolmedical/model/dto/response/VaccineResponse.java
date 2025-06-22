@@ -13,13 +13,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class VaccineResponse {
-    private int vaccineId;
+    private Long vaccineId;
     private String name;
     private String manufacturer;
     private String recommendedAge;
     private String description;
     private int doseNumber;
-
     // Trường này sẽ được JSON hóa là "active"
     @JsonProperty("active")
     private boolean isActive;
