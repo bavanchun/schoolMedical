@@ -71,8 +71,8 @@ public class PupilImpl implements PupilService {
     }
 
     @Override
-    public List<PupilRes> getAllPupilsByGrade() {
-        List<Pupil> pupil = pupilRepo.getAllPupilsByGrade();
+    public List<PupilRes> getAllPupilsByParent(String parentId) {
+        List<Pupil> pupil = pupilRepo.getAllPupilsByParent(parentId);
 
         return pupilMapper.toPupilGradeDtoList(pupil);
     }

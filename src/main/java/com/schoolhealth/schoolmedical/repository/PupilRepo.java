@@ -30,13 +30,14 @@ public interface PupilRepo extends JpaRepository<Pupil, String> {
 SELECT p FROM Pupil p
 JOIN FETCH p.pupilGrade pg
 JOIN FETCH pg.grade
-WHERE pg.startYear = (
+JOIN p.parents parent
+WHERE parent.userId = :parentId AND pg.startYear = (
     SELECT MAX(sub_pg.startYear)
     FROM PupilGrade sub_pg
     WHERE sub_pg.pupil.pupilId = p.pupilId
 )
 """)
-    List<Pupil> getAllPupilsByGrade();
+    List<Pupil> getAllPupilsByParent(@Param("parentId") String parentId);
 
 
 }

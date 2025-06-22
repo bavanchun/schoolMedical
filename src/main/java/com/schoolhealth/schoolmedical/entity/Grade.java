@@ -27,9 +27,6 @@ public class Grade {
     @Column(name = "grade_name", nullable = false, length = 50)
     private String gradeName;
 
-    @Column(name = "end_year", nullable = false)
-    private String endYear;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "grade_level", nullable = false)
     private GradeLevel gradeLevel;

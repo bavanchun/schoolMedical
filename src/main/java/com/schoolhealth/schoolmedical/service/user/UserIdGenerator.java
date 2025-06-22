@@ -54,7 +54,7 @@ public class UserIdGenerator {
             case SCHOOL_NURSE:
                 return "SN";
             case PARENT:
-                return "PP";
+                return "PR";
             default:
                 throw new IllegalArgumentException("Role không hợp lệ: " + role);
         }
