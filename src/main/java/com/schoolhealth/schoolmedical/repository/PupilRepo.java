@@ -26,4 +26,6 @@ public interface PupilRepo extends JpaRepository<Pupil, String> {
      */
     List<Pupil> findByParentPhoneNumber(String phoneNumber);
     List<Pupil> findAllByisActiveTrue();
+    List<Pupil> findAllByGradeIsNotNull();
+
 }

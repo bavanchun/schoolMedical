@@ -1,14 +1,11 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
-import com.schoolhealth.schoolmedical.entity.User;
-import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
-import com.schoolhealth.schoolmedical.model.dto.response.VaccinationHistoryResponse;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
-import com.schoolhealth.schoolmedical.service.PupilService;
+import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 //import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,21 +13,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/pupils")

@@ -31,7 +31,8 @@ public class Pupil {
 
     @Column(nullable = false)
     private char gender;
-
+    @Column(name = "avatar", length = 255)
+    private String avatar;
     /**
      * Số điện thoại của phụ huynh để liên kết với tài khoản phụ huynh
      */
@@ -69,4 +70,7 @@ public class Pupil {
 
     @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<HealthCheckConsentForm> healthCheckConsentForms;
+
+    @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+    private List<PupilGrade> pupilGrade;
 }

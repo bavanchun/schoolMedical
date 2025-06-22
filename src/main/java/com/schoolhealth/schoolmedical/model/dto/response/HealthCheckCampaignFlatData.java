@@ -29,6 +29,8 @@ public class HealthCheckCampaignFlatData {
     private String firstName;
     private LocalDate birthDate;
     private char gender;
+    private String avatar;
+    private Long gradeId;
     private GradeLevel gradeLevel;
     private String gradeName;
     private Long healthCheckDiseaseId;

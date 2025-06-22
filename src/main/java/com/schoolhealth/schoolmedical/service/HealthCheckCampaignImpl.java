@@ -13,6 +13,7 @@ import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.Notification.FCMService;
 import com.schoolhealth.schoolmedical.service.Notification.UserNotificationService;
+import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
