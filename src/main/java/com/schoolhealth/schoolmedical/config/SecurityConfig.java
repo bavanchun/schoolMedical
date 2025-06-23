@@ -23,13 +23,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(
-                            "/api/v1/auth/**",
-                            "/api/v1/register",
-                            "/api/v1/login",
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**")
-                    .permitAll()
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/api/v1/register",
+                                "/api/v1/login",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                // THÊM DÒNG NÀY:
+                                "/api/health-conditions/**"
+                        )
+                        .permitAll()
                     .anyRequest()
                     .authenticated()
                 )

@@ -47,9 +47,10 @@ public class PupilImpl implements PupilService{
                 .toList();
     }
 
-    @Override
     public Optional<List<Pupil>> getAll() {
         return Optional.ofNullable(pupilRepo.findAll());
+    }
+
     public PupilDto getPupilById(String id) {
         Optional<Pupil> pupilOptional = pupilRepo.findById(id);
         if (pupilOptional.isEmpty() || !pupilOptional.get().isActive()) {
@@ -57,13 +58,6 @@ public class PupilImpl implements PupilService{
         }
         return pupilMapper.toDto(pupilOptional.get());
     }
-
-/*
-    @Override
-    public Optional<List<Pupil>> getAll() {
-        return Optional.ofNullable(pupilRepo.findAll());
-    }
-    */
 
     @Override
     public PupilDto updatePupil(String id, PupilDto dto) {
