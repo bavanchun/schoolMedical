@@ -37,5 +37,5 @@ public class HealthCheckConsentForm {
     private List<HealthCheckDisease> healthCheckDiseases;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
-    private boolean isActive;
+    private boolean active;
 }

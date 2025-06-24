@@ -54,10 +54,6 @@ public class Pupil {
 //    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<PupilParent> pupilParents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_id" /*, nullable = true*/) // Thay đổi nullable = false thành nullable = true
-    private Grade grade;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     @JoinColumn(name = "pupil_id")
     private List<SendMedication> sendMedications;
