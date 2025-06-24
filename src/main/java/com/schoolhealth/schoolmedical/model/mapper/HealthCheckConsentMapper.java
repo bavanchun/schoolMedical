@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PupilMapper.class, DiseaseMapper.class})
 public interface HealthCheckConsentMapper {
     @Mapping(target = "pupilRes", source = "pupil")
     @Mapping(target = "disease", source = "healthCheckDiseases")

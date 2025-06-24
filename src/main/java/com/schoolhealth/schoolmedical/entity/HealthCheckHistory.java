@@ -83,4 +83,7 @@ public class HealthCheckHistory {
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "healthCheckHistory", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private HealthCheckConsentForm healthCheckConsentForm;
 }
