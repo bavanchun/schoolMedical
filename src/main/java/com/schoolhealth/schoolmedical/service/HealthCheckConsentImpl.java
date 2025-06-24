@@ -1,7 +1,6 @@
 package com.schoolhealth.schoolmedical.service;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
-import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class HealthCheckCosentImpl implements HealthCheckConsentService{
+public class HealthCheckConsentImpl implements HealthCheckConsentService{
 
     @Autowired
     private HealthCheckConsentRepo healthCheckConsentRepo;
@@ -78,4 +77,5 @@ public class HealthCheckCosentImpl implements HealthCheckConsentService{
         }
         return res;
     }
+
 }

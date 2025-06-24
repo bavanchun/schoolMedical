@@ -24,4 +24,5 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
             "JOIN hccf.healthCheckCampaign hc " +
             "WHERE hccf.schoolYear = :schoolYear AND hc.statusHealthCampaign IN (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS) " )
     List<HealthCheckConsentFlatData> findListPupilByGradeAndSchoolYear(@Param("grade") GradeLevel grade, @Param("schoolYear") int schoolYear);
+
 }
