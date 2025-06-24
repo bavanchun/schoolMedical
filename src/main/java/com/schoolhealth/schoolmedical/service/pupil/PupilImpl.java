@@ -113,15 +113,16 @@ public class PupilImpl implements PupilService {
 
     @Override
     public Pupil assignPupilClass(AssignClassRequest assignClassRequest) {
-        // pupilId => pupil
-        Pupil pupil = pupilRepo.findById(assignClassRequest.getPupilId()).get();
-
-        // gradeId => grade
-        Grade grade = gradeRepository.findById(assignClassRequest.getGradeId()).get();
-
-        pupil.setGrade(grade);
-
-        return pupilRepo.save(pupil);
+//        // pupilId => pupil
+//        Pupil pupil = pupilRepo.findById(assignClassRequest.getPupilId()).get();
+//
+//        // gradeId => grade
+//        Grade grade = gradeRepository.findById(assignClassRequest.getGradeId()).get();
+//
+//        pupil.setGrade(grade);
+//
+//        return pupilRepo.save(pupil);
+        return new Pupil();
     }
 
     @Override

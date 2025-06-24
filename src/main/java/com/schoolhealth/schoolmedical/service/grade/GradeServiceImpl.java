@@ -49,17 +49,18 @@ public class GradeServiceImpl implements GradeService{
 
     @Override
     public GradeDTO updateGrade(Long id, GradeDTO dto) {
-        Grade existing = gradeRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
-
-        // apply updates
-        existing.setGradeName(dto.getGradeName());
-//        existing.setStartYear(dto.getStartYear());
-        existing.setGradeLevel(dto.getGradeLevel());
-
-        Grade updated = gradeRepository.save(existing);
-        return gradeMapper.toDto(updated);
+//        Grade existing = gradeRepository.findById(id)
+//                .orElseThrow(() ->
+//                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
+//
+//        // apply updates
+//        existing.setGradeName(dto.getGradeName());
+////        existing.setStartYear(dto.getStartYear());
+//        existing.setGradeLevel(dto.getGradeLevel());
+//
+//        Grade updated = gradeRepository.save(existing);
+//        return gradeMapper.toDto(updated);
+        return new GradeDTO();
     }
 
     @Override

@@ -15,6 +15,5 @@ public interface HealthCheckCampaignService {
     HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign);
     HealthCheckCampaignRes getHealthCheckCampaignDetailsById(Long campaignId);
     void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign);
-    List<HealthCheckCampaignFlatData> getHealthCheckCampaignByGradeLevelAndSchoolYear(GradeLevel gradeLevel, int schoolYear);
     LatestHealthCheckCampaignRes getLatestHealthCheckCampaign();
 }
