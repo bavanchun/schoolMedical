@@ -24,6 +24,7 @@ import com.schoolhealth.schoolmedical.repository.NotificationRepo;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.VaccinationCampaignRepo;
 import com.schoolhealth.schoolmedical.repository.VaccinationConsentFormRepo;
+import com.schoolhealth.schoolmedical.repository.VaccinationHistoryRepo;
 import com.schoolhealth.schoolmedical.repository.VaccineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     private final VaccinationCampaignMapper mapper;
     private final PupilRepo pupilRepo;
     private final VaccinationConsentFormRepo consentFormRepo;
+    private final VaccinationHistoryRepo vaccinationHistoryRepo;
     private final NotificationRepo notificationRepo;
     @Override
     public VaccinationCampaignResponse createCampaign(VaccinationCampaignRequest request) {
@@ -110,10 +112,10 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
             throw new IllegalStateException("Campaign can only be published when in PENDING status.");
         }
 
-        // 2. Find eligible pupils
+        // 2. Find eligible pupils - check pupils who haven't completed all doses for this disease
         List<Pupil> eligiblePupils = pupilRepo.findPupilsNeedingVaccination(
                 campaign.getDisease().getDiseaseId(),
-                campaign.getDoseNumber()
+                campaign.getDisease().getDoseQuantity()  // Use disease's max dose count, not campaign's
         );
 
         List<VaccinationConsentForm> newConsentForms = new ArrayList<>();
@@ -121,12 +123,15 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
 
         // 3. Create Consent Forms and Notifications for each pupil
         for (Pupil pupil : eligiblePupils) {
+            // Calculate next dose number for this pupil and disease
+            int currentDoses = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, campaign.getDisease());
+            int nextDoseNumber = currentDoses + 1;
+
             // Create Consent Form
             VaccinationConsentForm consentForm = VaccinationConsentForm.builder()
                     .campaign(campaign)
                     .pupil(pupil)
                     .vaccine(campaign.getVaccine())
-                    .doseNumber(campaign.getDoseNumber())
                     .status(ConsentFormStatus.WAITING)
                     .isActive(true)
                     .build();

@@ -17,7 +17,6 @@ public class VaccinationHistoryResponse {
     private String diseaseName;
     private String campaignName;
     private VaccinationSource source;
-    private int doseNumber;
     private LocalDateTime vaccinatedAt;
     private String notes;
     private boolean isActive;

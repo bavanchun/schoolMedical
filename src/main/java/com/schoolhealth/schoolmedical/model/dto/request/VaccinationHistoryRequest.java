@@ -24,9 +24,6 @@ public class VaccinationHistoryRequest {
     @NotNull(message = "Disease ID is required")
     private Long diseaseId;
 
-    @Positive(message = "Dose number must be positive")
-    private int doseNumber;
-
     @NotNull(message = "Vaccination date is required")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate vaccinatedAt;
