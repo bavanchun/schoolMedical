@@ -4,6 +4,8 @@ import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.VaccinationCampagin;
 import com.schoolhealth.schoolmedical.entity.VaccinationConsentForm;
+import com.schoolhealth.schoolmedical.entity.VaccinationHistory;
+import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.exception.EntityNotFoundException;
@@ -13,6 +15,7 @@ import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.repository.VaccinationCampaignRepo;
 import com.schoolhealth.schoolmedical.repository.VaccinationConsentFormRepo;
+import com.schoolhealth.schoolmedical.repository.VaccinationHistoryRepo;
 import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,7 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     private final PupilRepo pupilRepo;
     private final UserRepository userRepository;
     private final VaccinationHistoryService vaccinationHistoryService; // Added missing dependency
+    private final VaccinationHistoryRepo vaccinationHistoryRepo;
 
     @Override
     public VaccinationConsentFormResponse parentRespond(Long formId, String parentUserId, VaccinationConsentFormRequest request) {
@@ -130,7 +134,23 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
         List<Pupil> children = pupilRepo.findByParent(parent);
 
         return children.stream()
-                .flatMap(pupil -> consentFormRepo.findByPupilAndIsActiveTrue(pupil).stream())
+                .flatMap(pupil -> {
+                    List<VaccinationConsentForm> activeConsentForms = consentFormRepo.findByPupilAndIsActiveTrue(pupil);
+
+                    // Filter out consent forms for vaccines that have been fully completed
+                    return activeConsentForms.stream()
+                            .filter(form -> {
+                                Vaccine vaccine = form.getVaccine();
+                                int requiredDoses = vaccine.getDoseNumber();
+
+                                // Get completed doses for this pupil and vaccine
+                                List<VaccinationHistory> completedVaccinations =
+                                        vaccinationHistoryRepo.findByPupilAndVaccineAndIsActiveTrue(pupil, vaccine);
+
+                                // If completed doses are less than required, include this form
+                                return completedVaccinations.size() < requiredDoses;
+                            });
+                })
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

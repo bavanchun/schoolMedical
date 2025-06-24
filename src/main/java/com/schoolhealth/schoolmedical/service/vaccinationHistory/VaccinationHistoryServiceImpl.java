@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                 .campaign(consentForm.getCampaign())
                 .source(VaccinationSource.CAMPAIGN)
                 .doseNumber(consentForm.getDoseNumber())
-                .vaccinatedAt(LocalDateTime.now())
+                .vaccinatedAt(LocalDate.now().atTime(LocalTime.NOON))
                 .notes("Tiêm trong chiến dịch: " + consentForm.getCampaign().getTitleCampaign())
                 .isActive(true)
                 .build();
@@ -81,7 +82,8 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                 .campaign(null) // No campaign for parent declaration
                 .source(VaccinationSource.PARENT_DECLARATION)
                 .doseNumber(request.getDoseNumber())
-                .vaccinatedAt(request.getVaccinatedAt())
+                .vaccinatedAt(request.getVaccinatedAt() != null ?
+                        request.getVaccinatedAt().atTime(LocalTime.NOON) : null)
                 .notes(request.getNotes())
                 .isActive(false) // Needs confirmation from nurse
                 .build();
@@ -152,7 +154,8 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
 
         // Only allow updating notes and vaccination date for parent declarations
         if (history.getSource() == VaccinationSource.PARENT_DECLARATION) {
-            history.setVaccinatedAt(request.getVaccinatedAt());
+            history.setVaccinatedAt(request.getVaccinatedAt() != null ?
+                    request.getVaccinatedAt().atTime(LocalTime.NOON) : null);
             history.setNotes(request.getNotes());
         } else {
             // For campaign records, only allow updating notes

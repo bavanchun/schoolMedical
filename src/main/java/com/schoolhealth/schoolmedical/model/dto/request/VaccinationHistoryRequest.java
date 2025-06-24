@@ -1,6 +1,9 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationSource;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -25,7 +28,8 @@ public class VaccinationHistoryRequest {
     private int doseNumber;
 
     @NotNull(message = "Vaccination date is required")
-    private LocalDateTime vaccinatedAt;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate vaccinatedAt;
 
     private String notes;
 
