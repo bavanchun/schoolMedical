@@ -25,6 +25,6 @@ public interface VaccinationConsentFormRepo extends JpaRepository<VaccinationCon
     @Query("SELECT vcf FROM VaccinationConsentForm vcf WHERE vcf.status = :status AND vcf.campaign.formDeadline < :currentTime AND vcf.isActive = true")
     List<VaccinationConsentForm> findExpiredWaitingForms(@Param("status") ConsentFormStatus status, @Param("currentTime") LocalDateTime currentTime);
 
-    @Query("SELECT vcf FROM VaccinationConsentForm vcf JOIN vcf.pupil p JOIN p.pupilGrades pg WHERE vcf.campaign.campaignId = :campaignId AND vcf.status = :status AND vcf.isActive = true ORDER BY pg.grade.gradeName, p.fullName")
+    @Query("SELECT vcf FROM VaccinationConsentForm vcf JOIN vcf.pupil p JOIN p.pupilGrade pg WHERE vcf.campaign.campaignId = :campaignId AND vcf.status = :status AND vcf.isActive = true ORDER BY pg.grade.gradeName, p.firstName")
     List<VaccinationConsentForm> findByCampaignIdAndStatusOrderByGradeAndName(@Param("campaignId") Long campaignId, @Param("status") ConsentFormStatus status);
 }

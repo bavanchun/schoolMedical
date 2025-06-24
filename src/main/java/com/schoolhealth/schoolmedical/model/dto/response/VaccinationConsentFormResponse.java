@@ -1,9 +1,13 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
+@Builder
 public class VaccinationConsentFormResponse {
     private Long consentFormId;
     private int doseNumber;

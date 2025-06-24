@@ -13,7 +13,7 @@ import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.repository.VaccinationCampaignRepo;
 import com.schoolhealth.schoolmedical.repository.VaccinationConsentFormRepo;
-import com.schoolhealth.schoolmedical.repository.VaccinationHistoryRepo;
+import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class VaccinationConsentFormServiceImpl implements VaccinationConsentFormService{
+public class VaccinationConsentFormServiceImpl implements VaccinationConsentFormService {
 
     private final VaccinationConsentFormRepo consentFormRepo;
     private final VaccinationCampaignRepo vaccinationCampaignRepo;
     private final PupilRepo pupilRepo;
     private final UserRepository userRepository;
-    private final VaccinationHistoryRepo vaccinationHistoryRepo;
+    private final VaccinationHistoryService vaccinationHistoryService; // Added missing dependency
 
     @Override
     public VaccinationConsentFormResponse parentRespond(Long formId, String parentUserId, VaccinationConsentFormRequest request) {
@@ -124,8 +124,8 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     public List<VaccinationConsentFormResponse> getMyConsentForms(String parentUserId) {
         log.info("Getting consent forms for parent {}", parentUserId);
 
-        User parent = userRepository.findByUserId(parentUserId)
-                .orElseThrow(() -> new EntityNotFoundException("User", "userId", parentUserId));
+        User parent = userRepository.findById(parentUserId)
+                .orElseThrow(() -> new EntityNotFoundException("User", "id", parentUserId));
 
         List<Pupil> children = pupilRepo.findByParent(parent);
 
@@ -140,8 +140,8 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     public List<VaccinationConsentFormResponse> getConsentFormsByCampaignAndStatus(Long campaignId, String status) {
         log.info("Getting consent forms for campaign {} with status {}", campaignId, status);
 
-        VaccinationCampagin campaign = campaignRepo.findById(campaignId)
-                .orElseThrow(() -> new EntityNotFoundException("Campaign not found with id: " + campaignId));
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findById(campaignId)
+                .orElseThrow(() -> new EntityNotFoundException("VaccinationCampaign", "id", campaignId));
 
         ConsentFormStatus formStatus = ConsentFormStatus.valueOf(status.toUpperCase());
 
@@ -170,12 +170,13 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
         log.info("Updated {} expired consent forms from WAITING to REJECTED", updatedCount);
         return updatedCount;
     }
+
     private VaccinationConsentForm validateParentPermission(Long formId, String parentUserId) {
         VaccinationConsentForm consentForm = consentFormRepo.findById(formId)
-                .orElseThrow(() -> new EntityNotFoundException("Consent form not found with id: " + formId));
+                .orElseThrow(() -> new EntityNotFoundException("VaccinationConsentForm", "id", formId));
 
-        User parent = userRepository.findByUserId(parentUserId)
-                .orElseThrow(() -> new EntityNotFoundException("Parent not found with userId: " + parentUserId));
+        User parent = userRepository.findById(parentUserId)
+                .orElseThrow(() -> new EntityNotFoundException("User", "id", parentUserId));
 
         // Check if this parent is the parent of the pupil
         List<Pupil> children = pupilRepo.findByParent(parent);
@@ -195,15 +196,15 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .doseNumber(form.getDoseNumber())
                 .respondedAt(form.getRespondedAt())
                 .status(form.getStatus())
-                .campaignName(form.getCampaign().getCampaignName())
-                .vaccineName(form.getVaccine().getVaccineName())
-                .pupilName(form.getPupil().getFullName())
+                .campaignName(form.getCampaign().getTitleCampaign())
+                .vaccineName(form.getVaccine().getName())
+                .pupilName(form.getPupil().getFirstName())
                 .pupilId(form.getPupil().getPupilId())
-                .gradeLevel(form.getPupil().getPupilGrades().stream()
+                .gradeLevel(form.getPupil().getPupilGrade().stream()
                         .map(pg -> pg.getGrade().getGradeName())
                         .findFirst()
                         .orElse("Unknown"))
-                .formDeadline(form.getCampaign().getFormDeadline())
+                .formDeadline(form.getCampaign().getFormDeadline().atTime(LocalTime.MAX))
                 .build();
     }
 }
