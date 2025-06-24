@@ -24,9 +24,6 @@ public class VaccinationCampagin {
     @Column(name = "title_campaign", length = 255, nullable = false)
     private String titleCampaign;
 
-    @Column(name = "dose_number")
-    private int doseNumber;
-
     @Column(name = "start_date")
     private LocalDate startDate;
 

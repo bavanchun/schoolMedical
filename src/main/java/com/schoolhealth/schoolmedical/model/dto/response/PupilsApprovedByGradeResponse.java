@@ -1,6 +1,5 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiseaseWithVaccinesWrapper {
-    @JsonProperty("GetVaccineByDisease")
-    private List<DiseaseVaccineInfo> getVaccineByDisease;
+public class PupilsApprovedByGradeResponse {
+    private List<PupilApprovedInfo> getPupilsApprovedByGrade;
 }

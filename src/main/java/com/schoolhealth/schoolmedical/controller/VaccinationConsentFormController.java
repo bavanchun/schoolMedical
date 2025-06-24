@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationConsentFormRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilsApprovedByGradeResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationConsentFormResponse;
 import com.schoolhealth.schoolmedical.service.vaccinationConsentForm.VaccinationConsentFormService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
@@ -69,6 +70,13 @@ public class VaccinationConsentFormController {
             @PathVariable Long formId,
             @Valid @RequestBody VaccinationConsentFormRequest request) {
         VaccinationConsentFormResponse response = consentFormService.nurseUpdateStatus(formId, request);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/pupils/approved-by-grade/{campaignId}")
+    @Operation(summary = "Get pupils approved by grade for campaign", description = "Get list of pupils approved for vaccination grouped by grade")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<PupilsApprovedByGradeResponse> getPupilsApprovedByGrade(@PathVariable Long campaignId) {
+        PupilsApprovedByGradeResponse response = consentFormService.getPupilsApprovedByGrade(campaignId);
         return ResponseEntity.ok(response);
     }
 }

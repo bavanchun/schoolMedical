@@ -46,7 +46,6 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                 .disease(consentForm.getCampaign().getDisease())
                 .campaign(consentForm.getCampaign())
                 .source(VaccinationSource.CAMPAIGN)
-                .doseNumber(consentForm.getDoseNumber())
                 .vaccinatedAt(LocalDate.now().atTime(LocalTime.NOON))
                 .notes("Tiêm trong chiến dịch: " + consentForm.getCampaign().getTitleCampaign())
                 .isActive(true)
@@ -81,7 +80,6 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                 .disease(disease)
                 .campaign(null) // No campaign for parent declaration
                 .source(VaccinationSource.PARENT_DECLARATION)
-                .doseNumber(request.getDoseNumber())
                 .vaccinatedAt(request.getVaccinatedAt() != null ?
                         request.getVaccinatedAt().atTime(LocalTime.NOON) : null)
                 .notes(request.getNotes())
@@ -210,7 +208,6 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                 .diseaseName(history.getDisease().getName()) // Fixed: Assumed getName() exists
                 .campaignName(history.getCampaign() != null ? history.getCampaign().getTitleCampaign() : null) // Fixed: Used getTitleCampaign for consistency
                 .source(history.getSource())
-                .doseNumber(history.getDoseNumber())
                 .vaccinatedAt(history.getVaccinatedAt())
                 .notes(history.getNotes())
                 .isActive(history.isActive())
