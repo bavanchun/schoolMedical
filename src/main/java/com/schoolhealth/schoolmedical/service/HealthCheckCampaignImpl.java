@@ -170,7 +170,9 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
         campaign.setStatusHealthCampaign(statusHealthCampaign);
         healthCheckCampaignRepo.save(campaign);
         if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
-            List<User> parents = userService.findAllByRole(Role.PARENT);
+            List<User> parents = userService.findAllWithPupilByParent();
+            Map<String, List<Pupil>> pupilsByParent = parents.stream()
+                    .collect(Collectors.groupingBy(User::getDeviceToken, Collectors.mapping(User::getPupils, Collectors.flatMapping(List::stream, Collectors.toList()))));
             //List<UserNotification> listNotification = userNotificationService.getAllUserNotifications(campaignId, TypeNotification.health_check_campaign.name());
 
             List<String> tokens = parents.stream()
@@ -178,9 +180,9 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                     .filter(token -> token != null && !token.isEmpty())
                     .toList();
 
-            // Add null/empty check before using getFirst()
-            if (!listNotification.isEmpty()) {
-                fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
+            if (!pupilsByParent.isEmpty()) {
+                String title = "Chiến dịch kiểm tra sức khỏe hằng năm";
+                fcmService.sendNotification(pupilsByParent, campaignId, TypeNotification.health_check_campaign.name(),title );
             }
         }
     }
