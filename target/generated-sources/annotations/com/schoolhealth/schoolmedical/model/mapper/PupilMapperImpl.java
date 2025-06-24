@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-22T20:25:06+0700",
+    date = "2025-06-24T10:37:32+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -65,7 +65,7 @@ public class PupilMapperImpl implements PupilMapper {
         pupilRes.gradeId( pupil.getPupilGrade().getFirst().getPupilGradeId().getGradeId() );
         pupilRes.startYear( pupil.getPupilGrade().getFirst().getStartYear() );
         pupilRes.gradeLevel( pupil.getPupilGrade().getFirst().getGrade().getGradeLevel() );
-        pupilRes.gradeName( pupil.getPupilGrade().getFirst().getGrade().getGradeName() );
+        pupilRes.gradeName( pupil.getPupilGrade().getFirst().getGradeName() );
 
         return pupilRes.build();
     }

@@ -24,20 +24,9 @@ public class Grade {
     @Column(name = "grade_id", nullable = false, unique = true)
     private Long gradeId;
 
-    @Column(name = "grade_name", nullable = false, length = 50)
-    private String gradeName;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "grade_level", nullable = false)
     private GradeLevel gradeLevel;
-
-    @OneToMany(
-            mappedBy = "grade",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            orphanRemoval = true
-    )
-    @JsonIgnore
-    private List<Pupil> pupils;
 
     @OneToMany(
             mappedBy = "grade",
