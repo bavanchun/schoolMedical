@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/vaccination-campaigns")
 @RequiredArgsConstructor
@@ -22,6 +24,22 @@ import org.springframework.web.bind.annotation.*;
 public class VaccinationCampaignController {
 
     private final VaccinationCampaignService vaccinationCampaignService;
+
+    @GetMapping
+    @Operation(summary = "Get all vaccination campaigns", description = "Retrieve list of all vaccination campaigns")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<List<VaccinationCampaignResponse>> getAllCampaigns() {
+        List<VaccinationCampaignResponse> campaigns = vaccinationCampaignService.getAllCampaigns();
+        return ResponseEntity.ok(campaigns);
+    }
+
+    @GetMapping("/{campaignId}")
+    @Operation(summary = "Get vaccination campaign by ID", description = "Retrieve a specific vaccination campaign by its ID")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<VaccinationCampaignResponse> getCampaignById(@PathVariable Long campaignId) {
+        VaccinationCampaignResponse campaign = vaccinationCampaignService.getCampaignById(campaignId);
+        return ResponseEntity.ok(campaign);
+    }
 
     @PostMapping
     @Operation(summary = "Create new vaccination campaign", description = "Create a new vaccination campaign (Manager only)")

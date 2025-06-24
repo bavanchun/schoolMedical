@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -181,6 +182,24 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<VaccinationCampaignResponse> getAllCampaigns() {
+        List<VaccinationCampagin> campaigns = vaccinationCampaignRepo.findAll();
+        return campaigns.stream()
+                .map(mapper::toVaccinationCampaignResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public VaccinationCampaignResponse getCampaignById(Long campaignId) {
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findById(campaignId)
+                .orElseThrow(() -> new NotFoundException("Campaign not found with id: " + campaignId));
+
+        return mapper.toVaccinationCampaignResponse(campaign);
+    }
+
     private boolean isValidStatusTransition(VaccinationCampaignStatus current, VaccinationCampaignStatus target) {
         return switch (current) {
             case PENDING -> target == VaccinationCampaignStatus.PUBLISHED;
@@ -231,6 +250,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
         // Save all completion notifications
         notificationRepo.saveAll(completionNotifications);
     }
+
+
 
 
 }
