@@ -201,7 +201,7 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .pupilName(form.getPupil().getFirstName())
                 .pupilId(form.getPupil().getPupilId())
                 .gradeLevel(form.getPupil().getPupilGrade().stream()
-                        .map(pg -> pg.getGrade().getGradeName())
+                        .map(pg -> pg.getGrade().getGradeLevel().toString())
                         .findFirst()
                         .orElse("Unknown"))
                 .formDeadline(form.getCampaign().getFormDeadline().atTime(LocalTime.MAX))
