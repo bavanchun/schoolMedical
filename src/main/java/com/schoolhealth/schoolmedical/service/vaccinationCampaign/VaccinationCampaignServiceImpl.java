@@ -12,6 +12,11 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationCampaignRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.CampaignDiseaseInfo;
+import com.schoolhealth.schoolmedical.model.dto.response.CampaignVaccineInfo;
+import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignInfo;
+import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignWrapper;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignResponse;
 import com.schoolhealth.schoolmedical.model.mapper.VaccinationCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.DiseaseRepo;
@@ -24,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -198,6 +204,74 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
                 .orElseThrow(() -> new NotFoundException("Campaign not found with id: " + campaignId));
 
         return mapper.toVaccinationCampaignResponse(campaign);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public NewestCampaignResponse getNewestCampaign() {
+        // Find the newest published campaign
+        VaccinationCampagin newestCampaign = vaccinationCampaignRepo
+                .findTopByStatusOrderByCampaignIdDesc(VaccinationCampaignStatus.PUBLISHED)
+                .orElse(null);
+
+        if (newestCampaign == null) {
+            // Return empty response if no published campaign found
+            return NewestCampaignResponse.builder()
+                    .newest_vaccination_campaign(new ArrayList<>())
+                    .build();
+        }
+
+        // Build disease info
+        CampaignDiseaseInfo diseaseInfo = CampaignDiseaseInfo.builder()
+                .disease_id(newestCampaign.getDisease().getDiseaseId())
+                .name(newestCampaign.getDisease().getName())
+                .description(newestCampaign.getDisease().getDescription())
+                .isInjectedVaccine(newestCampaign.getDisease().getIsInjectedVaccination())
+                .doseQuantity(newestCampaign.getDisease().getDoseQuantity())
+                .build();
+
+        // Build vaccine info
+        CampaignVaccineInfo vaccineInfo = CampaignVaccineInfo.builder()
+                .vaccineId(newestCampaign.getVaccine().getVaccineId())
+                .name(newestCampaign.getVaccine().getName())
+                .manufacturer(newestCampaign.getVaccine().getManufacturer())
+                .recommendedAge(newestCampaign.getVaccine().getRecommendedAge())
+                .description(newestCampaign.getVaccine().getDescription())
+                .build();
+
+        // Determine implementation status based on dates
+        String implementationStatus;
+        LocalDate today = LocalDate.now();
+        if (newestCampaign.getStartDate().isAfter(today)) {
+            implementationStatus = "Pending";
+        } else if (newestCampaign.getEndDate().isBefore(today)) {
+            implementationStatus = "Completed";
+        } else {
+            implementationStatus = "In Progress";
+        }
+
+        // Build campaign info
+        NewestCampaignInfo campaignInfo = NewestCampaignInfo.builder()
+                .campaignId(newestCampaign.getCampaignId())
+                .disease(diseaseInfo)
+                .vaccine(vaccineInfo)
+                .notes(newestCampaign.getNotes())
+                .consentFormDeadline(newestCampaign.getFormDeadline())
+                .startDate(newestCampaign.getStartDate())
+                .endDate(newestCampaign.getEndDate())
+                .campaignStatus(newestCampaign.getStatus().toString())
+                .status(implementationStatus) // Default status as shown in JSON
+                .build();
+
+        // Build wrapper
+        NewestCampaignWrapper wrapper = NewestCampaignWrapper.builder()
+                .campaign(campaignInfo)
+                .build();
+
+        // Build final response
+        return NewestCampaignResponse.builder()
+                .newest_vaccination_campaign(List.of(wrapper))
+                .build();
     }
 
     private boolean isValidStatusTransition(VaccinationCampaignStatus current, VaccinationCampaignStatus target) {
