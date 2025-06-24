@@ -16,6 +16,9 @@ public class PupilGrade {
     @Column(name = "start_year", nullable = false)
     private int startYear;
 
+    @Column(name = "grade_name", nullable = false, length = 50)
+    private String gradeName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("pupilId")
     @JoinColumn(name = "pupil_id", nullable = false)

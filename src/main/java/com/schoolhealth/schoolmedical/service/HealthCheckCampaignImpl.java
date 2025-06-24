@@ -73,9 +73,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
         for (Pupil pupil : pupils) {
             HealthCheckConsentForm consentForm = new HealthCheckConsentForm();
             consentForm.setPupil(pupil);
-//            HealthCheckHistory history = new HealthCheckHistory();
-//            history = healthCheckHistoryService.saveHealthCheckHistory(history);
-//            consentForm.setHealthCheckHistory(history);
             consentForm.setSchoolYear(Year.now().getValue());
             consentForm.setHealthCheckCampaign(campaign);
             healthCheckConsentForm.add(consentForm);
@@ -95,27 +92,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             }
         }
         healthCheckDiseaseService.saveHealthCheckDisease(healthCheckDiseases);
-//        List<User> parents = userService.findAllByRole(Role.PARENT);
-//        List<UserNotification> listNotification = new ArrayList<>();
-//        for( User parent : parents) {
-//            UserNotification notification = UserNotification.builder()
-//                    .message("Chiến dịch kiểm tra sức khỏe mới")
-//                    .sourceId(campaign.getCampaignId())
-//                    .typeNotification(TypeNotification.health_check_campaign)
-//                    .user(parent)
-//                    .build();
-//            listNotification.add(notification);
-//        }
-//        userNotificationService.saveAllUserNotifications(listNotification);
-//        List<String> tokens = parents.stream()
-//                .map(User::getDeviceToken)
-//                .filter(token -> token != null && !token.isEmpty())
-//                .toList();
-//
-//        if (!listNotification.isEmpty()) {
-//            fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
-//        }
-
         return healthCheckCampaignMapper.toDto(campaign);
     }
 
@@ -204,62 +180,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 fcmService.sendMulticastNotification(tokens, listNotification.getFirst());
             }
         }
-    }
-
-    @Override
-    public List<HealthCheckCampaignFlatData> getHealthCheckCampaignByGradeLevelAndSchoolYear(GradeLevel gradeLevel, int schoolYear) {
-//        List<HealthCheckCampaignFlatData> rs = healthCheckCampaignRepo.findHealthCheckCampaignByGradeLevelAndSchoolYear(gradeLevel, schoolYear);
-//        if (rs.isEmpty()) {
-//            throw new NotFoundException("Campaign not found");
-//        }
-//        List<HealthCheckConsentRes> healthCheckConsentResList = new ArrayList<>();
-//
-//        Map<String, List<HealthCheckCampaignFlatData>> groupedData = rs.stream()
-//                .collect(Collectors.groupingBy(HealthCheckCampaignFlatData::getPupilId));
-//
-//        for (Map.Entry<String, List<HealthCheckCampaignFlatData>> entry : groupedData.entrySet()) {
-//            String pupilId = entry.getKey();
-//            List<HealthCheckCampaignFlatData> dataList = entry.getValue();
-//
-//            // Create PupilRes object
-//            PupilRes pupilRes = PupilRes.builder()
-//                    .pupilId(dataList.getFirst().getPupilId())
-//                    .lastName(dataList.getFirst().getLastName())
-//                    .firstName(dataList.getFirst().getFirstName())
-//                    .birthDate(dataList.getFirst().getBirthDate())
-//                    .gender(dataList.getFirst().getGender())
-//                    .gradeLevel(dataList.getFirst().getGradeLevel())
-//                    .gradeName(dataList.getFirst().getGradeName())
-//                    .build();
-//            // Collect disease names for this pupil
-//            List<HealthCheckDiseaseRes> diseaseForPupil = dataList.stream()
-//                    .map(data -> HealthCheckDiseaseRes.builder()
-//                            .healthCheckDiseaseId(data.getHealthCheckDiseaseId())
-//                            .diseaseName(data.getDiseaseName())
-//                            .build())
-//                    .toList();
-//            HealthCheckConsentRes healthCheckConsentRes = HealthCheckConsentRes.builder()
-//                    .healthCheckConsentId(dataList.getFirst().getHealthCheckConsentId())
-//                    .schoolYear(dataList.getFirst().getSchoolYear())
-//                    .pupilRes(pupilRes)
-//                    .disease(diseaseForPupil)
-//                    .build();
-//            healthCheckConsentResList.add(healthCheckConsentRes);
-//        }
-//        // Create HealthCheckCampaignRes object
-//        return  HealthCheckCampaignRes.builder()
-//                .campaignId(rs.getFirst().getCampaignId())
-//                .title(rs.getFirst().getTitle())
-//                .address(rs.getFirst().getAddress())
-//                .description(rs.getFirst().getDescription())
-//                .deadlineDate(rs.getFirst().getDeadlineDate())
-//                .startExaminationDate(rs.getFirst().getStartExaminationDate())
-//                .endExaminationDate(rs.getFirst().getEndExaminationDate())
-//                .createdAt(rs.getFirst().getCreatedAt())
-//                .statusHealthCampaign(rs.getFirst().getStatusHealthCampaign())
-//                .consentForms(healthCheckConsentResList)
-//                .build();
-        return List.of();
     }
 
     @Override
