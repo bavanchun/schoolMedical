@@ -12,6 +12,8 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationCampaignRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.AllCampaignInfo;
+import com.schoolhealth.schoolmedical.model.dto.response.AllCampaignsResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.CampaignDiseaseInfo;
 import com.schoolhealth.schoolmedical.model.dto.response.CampaignVaccineInfo;
 import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignInfo;
@@ -276,6 +278,46 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
         // Build final response
         return NewestCampaignResponse.builder()
                 .newest_vaccination_campaign(List.of(wrapper))
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AllCampaignsResponse getAllCampaignsEnhanced() {
+        List<VaccinationCampagin> campaigns = vaccinationCampaignRepo.findAll();
+
+        List<AllCampaignInfo> campaignInfos = campaigns.stream()
+                .map(this::mapToAllCampaignInfo)
+                .collect(Collectors.toList());
+
+        return AllCampaignsResponse.builder()
+                .getAllVaccinationCampaigns(campaignInfos)
+                .build();
+    }
+
+    private AllCampaignInfo mapToAllCampaignInfo(VaccinationCampagin campaign) {
+        // Determine implementation status based on dates
+        String implementationStatus;
+        LocalDate today = LocalDate.now();
+        if (campaign.getStartDate().isAfter(today)) {
+            implementationStatus = "Pending";
+        } else if (campaign.getEndDate().isBefore(today)) {
+            implementationStatus = "Completed";
+        } else {
+            implementationStatus = "In Progress";
+        }
+
+        return AllCampaignInfo.builder()
+                .campaignId(campaign.getCampaignId())
+                .diseaseId(campaign.getDisease().getDiseaseId())
+                .diseaseName(campaign.getDisease().getName())
+                .vaccineId(campaign.getVaccine().getVaccineId())
+                .vaccineName(campaign.getVaccine().getName())
+                .formDeadline(campaign.getFormDeadline())
+                .startDate(campaign.getStartDate())
+                .endDate(campaign.getEndDate())
+                .notes(campaign.getNotes())
+                .status(implementationStatus)
                 .build();
     }
 

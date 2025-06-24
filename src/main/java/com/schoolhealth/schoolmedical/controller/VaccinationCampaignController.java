@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationCampaignRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.AllCampaignsResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignResponse;
 import com.schoolhealth.schoolmedical.service.vaccinationCampaign.VaccinationCampaignService;
@@ -84,6 +85,15 @@ public class VaccinationCampaignController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE') or hasRole('PARENT')")
     public ResponseEntity<NewestCampaignResponse> getNewestCampaign() {
         NewestCampaignResponse response = vaccinationCampaignService.getNewestCampaign();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "Get all vaccination campaigns with enhanced details",
+            description = "Retrieve all vaccination campaigns with disease and vaccine information, formatted according to frontend requirements")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<AllCampaignsResponse> getAllCampaignsEnhanced() {
+        AllCampaignsResponse response = vaccinationCampaignService.getAllCampaignsEnhanced();
         return ResponseEntity.ok(response);
     }
 }
