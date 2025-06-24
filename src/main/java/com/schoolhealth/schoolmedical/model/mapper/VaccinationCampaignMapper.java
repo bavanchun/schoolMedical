@@ -15,7 +15,7 @@ public interface VaccinationCampaignMapper {
     @Mapping(target = "vaccine", ignore = true)
     @Mapping(target = "disease", ignore = true)
     @Mapping(target = "status", ignore = true)
-    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "active", ignore = true)
     @Mapping(target = "vaccinationHistories", ignore = true)
     @Mapping(target = "consentForms", ignore = true)
     void updateCampaignFromRequest(VaccinationCampaignRequest request, @MappingTarget VaccinationCampagin campaign);

@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,11 +41,14 @@ WHERE parent.userId = :parentId AND pg.startYear = (
     List<Pupil> getAllPupilsByParent(@Param("parentId") String parentId);
 
 
-    List<Pupil> findByGradeId(Long gradeId);
+    List<Pupil> findByGrade_GradeId(Long gradeId);
 
     @Query("SELECT p FROM Pupil p WHERE p.isActive = true AND " +
             "(SELECT COUNT(vh.historyId) FROM VaccinationHistory vh " +
             "WHERE vh.pupil = p AND vh.disease.id = :diseaseId) < :doseNumber")
     List<Pupil> findPupilsNeedingVaccination(@Param("diseaseId") Long diseaseId, @Param("doseNumber") int doseNumber);
+
+    @Query("SELECT p FROM Pupil p JOIN p.parents parent WHERE parent = :parent")
+    List<Pupil> findByParent(@Param("parent") User parent);
 
 }
