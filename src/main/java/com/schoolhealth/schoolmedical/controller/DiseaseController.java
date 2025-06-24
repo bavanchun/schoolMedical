@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseWithVaccinesWrapper;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
 import com.schoolhealth.schoolmedical.service.DiseaseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -202,5 +203,19 @@ public class DiseaseController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         }
+    }
+
+    @GetMapping("/vaccines")
+    @Operation(
+            summary = "Get All Diseases with Associated Vaccines REST API",
+            description = "Retrieve all diseases with their associated vaccines in the format expected by frontend"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Diseases with vaccines retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<DiseaseWithVaccinesWrapper> getAllDiseasesWithVaccines() {
+        DiseaseWithVaccinesWrapper response = diseaseService.getAllDiseasesWithVaccines();
+        return ResponseEntity.ok(response);
     }
 }

@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseWithVaccinesWrapper;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
 import org.springframework.data.domain.Page;
 
@@ -24,6 +25,7 @@ public interface DiseaseService {
     List<VaccineResponse> getVaccinesByDiseaseId(Long diseaseId);
 
     DiseaseVaccineResponse removeVaccineFromDisease(DiseaseVaccineRequest request);
+    DiseaseWithVaccinesWrapper getAllDiseasesWithVaccines();
 
     List<Disease> getAllDiseases();
 }

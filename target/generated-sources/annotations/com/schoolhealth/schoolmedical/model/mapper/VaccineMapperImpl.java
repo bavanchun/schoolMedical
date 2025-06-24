@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-24T17:30:08+0700",
+    date = "2025-06-24T22:32:34+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -27,6 +27,8 @@ public class VaccineMapperImpl implements VaccineMapper {
         vaccine.recommendedAge( request.getRecommendedAge() );
         vaccine.description( request.getDescription() );
         vaccine.doseNumber( request.getDoseNumber() );
+
+        vaccine.isActive( true );
 
         return vaccine.build();
     }
