@@ -2,10 +2,12 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationHistoryRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationHistoryResponse;
+import com.schoolhealth.schoolmedical.service.user.UserService;
 import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.List;
 public class VaccinationHistoryController {
 
     private final VaccinationHistoryService vaccinationHistoryService;
+    private final UserService userService;
 
     @GetMapping("/pupil/{pupilId}")
     @Operation(summary = "Get pupil vaccination history", description = "Get vaccination history for a specific pupil")
@@ -47,8 +50,8 @@ public class VaccinationHistoryController {
     @PreAuthorize("hasRole('PARENT')")
     public ResponseEntity<VaccinationHistoryResponse> createParentDeclaration(
             @Valid @RequestBody VaccinationHistoryRequest request,
-            Authentication authentication) {
-        String parentUserId = authentication.getName();
+            HttpServletRequest httpRequest) {
+        String parentUserId = userService.getCurrentUserId(httpRequest);
         VaccinationHistoryResponse response = vaccinationHistoryService.createParentDeclaration(request, parentUserId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

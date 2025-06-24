@@ -3,14 +3,15 @@ package com.schoolhealth.schoolmedical.controller;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationConsentFormRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationConsentFormResponse;
 import com.schoolhealth.schoolmedical.service.vaccinationConsentForm.VaccinationConsentFormService;
+import com.schoolhealth.schoolmedical.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,12 +24,13 @@ import java.util.List;
 public class VaccinationConsentFormController {
 
     private final VaccinationConsentFormService consentFormService;
+    private final UserService userService;
 
     @GetMapping("/my-forms")
     @Operation(summary = "Get my consent forms", description = "Parent gets list of consent forms for their children")
     @PreAuthorize("hasRole('PARENT')")
-    public ResponseEntity<List<VaccinationConsentFormResponse>> getMyConsentForms(Authentication authentication) {
-        String parentUserId = authentication.getName();
+    public ResponseEntity<List<VaccinationConsentFormResponse>> getMyConsentForms(HttpServletRequest httpRequest) {
+        String parentUserId = userService.getCurrentUserId(httpRequest);
         List<VaccinationConsentFormResponse> forms = consentFormService.getMyConsentForms(parentUserId);
         return ResponseEntity.ok(forms);
     }
@@ -39,8 +41,8 @@ public class VaccinationConsentFormController {
     public ResponseEntity<VaccinationConsentFormResponse> parentRespond(
             @PathVariable Long formId,
             @Valid @RequestBody VaccinationConsentFormRequest request,
-            Authentication authentication) {
-        String parentUserId = authentication.getName();
+            HttpServletRequest httpRequest) {
+        String parentUserId = userService.getCurrentUserId(httpRequest);
         VaccinationConsentFormResponse response = consentFormService.parentRespond(formId, parentUserId, request);
         return ResponseEntity.ok(response);
     }
