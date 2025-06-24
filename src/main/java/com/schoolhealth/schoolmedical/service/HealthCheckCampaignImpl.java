@@ -92,6 +92,18 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             }
         }
         healthCheckDiseaseService.saveHealthCheckDisease(healthCheckDiseases);
+        List<User> parents = userService.findAllByRole(Role.PARENT);
+        List<UserNotification> listNotification = new ArrayList<>();
+        for( User parent : parents) {
+            UserNotification notification = UserNotification.builder()
+                    .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
+                    .sourceId(campaign.getCampaignId())
+                    .typeNotification(TypeNotification.health_check_campaign)
+                    .user(parent)
+                    .build();
+            listNotification.add(notification);
+        }
+        userNotificationService.saveAllUserNotifications(listNotification);
         return healthCheckCampaignMapper.toDto(campaign);
     }
 
@@ -159,17 +171,8 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
         healthCheckCampaignRepo.save(campaign);
         if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
             List<User> parents = userService.findAllByRole(Role.PARENT);
-            List<UserNotification> listNotification = new ArrayList<>();
-            for( User parent : parents) {
-                UserNotification notification = UserNotification.builder()
-                        .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
-                        .sourceId(campaign.getCampaignId())
-                        .typeNotification(TypeNotification.health_check_campaign)
-                        .user(parent)
-                        .build();
-                listNotification.add(notification);
-            }
-            userNotificationService.saveAllUserNotifications(listNotification);
+            //List<UserNotification> listNotification = userNotificationService.getAllUserNotifications(campaignId, TypeNotification.health_check_campaign.name());
+
             List<String> tokens = parents.stream()
                     .map(User::getDeviceToken)
                     .filter(token -> token != null && !token.isEmpty())

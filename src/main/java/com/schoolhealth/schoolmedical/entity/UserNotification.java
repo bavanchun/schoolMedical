@@ -26,7 +26,7 @@ public class UserNotification {
     private String message;
 
     @Column(name = "is_read", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isRead;
+    private boolean active;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

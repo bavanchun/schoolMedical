@@ -15,5 +15,9 @@ public class UserNotificationImpl implements UserNotificationService {
     public List<UserNotification> saveAllUserNotifications(List<UserNotification> userNotification) {
         return notificationRepo.saveAll(userNotification);
     }
+
+
+
+
 }
 
