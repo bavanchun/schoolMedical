@@ -14,6 +14,6 @@ import java.util.List;
 public class DiseaseVaccineInfo {
     private Long diseaseId;
     private String diseaseName;
-    private int doseNumber;
+    private int doseQuantity;
     private List<VaccineInfo> vaccines;
 }
