@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.service.vaccinationCampaign;
 
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationCampaignRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignResponse;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface VaccinationCampaignService {
     void updateStatus(Long campaignId, VaccinationCampaignStatus newStatus);
     List<VaccinationCampaignResponse> getAllCampaigns();
     VaccinationCampaignResponse getCampaignById(Long campaignId);
+    NewestCampaignResponse getNewestCampaign();
 }

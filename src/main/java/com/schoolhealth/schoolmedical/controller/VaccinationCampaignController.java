@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationCampaignRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignResponse;
 import com.schoolhealth.schoolmedical.service.vaccinationCampaign.VaccinationCampaignService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,5 +77,13 @@ public class VaccinationCampaignController {
             @RequestParam VaccinationCampaignStatus status) {
         vaccinationCampaignService.updateStatus(campaignId, status);
         return ResponseEntity.ok("Campaign status updated to " + status);
+    }
+
+    @GetMapping("/newest")
+    @Operation(summary = "Get newest vaccination campaign", description = "Retrieve the newest published vaccination campaign with detailed information")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE') or hasRole('PARENT')")
+    public ResponseEntity<NewestCampaignResponse> getNewestCampaign() {
+        NewestCampaignResponse response = vaccinationCampaignService.getNewestCampaign();
+        return ResponseEntity.ok(response);
     }
 }
