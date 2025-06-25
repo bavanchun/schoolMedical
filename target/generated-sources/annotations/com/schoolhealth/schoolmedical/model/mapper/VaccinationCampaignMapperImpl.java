@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-24T17:22:49+0700",
+    date = "2025-06-25T02:51:40+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -25,9 +25,6 @@ public class VaccinationCampaignMapperImpl implements VaccinationCampaignMapper 
         VaccinationCampagin.VaccinationCampaginBuilder vaccinationCampagin = VaccinationCampagin.builder();
 
         vaccinationCampagin.titleCampaign( request.getTitleCampaign() );
-        if ( request.getDoseNumber() != null ) {
-            vaccinationCampagin.doseNumber( request.getDoseNumber() );
-        }
         vaccinationCampagin.startDate( request.getStartDate() );
         vaccinationCampagin.endDate( request.getEndDate() );
         vaccinationCampagin.formDeadline( request.getFormDeadline() );
@@ -43,9 +40,6 @@ public class VaccinationCampaignMapperImpl implements VaccinationCampaignMapper 
         }
 
         campaign.setTitleCampaign( request.getTitleCampaign() );
-        if ( request.getDoseNumber() != null ) {
-            campaign.setDoseNumber( request.getDoseNumber() );
-        }
         campaign.setStartDate( request.getStartDate() );
         campaign.setEndDate( request.getEndDate() );
         campaign.setFormDeadline( request.getFormDeadline() );
@@ -69,7 +63,6 @@ public class VaccinationCampaignMapperImpl implements VaccinationCampaignMapper 
             vaccinationCampaignResponse.campaignId( campaign.getCampaignId().intValue() );
         }
         vaccinationCampaignResponse.titleCampaign( campaign.getTitleCampaign() );
-        vaccinationCampaignResponse.doseNumber( campaign.getDoseNumber() );
         vaccinationCampaignResponse.startDate( campaign.getStartDate() );
         vaccinationCampaignResponse.endDate( campaign.getEndDate() );
         vaccinationCampaignResponse.formDeadline( campaign.getFormDeadline() );

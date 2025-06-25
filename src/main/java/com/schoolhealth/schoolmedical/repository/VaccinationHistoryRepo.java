@@ -20,8 +20,8 @@ public interface VaccinationHistoryRepo extends CrudRepository<VaccinationHistor
 
     List<VaccinationHistory> findByPupilAndDiseaseAndIsActiveTrue(Pupil pupil, Disease disease);
 
-    @Query("SELECT vh FROM VaccinationHistory vh WHERE vh.pupil = :pupil AND vh.disease = :disease AND vh.isActive = true ORDER BY vh.doseNumber DESC")
-    List<VaccinationHistory> findByPupilAndDiseaseOrderByDoseNumberDesc(@Param("pupil") Pupil pupil, @Param("disease") Disease disease);
+    @Query("SELECT vh FROM VaccinationHistory vh WHERE vh.pupil = :pupil AND vh.disease = :disease AND vh.isActive = true ORDER BY vh.vaccinatedAt DESC")
+    List<VaccinationHistory> findByPupilAndDiseaseOrderByVaccinatedAtDesc(@Param("pupil") Pupil pupil, @Param("disease") Disease disease);
 
     @Query("SELECT COUNT(vh) FROM VaccinationHistory vh WHERE vh.pupil = :pupil AND vh.disease = :disease AND vh.isActive = true")
     int countByPupilAndDiseaseAndIsActiveTrue(@Param("pupil") Pupil pupil, @Param("disease") Disease disease);

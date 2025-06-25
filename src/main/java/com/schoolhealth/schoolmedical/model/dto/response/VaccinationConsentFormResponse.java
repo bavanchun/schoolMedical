@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 public class VaccinationConsentFormResponse {
     private Long consentFormId;
-    private int doseNumber;
     private LocalDateTime respondedAt;
     private ConsentFormStatus status;
     private String campaignName;

@@ -1,18 +1,23 @@
 package com.schoolhealth.schoolmedical.service.vaccinationConsentForm;
 
+import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.VaccinationCampagin;
 import com.schoolhealth.schoolmedical.entity.VaccinationConsentForm;
+
 import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.exception.EntityNotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationConsentFormRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilApprovedInfo;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilsApprovedByGradeResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationConsentFormResponse;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.repository.VaccinationCampaignRepo;
 import com.schoolhealth.schoolmedical.repository.VaccinationConsentFormRepo;
+import com.schoolhealth.schoolmedical.repository.VaccinationHistoryRepo;
 import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +40,7 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     private final PupilRepo pupilRepo;
     private final UserRepository userRepository;
     private final VaccinationHistoryService vaccinationHistoryService; // Added missing dependency
+    private final VaccinationHistoryRepo vaccinationHistoryRepo;
 
     @Override
     public VaccinationConsentFormResponse parentRespond(Long formId, String parentUserId, VaccinationConsentFormRequest request) {
@@ -130,7 +136,22 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
         List<Pupil> children = pupilRepo.findByParent(parent);
 
         return children.stream()
-                .flatMap(pupil -> consentFormRepo.findByPupilAndIsActiveTrue(pupil).stream())
+                .flatMap(pupil -> {
+                    List<VaccinationConsentForm> activeConsentForms = consentFormRepo.findByPupilAndIsActiveTrue(pupil);
+
+                    // Filter out consent forms for diseases that have been fully completed
+                    return activeConsentForms.stream()
+                            .filter(form -> {
+                                Disease disease = form.getCampaign().getDisease();
+                                int requiredDoses = disease.getDoseQuantity(); // Use disease's max doses, not vaccine's
+
+                                // Get completed doses for this pupil and disease (not vaccine)
+                                int completedDoses = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, disease);
+
+                                // If completed doses are less than required, include this form
+                                return completedDoses < requiredDoses;
+                            });
+                })
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -171,6 +192,23 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
         return updatedCount;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public PupilsApprovedByGradeResponse getPupilsApprovedByGrade(Long campaignId) {
+        log.info("Getting pupils approved by grade for campaign {}", campaignId);
+
+        List<VaccinationConsentForm> approvedForms = consentFormRepo
+                .findByCampaignIdAndStatusOrderByGradeAndName(campaignId, ConsentFormStatus.APPROVED);
+
+        List<PupilApprovedInfo> pupilInfos = approvedForms.stream()
+                .map(this::mapToPupilApprovedInfo)
+                .collect(Collectors.toList());
+
+        return PupilsApprovedByGradeResponse.builder()
+                .getPupilsApprovedByGrade(pupilInfos)
+                .build();
+    }
+
     private VaccinationConsentForm validateParentPermission(Long formId, String parentUserId) {
         VaccinationConsentForm consentForm = consentFormRepo.findById(formId)
                 .orElseThrow(() -> new EntityNotFoundException("VaccinationConsentForm", "id", formId));
@@ -193,7 +231,6 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     private VaccinationConsentFormResponse mapToResponse(VaccinationConsentForm form) {
         return VaccinationConsentFormResponse.builder()
                 .consentFormId(form.getConsentFormId())
-                .doseNumber(form.getDoseNumber())
                 .respondedAt(form.getRespondedAt())
                 .status(form.getStatus())
                 .campaignName(form.getCampaign().getTitleCampaign())
@@ -201,10 +238,42 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .pupilName(form.getPupil().getFirstName())
                 .pupilId(form.getPupil().getPupilId())
                 .gradeLevel(form.getPupil().getPupilGrade().stream()
-                        .map(pg -> pg.getGrade().getGradeName())
+                        .map(pg -> pg.getGrade().getGradeLevel().toString())
                         .findFirst()
                         .orElse("Unknown"))
                 .formDeadline(form.getCampaign().getFormDeadline().atTime(LocalTime.MAX))
+                .build();
+    }
+    private PupilApprovedInfo mapToPupilApprovedInfo(VaccinationConsentForm form) {
+        Pupil pupil = form.getPupil();
+
+        // Get class ID - assuming first pupilGrade entry
+        Long classId = pupil.getPupilGrade().stream()
+                .findFirst()
+                .map(pg -> pg.getPupilGradeId().getGradeId())
+                .orElse(null);
+
+        // Get grade level
+        Integer grade = pupil.getPupilGrade().stream()
+                .findFirst()
+                .map(pg -> pg.getGrade().getGradeLevel().ordinal() + 1)
+                .orElse(1);
+
+        return PupilApprovedInfo.builder()
+                .pupilId(pupil.getPupilId())
+                .classId(classId)
+                .dateOfBirth(pupil.getBirthDate())
+                .gender(String.valueOf(pupil.getGender()))
+                .lastName(pupil.getLastName())
+                .firstName(pupil.getFirstName())
+                .avatar(pupil.getAvatar())
+                .isActive(pupil.isActive())
+                .consentFormId(form.getConsentFormId())
+                .campaignId(form.getCampaign().getCampaignId())
+                .vaccineId(form.getVaccine().getVaccineId())
+                .respondedAt(form.getRespondedAt())
+                .status(form.getStatus().toString())
+                .Grade(grade)
                 .build();
     }
 }
