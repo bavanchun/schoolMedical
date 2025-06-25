@@ -22,7 +22,7 @@ public interface VaccinationConsentFormService {
     List<VaccinationConsentFormResponse> getConsentFormsByCampaignAndStatus(Long campaignId, String status);
 
 
-    int updateExpiredConsentForms();
+//    int updateExpiredConsentForms();
     PupilsApprovedByGradeResponse getPupilsApprovedByGrade(Long campaignId);
     PupilsApprovedByGradeResponse getPupilsApprovedBySpecificGrade(Long campaignId, GradeLevel gradeLevel);
 }
