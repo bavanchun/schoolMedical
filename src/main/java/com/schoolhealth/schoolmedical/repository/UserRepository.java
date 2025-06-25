@@ -34,4 +34,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
     @Query("UPDATE User u SET u.deviceToken = :deviceToken WHERE u.userId = :userId")
     int updateDeviceToken(@Param("userId") String userId, @Param("deviceToken") String deviceToken);
+
+    @Query("SELECT p from User p " +
+            "join fetch p.pupils " +
+            "where p.role = com.schoolhealth.schoolmedical.entity.enums.Role.PARENT")
+    List<User> findAllWithPupilsByParent();
 }

@@ -2,22 +2,26 @@ package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
-import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
-import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-24T11:57:34+0700",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
+    date = "2025-06-24T19:16:15+0700",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.5 (Oracle Corporation)"
 )
 @Component
 public class HealthCheckConsentMapperImpl implements HealthCheckConsentMapper {
+
+    @Autowired
+    private PupilMapper pupilMapper;
+    @Autowired
+    private DiseaseMapper diseaseMapper;
 
     @Override
     public HealthCheckConsentRes toDto(HealthCheckConsentForm healthCheckConsentForm) {
@@ -27,7 +31,7 @@ public class HealthCheckConsentMapperImpl implements HealthCheckConsentMapper {
 
         HealthCheckConsentRes.HealthCheckConsentResBuilder healthCheckConsentRes = HealthCheckConsentRes.builder();
 
-        healthCheckConsentRes.pupilRes( pupilToPupilRes( healthCheckConsentForm.getPupil() ) );
+        healthCheckConsentRes.pupilRes( pupilMapper.toDto( healthCheckConsentForm.getPupil() ) );
         healthCheckConsentRes.disease( healthCheckDiseaseListToHealthCheckDiseaseResList( healthCheckConsentForm.getHealthCheckDiseases() ) );
         healthCheckConsentRes.schoolYear( healthCheckConsentForm.getSchoolYear() );
 
@@ -48,35 +52,6 @@ public class HealthCheckConsentMapperImpl implements HealthCheckConsentMapper {
         return list;
     }
 
-    protected PupilRes pupilToPupilRes(Pupil pupil) {
-        if ( pupil == null ) {
-            return null;
-        }
-
-        PupilRes.PupilResBuilder pupilRes = PupilRes.builder();
-
-        pupilRes.pupilId( pupil.getPupilId() );
-        pupilRes.lastName( pupil.getLastName() );
-        pupilRes.firstName( pupil.getFirstName() );
-        pupilRes.birthDate( pupil.getBirthDate() );
-        pupilRes.gender( pupil.getGender() );
-        pupilRes.avatar( pupil.getAvatar() );
-
-        return pupilRes.build();
-    }
-
-    protected HealthCheckDiseaseRes healthCheckDiseaseToHealthCheckDiseaseRes(HealthCheckDisease healthCheckDisease) {
-        if ( healthCheckDisease == null ) {
-            return null;
-        }
-
-        HealthCheckDiseaseRes.HealthCheckDiseaseResBuilder healthCheckDiseaseRes = HealthCheckDiseaseRes.builder();
-
-        healthCheckDiseaseRes.healthCheckDiseaseId( healthCheckDisease.getHealthCheckDiseaseId() );
-
-        return healthCheckDiseaseRes.build();
-    }
-
     protected List<HealthCheckDiseaseRes> healthCheckDiseaseListToHealthCheckDiseaseResList(List<HealthCheckDisease> list) {
         if ( list == null ) {
             return null;
@@ -84,7 +59,7 @@ public class HealthCheckConsentMapperImpl implements HealthCheckConsentMapper {
 
         List<HealthCheckDiseaseRes> list1 = new ArrayList<HealthCheckDiseaseRes>( list.size() );
         for ( HealthCheckDisease healthCheckDisease : list ) {
-            list1.add( healthCheckDiseaseToHealthCheckDiseaseRes( healthCheckDisease ) );
+            list1.add( diseaseMapper.toHealthCheckDiseaseDto( healthCheckDisease ) );
         }
 
         return list1;
