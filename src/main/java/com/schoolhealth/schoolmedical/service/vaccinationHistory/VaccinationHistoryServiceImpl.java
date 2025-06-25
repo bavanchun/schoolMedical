@@ -186,6 +186,35 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
         return isCompleted;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<VaccinationHistoryResponse> getPendingParentDeclarations() {
+        log.info("Getting all pending parent declarations");
+
+        List<VaccinationHistory> pendingDeclarations = vaccinationHistoryRepo
+                .findBySourceAndIsActiveFalseOrderByVaccinatedAtDesc(VaccinationSource.PARENT_DECLARATION);
+
+        return pendingDeclarations.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<VaccinationHistoryResponse> getPendingParentDeclarationsByPupil(String pupilId) {
+        log.info("Getting pending parent declarations for pupil {}", pupilId);
+
+        Pupil pupil = pupilRepo.findById(pupilId)
+                .orElseThrow(() -> new EntityNotFoundException("Pupil", "id", pupilId));
+
+        List<VaccinationHistory> pendingDeclarations = vaccinationHistoryRepo
+                .findByPupilAndSourceAndIsActiveFalseOrderByVaccinatedAtDesc(pupil, VaccinationSource.PARENT_DECLARATION);
+
+        return pendingDeclarations.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     private void validateParentPermission(String pupilId, String parentUserId) {
         User parent = userRepository.findById(parentUserId)
                 .orElseThrow(() -> new EntityNotFoundException("User", "id", parentUserId));

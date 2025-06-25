@@ -27,4 +27,7 @@ public interface VaccinationHistoryService {
 
 
     boolean hasCompletedVaccination(String pupilId, Long diseaseId, int requiredDoses);
+    List<VaccinationHistoryResponse> getPendingParentDeclarations();
+
+    List<VaccinationHistoryResponse> getPendingParentDeclarationsByPupil(String pupilId);
 }
