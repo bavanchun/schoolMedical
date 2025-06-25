@@ -18,4 +18,6 @@ public interface UserService {
     List<User> findAllByRole(Role role);
     boolean updateDeviceToken(String userId, String deviceToken);
     String getCurrentUserId(HttpServletRequest request);
+
+    List<User> findAllWithPupilByParent();
 }

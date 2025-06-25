@@ -1,9 +1,12 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -81,6 +84,15 @@ public class HealthCheckHistory {
     @Column(name = "unusual_signs", length = 255, nullable = true)
     private String unusualSigns;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDate createdAt;
+
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean isActive;
+    private boolean active;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "consent_id", nullable = true)
+    @JsonIgnore
+    private HealthCheckConsentForm healthCheckConsentForm;
 }

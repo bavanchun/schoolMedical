@@ -1,20 +1,36 @@
 package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
+import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-23T03:15:43+0700",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
+    date = "2025-06-24T19:16:15+0700",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.5 (Oracle Corporation)"
 )
 @Component
 public class DiseaseMapperImpl implements DiseaseMapper {
+
+    @Override
+    public HealthCheckDiseaseRes toHealthCheckDiseaseDto(HealthCheckDisease healthCheckDisease) {
+        if ( healthCheckDisease == null ) {
+            return null;
+        }
+
+        HealthCheckDiseaseRes.HealthCheckDiseaseResBuilder healthCheckDiseaseRes = HealthCheckDiseaseRes.builder();
+
+        healthCheckDiseaseRes.diseaseName( healthCheckDiseaseDiseaseName( healthCheckDisease ) );
+        healthCheckDiseaseRes.healthCheckDiseaseId( healthCheckDisease.getHealthCheckDiseaseId() );
+
+        return healthCheckDiseaseRes.build();
+    }
 
     @Override
     public Disease toEntity(DiseaseRequest request) {
@@ -73,5 +89,13 @@ public class DiseaseMapperImpl implements DiseaseMapper {
         handleNullEntities( disease, vaccine, success, message, diseaseVaccineResponse );
 
         return diseaseVaccineResponse.build();
+    }
+
+    private String healthCheckDiseaseDiseaseName(HealthCheckDisease healthCheckDisease) {
+        Disease disease = healthCheckDisease.getDisease();
+        if ( disease == null ) {
+            return null;
+        }
+        return disease.getName();
     }
 }
