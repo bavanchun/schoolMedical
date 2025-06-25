@@ -142,16 +142,24 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .flatMap(pupil -> {
                     List<VaccinationConsentForm> activeConsentForms = consentFormRepo.findByPupilAndIsActiveTrue(pupil);
 
-                    // Filter out consent forms for diseases that have been fully completed
+                    // Apply multiple filters to determine which consent forms to show
                     return activeConsentForms.stream()
                             .filter(form -> {
+                                // Filter 1: Exclude campaigns that are COMPLETED
+                                // Parents don't need to see completed campaigns
+                                VaccinationCampaignStatus campaignStatus = form.getCampaign().getStatus();
+                                if (campaignStatus == VaccinationCampaignStatus.COMPLETED) {
+                                    return false; // Exclude completed campaigns
+                                }
+
+                                // Filter 2: Exclude diseases that have been fully vaccinated
                                 Disease disease = form.getCampaign().getDisease();
                                 int requiredDoses = disease.getDoseQuantity(); // Use disease's max doses, not vaccine's
 
                                 // Get completed doses for this pupil and disease (not vaccine)
                                 int completedDoses = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, disease);
 
-                                // If completed doses are less than required, include this form
+                                // Include only if completed doses are less than required
                                 return completedDoses < requiredDoses;
                             });
                 })
