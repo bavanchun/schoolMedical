@@ -7,6 +7,7 @@ import com.schoolhealth.schoolmedical.entity.VaccinationCampagin;
 import com.schoolhealth.schoolmedical.entity.VaccinationConsentForm;
 
 import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
+import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.exception.EntityNotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationConsentFormRequest;
@@ -199,6 +200,23 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
 
         List<VaccinationConsentForm> approvedForms = consentFormRepo
                 .findByCampaignIdAndStatusOrderByGradeAndName(campaignId, ConsentFormStatus.APPROVED);
+
+        List<PupilApprovedInfo> pupilInfos = approvedForms.stream()
+                .map(this::mapToPupilApprovedInfo)
+                .collect(Collectors.toList());
+
+        return PupilsApprovedByGradeResponse.builder()
+                .getPupilsApprovedByGrade(pupilInfos)
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PupilsApprovedByGradeResponse getPupilsApprovedBySpecificGrade(Long campaignId, GradeLevel gradeLevel) {
+        log.info("Getting pupils approved by specific grade {} for campaign {}", gradeLevel, campaignId);
+
+        List<VaccinationConsentForm> approvedForms = consentFormRepo
+                .findByCampaignIdAndStatusAndGradeLevelOrderByName(campaignId, ConsentFormStatus.APPROVED, gradeLevel);
 
         List<PupilApprovedInfo> pupilInfos = approvedForms.stream()
                 .map(this::mapToPupilApprovedInfo)
