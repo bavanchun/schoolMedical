@@ -6,6 +6,7 @@ import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.VaccinationCampagin;
 import com.schoolhealth.schoolmedical.entity.VaccinationConsentForm;
 
+import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
@@ -259,19 +260,45 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     }
 
     private VaccinationConsentFormResponse mapToResponse(VaccinationConsentForm form) {
+        // Extract campaign, disease, vaccine, and pupil information
+        VaccinationCampagin campaign = form.getCampaign();
+        Disease disease = campaign.getDisease();
+        Vaccine vaccine = form.getVaccine();
+        Pupil pupil = form.getPupil();
+
+        // Calculate current completed doses for this disease from all sources
+        // This includes both campaign injections and approved parent declarations
+        int currDoseNumber = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, disease);
+
+        // Get pupil's grade level
+        String gradeLevel = pupil.getPupilGrade().stream()
+                .map(pg -> pg.getGrade().getGradeLevel().toString())
+                .findFirst()
+                .orElse("Unknown");
         return VaccinationConsentFormResponse.builder()
                 .consentFormId(form.getConsentFormId())
                 .respondedAt(form.getRespondedAt())
                 .status(form.getStatus())
-                .campaignName(form.getCampaign().getTitleCampaign())
-                .vaccineName(form.getVaccine().getName())
-                .pupilName(form.getPupil().getFirstName())
-                .pupilId(form.getPupil().getPupilId())
-                .gradeLevel(form.getPupil().getPupilGrade().stream()
-                        .map(pg -> pg.getGrade().getGradeLevel().toString())
-                        .findFirst()
-                        .orElse("Unknown"))
-                .formDeadline(form.getCampaign().getFormDeadline().atTime(LocalTime.MAX))
+                .formDeadline(campaign.getFormDeadline().atTime(LocalTime.MAX))
+
+                // Campaign information
+                .campaignId(campaign.getCampaignId())
+                .campaignName(campaign.getTitleCampaign())
+
+                // Disease information
+                .diseaseId(disease.getDiseaseId())
+                .diseaseName(disease.getName())
+                .doseNumber(disease.getDoseQuantity())       // Total doses required
+                .currDoseNumber(currDoseNumber)              // Current completed doses
+
+                // Vaccine information
+                .vaccineId(vaccine.getVaccineId())
+                .vaccineName(vaccine.getName())
+
+                // Pupil information
+                .pupilId(pupil.getPupilId())
+                .pupilName(pupil.getFirstName())
+                .gradeLevel(gradeLevel)
                 .build();
     }
     private PupilApprovedInfo mapToPupilApprovedInfo(VaccinationConsentForm form) {
