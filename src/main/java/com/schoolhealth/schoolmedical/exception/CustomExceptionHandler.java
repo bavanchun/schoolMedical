@@ -14,4 +14,15 @@ public class CustomExceptionHandler {
     public ErrorResponse handleNotFoundException(NotFoundException ex, WebRequest req) {
         return new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), req.getDescription(false));
     }
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleAccessDeniedException(AccessDeniedException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), req.getDescription(false));
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleDuplicateException(DuplicateException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), req.getDescription(false));
+    }
 }

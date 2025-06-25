@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -28,9 +30,7 @@ public class SecurityConfig {
                                 "/api/v1/register",
                                 "/api/v1/login",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                // THÊM DÒNG NÀY:
-                                "/api/health-conditions/**"
+                                "/v3/api-docs/**"
                         )
                         .permitAll()
                     .anyRequest()
