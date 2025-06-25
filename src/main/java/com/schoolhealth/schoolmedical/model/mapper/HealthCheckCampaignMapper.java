@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface HealthCheckCampaignMapper {
     @Mappings({
@@ -19,6 +21,8 @@ public interface HealthCheckCampaignMapper {
             @Mapping(target = "healthCheckDiseases", ignore = true)
     })
     HealthCheckCampaign toEntity(HealthCheckCampaginReq healthCheckCampaign);
+   // @Mapping(target = "consentForms", source = "healthCheckConsentForms")
     HealthCheckCampaignRes toDto(HealthCheckCampaign healthCheckCampaign);
     LatestHealthCheckCampaignRes toLatestDto(HealthCheckCampaign healthCheckCampaign);
+    List<HealthCheckCampaignRes> toDto(List<HealthCheckCampaign> healthCheckCampaigns);
 }

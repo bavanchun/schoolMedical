@@ -5,12 +5,14 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignRes;
 import com.schoolhealth.schoolmedical.model.dto.response.LatestHealthCheckCampaignRes;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-25T02:51:40+0700",
+    date = "2025-06-25T23:03:51+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -77,5 +79,19 @@ public class HealthCheckCampaignMapperImpl implements HealthCheckCampaignMapper 
         latestHealthCheckCampaignRes.statusHealthCampaign( healthCheckCampaign.getStatusHealthCampaign() );
 
         return latestHealthCheckCampaignRes.build();
+    }
+
+    @Override
+    public List<HealthCheckCampaignRes> toDto(List<HealthCheckCampaign> healthCheckCampaigns) {
+        if ( healthCheckCampaigns == null ) {
+            return null;
+        }
+
+        List<HealthCheckCampaignRes> list = new ArrayList<HealthCheckCampaignRes>( healthCheckCampaigns.size() );
+        for ( HealthCheckCampaign healthCheckCampaign : healthCheckCampaigns ) {
+            list.add( toDto( healthCheckCampaign ) );
+        }
+
+        return list;
     }
 }

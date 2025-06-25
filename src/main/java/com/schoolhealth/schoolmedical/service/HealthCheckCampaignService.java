@@ -16,4 +16,5 @@ public interface HealthCheckCampaignService {
     HealthCheckCampaignRes getHealthCheckCampaignDetailsById(Long campaignId);
     void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign);
     LatestHealthCheckCampaignRes getLatestHealthCheckCampaign();
+    List<HealthCheckCampaignRes> getAllHealthCheckCampaigns();
 }
