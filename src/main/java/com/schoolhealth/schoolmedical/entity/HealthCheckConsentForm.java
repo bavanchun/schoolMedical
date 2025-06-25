@@ -1,5 +1,7 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +25,7 @@ public class HealthCheckConsentForm {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pupil_id", nullable = false)
+
     private Pupil pupil;
 
     @OneToOne(mappedBy = "healthCheckConsentForm", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)

@@ -68,10 +68,10 @@ public class User implements UserDetails{
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
-    @OneToMany(mappedBy = "authorId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authorId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
     private List<Blog> blogs;
 
-    @ManyToMany(mappedBy = "parents")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "parents")
     private List<Pupil> pupils;
 
     @Column(name = "device_token", nullable = true, length = 255)

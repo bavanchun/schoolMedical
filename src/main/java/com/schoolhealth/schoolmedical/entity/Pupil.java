@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,10 +44,12 @@ public class Pupil {
     private boolean isActive;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
     @JoinTable(
             name = "pupil_parent",
             joinColumns = @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id"),
-            inverseJoinColumns = @JoinColumn(name = "parent_id", referencedColumnName = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "parent_id", referencedColumnName = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"pupil_id", "parent_id"})
     )
     private List<User> parents;
 
@@ -58,15 +61,15 @@ public class Pupil {
     @JoinColumn(name = "pupil_id")
     private List<SendMedication> sendMedications;
 
-    @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<HealthConditionHistory> healthConditionHistories;
 
     @OneToMany(mappedBy = "pupil", fetch = FetchType.LAZY)
     private List<MedicalEvent> medicalEvents;
 
-    @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<HealthCheckConsentForm> healthCheckConsentForms;
 
-    @OneToMany(mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<PupilGrade> pupilGrade;
 }
