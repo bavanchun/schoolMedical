@@ -75,4 +75,20 @@ public class VaccinationHistoryController {
         VaccinationHistoryResponse response = vaccinationHistoryService.updateHistory(historyId, request);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/pending-declarations")
+    @Operation(summary = "Get all pending parent declarations", description = "Get all vaccination declarations from parents pending confirmation")
+    @PreAuthorize("hasRole('SCHOOL_NURSE') or hasRole('MANAGER') or hasRole('ADMIN')")
+    public ResponseEntity<List<VaccinationHistoryResponse>> getPendingParentDeclarations() {
+        List<VaccinationHistoryResponse> pendingDeclarations = vaccinationHistoryService.getPendingParentDeclarations();
+        return ResponseEntity.ok(pendingDeclarations);
+    }
+
+    @GetMapping("/pending-declarations/pupil/{pupilId}")
+    @Operation(summary = "Get pending parent declarations by pupil", description = "Get vaccination declarations from parents for specific pupil pending confirmation")
+    @PreAuthorize("hasRole('SCHOOL_NURSE') or hasRole('MANAGER') or hasRole('ADMIN')")
+    public ResponseEntity<List<VaccinationHistoryResponse>> getPendingParentDeclarationsByPupil(
+            @PathVariable String pupilId) {
+        List<VaccinationHistoryResponse> pendingDeclarations = vaccinationHistoryService.getPendingParentDeclarationsByPupil(pupilId);
+        return ResponseEntity.ok(pendingDeclarations);
+    }
 }
