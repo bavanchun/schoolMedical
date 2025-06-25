@@ -32,10 +32,6 @@ public class VaccinationCampaignRequest {
     @NotNull(message = "Vaccine ID is required")
     private Integer vaccineId;
 
-    @NotNull(message = "Dose number is required")
-    @Min(value = 1, message = "Dose number must be >= 1")
-    private Integer doseNumber;
-
     @NotNull(message = "Start date is required")
     @FutureOrPresent(message = "Start date must be in the present or future")
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -62,6 +58,7 @@ public class VaccinationCampaignRequest {
             return true;
         }
         // check if startDate is before formDeadline and formDeadline is before endDate
-        return startDate.isBefore(formDeadline) && formDeadline.isBefore(endDate);
+//        return startDate.isBefore(formDeadline) && formDeadline.isBefore(endDate);
+        return formDeadline.isBefore(startDate) && startDate.isBefore(endDate);
     }
 }

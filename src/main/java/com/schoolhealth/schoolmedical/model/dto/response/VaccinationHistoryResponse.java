@@ -10,13 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class VaccinationHistoryResponse {
-    private int historyId;
+    private Long historyId;
     private String pupilId;
-    private int vaccineId;
+    private String pupilName;
     private String vaccineName;
-    private int diseaseId;
     private String diseaseName;
-    private int campaignId;
+    private String campaignName;
     private VaccinationSource source;
     private LocalDateTime vaccinatedAt;
     private String notes;
