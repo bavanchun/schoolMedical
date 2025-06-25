@@ -20,4 +20,5 @@ public interface UserService {
     String getCurrentUserId(HttpServletRequest request);
 
     List<User> findAllWithPupilByParent();
+
 }

@@ -173,7 +173,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             List<User> parents = userService.findAllWithPupilByParent();
             Map<String, List<Pupil>> pupilsByParent = parents.stream()
                     .collect(Collectors.groupingBy(User::getDeviceToken, Collectors.mapping(User::getPupils, Collectors.flatMapping(List::stream, Collectors.toList()))));
-            //List<UserNotification> listNotification = userNotificationService.getAllUserNotifications(campaignId, TypeNotification.health_check_campaign.name());
 
             List<String> tokens = parents.stream()
                     .map(User::getDeviceToken)
