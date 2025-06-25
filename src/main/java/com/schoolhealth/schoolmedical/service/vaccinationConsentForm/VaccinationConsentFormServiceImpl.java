@@ -50,28 +50,30 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
         // Validate parent permission
         VaccinationConsentForm consentForm = validateParentPermission(formId, parentUserId);
 
-        // Check if campaign is still accepting responses
+        // Business Rule: Parents can only respond when campaign is PUBLISHED
+        // Once campaign moves to IN_PROGRESS, responses are locked
         if (!consentForm.getCampaign().getStatus().equals(VaccinationCampaignStatus.PUBLISHED)) {
-            throw new IllegalStateException("Campaign is not in PUBLISHED status");
+            throw new IllegalStateException("Cannot respond: Campaign is not in PUBLISHED status. Responses are locked.");
         }
 
-        // Check if deadline has passed
+        // Business Rule: Responses must be submitted before deadline
         if (LocalDateTime.now().isAfter(consentForm.getCampaign().getFormDeadline().atTime(LocalTime.MAX))) {
-            throw new IllegalStateException("Response deadline has passed");
+            throw new IllegalStateException("Cannot respond: Response deadline has passed");
         }
 
-        // Validate status - parent can only respond with APPROVED or REJECTED
+        // Validate response options - parents can only choose APPROVED or REJECTED
         if (request.getStatus() != ConsentFormStatus.APPROVED &&
                 request.getStatus() != ConsentFormStatus.REJECTED) {
-            throw new IllegalArgumentException("Parents can only respond with APPROVED or REJECTED");
+            throw new IllegalArgumentException("Invalid response: Parents can only respond with APPROVED or REJECTED");
         }
 
-        // Update consent form
+        // Business Rule: Parents can freely toggle between REJECTED ↔ APPROVED before deadline
+        // Default status is REJECTED, so parents must actively approve to participate
         consentForm.setStatus(request.getStatus());
         consentForm.setRespondedAt(LocalDateTime.now());
 
         VaccinationConsentForm savedForm = consentFormRepo.save(consentForm);
-        log.info("Parent response saved successfully for form {}", formId);
+        log.info("Parent response updated successfully for form {} - Status: {}", formId, request.getStatus());
 
         return mapToResponse(savedForm);
     }
@@ -174,24 +176,26 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public int updateExpiredConsentForms() {
-        log.info("Starting automatic update of expired consent forms");
-
-        List<VaccinationConsentForm> expiredForms = consentFormRepo
-                .findExpiredWaitingForms(ConsentFormStatus.WAITING, LocalDateTime.now());
-
-        int updatedCount = 0;
-        for (VaccinationConsentForm form : expiredForms) {
-            form.setStatus(ConsentFormStatus.REJECTED);
-            form.setRespondedAt(LocalDateTime.now());
-            consentFormRepo.save(form);
-            updatedCount++;
-        }
-
-        log.info("Updated {} expired consent forms from WAITING to REJECTED", updatedCount);
-        return updatedCount;
-    }
+//    @Override
+//    public int updateExpiredConsentForms() {
+//        log.info("Starting automatic update of expired consent forms");
+//
+//        List<VaccinationConsentForm> expiredForms = consentFormRepo
+//                .findExpiredWaitingForms(ConsentFormStatus.WAITING, LocalDateTime.now());
+//
+//        int updatedCount = 0;
+//        for (VaccinationConsentForm form : expiredForms) {
+//            form.setStatus(ConsentFormStatus.REJECTED);
+//            form.setRespondedAt(LocalDateTime.now());
+//            consentFormRepo.save(form);
+//            updatedCount++;
+//        }
+//
+//        log.info("Updated {} expired consent forms from WAITING to REJECTED", updatedCount);
+//        return updatedCount;
+//    }
+    // Removed: updateExpiredConsentForms() method
+    // Reason: With new business logic, default status is REJECTED, so no automatic expiry handling needed
 
     @Override
     @Transactional(readOnly = true)
