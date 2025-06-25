@@ -30,4 +30,6 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     List<HealthCheckCampaignFlatData> findHealthCheckCampaignDetails(@Param("campaignId") Long campaignId);
 
     HealthCheckCampaign findTopByActiveTrueOrderByCreatedAtDesc();
+
+    List<HealthCheckCampaign> findAllByActiveTrue();
 }

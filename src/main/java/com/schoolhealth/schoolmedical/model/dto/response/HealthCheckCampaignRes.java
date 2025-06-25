@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import lombok.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HealthCheckCampaignRes {
     private Long campaignId;
     private String address;

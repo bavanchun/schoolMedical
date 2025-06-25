@@ -34,5 +34,8 @@
         public ResponseEntity<?> getLatestHealthCheckCampaign() {
             return ResponseEntity.ok(healthCheckCampaignService.getLatestHealthCheckCampaign());
         }
-
+        @GetMapping("/allHealthCheckCampaigns")
+        public ResponseEntity<?> getAllHealthCheckCampaigns() {
+            return ResponseEntity.ok(healthCheckCampaignService.getAllHealthCheckCampaigns());
+        }
     }
