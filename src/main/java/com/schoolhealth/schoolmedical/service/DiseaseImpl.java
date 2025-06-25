@@ -7,7 +7,10 @@ import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineInfo;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseWithVaccinesWrapper;
+import com.schoolhealth.schoolmedical.model.dto.response.VaccineInfo;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.repository.DiseaseRepo;
@@ -16,9 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DiseaseImpl implements DiseaseService{
@@ -196,6 +202,38 @@ public class DiseaseImpl implements DiseaseService{
                 .message("An unexpected error occurred: " + e.getMessage())
                 .build();
         }
+    }
+
+    @Override
+    @Transactional
+    public DiseaseWithVaccinesWrapper getAllDiseasesWithVaccines() {
+        List<Disease> diseases = diseaseRepo.findAllByisActiveTrue();
+
+        List<DiseaseVaccineInfo> diseaseVaccineInfos = diseases.stream()
+                .map(disease -> {
+                    // Filter only active vaccines
+                    List<VaccineInfo> vaccineInfos = (disease.getVaccines() != null)
+                            ? disease.getVaccines().stream()
+                            .filter(vaccine -> vaccine.isActive())
+                            .map(vaccine -> VaccineInfo.builder()
+                                    .vaccineId(vaccine.getVaccineId())
+                                    .name(vaccine.getName())
+                                    .build())
+                            .collect(Collectors.toList())
+                            : new ArrayList<>();
+
+                    return DiseaseVaccineInfo.builder()
+                            .diseaseId(disease.getDiseaseId())
+                            .diseaseName(disease.getName())
+                            .doseQuantity(disease.getDoseQuantity())
+                            .vaccines(vaccineInfos)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return DiseaseWithVaccinesWrapper.builder()
+                .getVaccineByDisease(diseaseVaccineInfos)
+                .build();
     }
 
     @Override

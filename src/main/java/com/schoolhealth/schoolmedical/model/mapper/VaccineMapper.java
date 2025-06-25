@@ -15,7 +15,7 @@ public interface VaccineMapper {
         @Mapping(target = "campaigns", ignore = true),
         @Mapping(target = "vaccinationHistories", ignore = true),
         @Mapping(target = "consentForms", ignore = true),
-        @Mapping(target = "isActive", ignore = true)
+        @Mapping(target = "isActive", constant = "true")
     })
     Vaccine toEntity(VaccineRequest request);
 
