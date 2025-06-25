@@ -153,7 +153,7 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
                         .message(message)
                         .typeNotification(TypeNotification.VACCINATION_CAMPAIGN)
                         .sourceId(campaignId)
-                        .isRead(false)
+                        .active(false)
                         .build();
                 newNotifications.add(notification);
                 // Here you would also call a real-time notification service like FCM
@@ -362,7 +362,7 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
                         .message(message)
                         .typeNotification(TypeNotification.VACCINATION_CAMPAIGN)
                         .sourceId(campaign.getCampaignId())
-                        .isRead(false)
+                        .active(false)
                         .build();
                 completionNotifications.add(notification);
             }
