@@ -24,9 +24,6 @@ public class VaccinationHistory {
     @Column(name = "source")
     private VaccinationSource source;
 
-    @Column(name = "dose_number")
-    private int doseNumber;
-
     @Column(name = "vaccinated_at")
     private LocalDateTime vaccinatedAt;
 
@@ -45,7 +42,7 @@ public class VaccinationHistory {
     private Pupil pupil;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id", nullable = false)
+    @JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id", nullable = true)
     private VaccinationCampagin campaign;
 
     @ManyToOne(fetch = FetchType.LAZY)

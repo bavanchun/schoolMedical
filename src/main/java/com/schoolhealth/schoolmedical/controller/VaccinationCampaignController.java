@@ -2,6 +2,8 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationCampaignRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.AllCampaignsResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.NewestCampaignResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignResponse;
 import com.schoolhealth.schoolmedical.service.vaccinationCampaign.VaccinationCampaignService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/vaccination-campaigns")
 @RequiredArgsConstructor
@@ -22,6 +26,22 @@ import org.springframework.web.bind.annotation.*;
 public class VaccinationCampaignController {
 
     private final VaccinationCampaignService vaccinationCampaignService;
+
+    @GetMapping
+    @Operation(summary = "Get all vaccination campaigns", description = "Retrieve list of all vaccination campaigns")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<List<VaccinationCampaignResponse>> getAllCampaigns() {
+        List<VaccinationCampaignResponse> campaigns = vaccinationCampaignService.getAllCampaigns();
+        return ResponseEntity.ok(campaigns);
+    }
+
+    @GetMapping("/{campaignId}")
+    @Operation(summary = "Get vaccination campaign by ID", description = "Retrieve a specific vaccination campaign by its ID")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<VaccinationCampaignResponse> getCampaignById(@PathVariable Long campaignId) {
+        VaccinationCampaignResponse campaign = vaccinationCampaignService.getCampaignById(campaignId);
+        return ResponseEntity.ok(campaign);
+    }
 
     @PostMapping
     @Operation(summary = "Create new vaccination campaign", description = "Create a new vaccination campaign (Manager only)")
@@ -58,5 +78,22 @@ public class VaccinationCampaignController {
             @RequestParam VaccinationCampaignStatus status) {
         vaccinationCampaignService.updateStatus(campaignId, status);
         return ResponseEntity.ok("Campaign status updated to " + status);
+    }
+
+    @GetMapping("/newest")
+    @Operation(summary = "Get newest vaccination campaign", description = "Retrieve the newest published vaccination campaign with detailed information")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE') or hasRole('PARENT')")
+    public ResponseEntity<NewestCampaignResponse> getNewestCampaign() {
+        NewestCampaignResponse response = vaccinationCampaignService.getNewestCampaign();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "Get all vaccination campaigns with enhanced details",
+            description = "Retrieve all vaccination campaigns with disease and vaccine information, formatted according to frontend requirements")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
+    public ResponseEntity<AllCampaignsResponse> getAllCampaignsEnhanced() {
+        AllCampaignsResponse response = vaccinationCampaignService.getAllCampaignsEnhanced();
+        return ResponseEntity.ok(response);
     }
 }

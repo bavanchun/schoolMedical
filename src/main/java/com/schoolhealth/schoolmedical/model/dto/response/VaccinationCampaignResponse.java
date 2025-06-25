@@ -17,7 +17,6 @@ public class VaccinationCampaignResponse {
     private String titleCampaign;
     private String vaccineName;
     private String diseaseName;
-    private int doseNumber;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
     @JsonFormat(pattern = "dd-MM-yyyy")

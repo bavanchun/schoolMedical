@@ -22,9 +22,6 @@ public class VaccineServiceImpl implements  VaccineService {
 
     @Override
     public VaccineResponse createVaccine(VaccineRequest request) {
-        if (vaccineRepository.findByNameIgnoreCase(request.getName()).isPresent()) {
-            throw new VaccineAlreadyExistsException("Vaccine with name " + request.getName() + " already exists");
-        }
         Vaccine vaccine = vaccineMapper.toEntity(request);
         return vaccineMapper.toDto(vaccineRepository.save(vaccine));
     }
