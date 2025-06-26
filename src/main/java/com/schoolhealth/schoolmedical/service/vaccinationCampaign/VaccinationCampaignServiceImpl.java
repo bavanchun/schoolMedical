@@ -129,12 +129,13 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
             int currentDoses = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, campaign.getDisease());
             int nextDoseNumber = currentDoses + 1;
 
-            // Create Consent Form
+            // Create Consent Form with default REJECTED status
+            // Parents must actively approve to participate in vaccination
             VaccinationConsentForm consentForm = VaccinationConsentForm.builder()
                     .campaign(campaign)
                     .pupil(pupil)
                     .vaccine(campaign.getVaccine())
-                    .status(ConsentFormStatus.WAITING)
+                    .status(ConsentFormStatus.REJECTED)
                     .isActive(true)
                     .build();
             newConsentForms.add(consentForm);
