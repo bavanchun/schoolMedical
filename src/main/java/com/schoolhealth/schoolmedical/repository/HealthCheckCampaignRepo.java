@@ -25,7 +25,7 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
             "LEFT JOIN pp.pupilGrade pg " +
             "LEFT JOIN pg.grade g " +
             "LEFT JOIN hccs.healthCheckDiseases hcd ON hcd.status = com.schoolhealth.schoolmedical.entity.enums.HealthCheckDiseaseStatus.APPROVED " +
-            "LEFT JOIN hcd.disease d " +
+            "LEFT JOIN hcd.disease d ON d.isInjectedVaccination = false " +
             " where hcc.active = true AND hcc.campaignId = :campaignId")
     List<HealthCheckCampaignFlatData> findHealthCheckCampaignDetails(@Param("campaignId") Long campaignId);
 
