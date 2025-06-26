@@ -12,4 +12,5 @@ import lombok.*;
 public class HealthCheckDiseaseRes {
     private Long healthCheckDiseaseId;
     private String diseaseName;
+    private String note;
 }

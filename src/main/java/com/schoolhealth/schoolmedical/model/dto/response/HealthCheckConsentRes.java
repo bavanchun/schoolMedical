@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HealthCheckConsentRes {
     private Long healthCheckConsentId;
     private int schoolYear;

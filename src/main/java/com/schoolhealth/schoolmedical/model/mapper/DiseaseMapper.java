@@ -11,7 +11,11 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface DiseaseMapper {
-    @Mapping(target = "diseaseName", source="disease.name")
+
+    @Mappings({
+            @Mapping(target = "diseaseName", source="disease.name")
+            , @Mapping(target = "note", source="note")
+    })
     HealthCheckDiseaseRes toHealthCheckDiseaseDto(HealthCheckDisease healthCheckDisease);
     @Mappings({
             @Mapping(target = "diseaseId", ignore = true),

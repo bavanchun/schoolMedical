@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.controller;
 import com.schoolhealth.schoolmedical.entity.HealthCheckHistory;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import com.schoolhealth.schoolmedical.service.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,10 @@ public class HealthCheckAnnualController {
     @PostMapping("/result/{consentId}")
     public ResponseEntity<?> saveHealthCheckHistory(@RequestBody HealthCheckHistoryReq healthCheckHistoryReq, @PathVariable Long consentId) {
         return ResponseEntity.ok(healthCheckHistoryService.saveHealthCheckHistory(healthCheckHistoryReq, consentId));
+    }
+    @GetMapping("/result")
+    public ResponseEntity<?> getHealthCheckHistoryByPupilIdAndSchoolYear(@RequestParam String pupilId, @RequestParam int schoolYear) {
+        HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
+        return ResponseEntity.ok(healthCheckHistory);
     }
 }
