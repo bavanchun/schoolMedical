@@ -141,7 +141,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                             .build())
                     .toList();
             HealthCheckConsentRes healthCheckConsentRes = HealthCheckConsentRes.builder()
-                    .healthCheckConsentId(dataList.getFirst().getHealthCheckConsentId())
+                    .consentFormId(dataList.getFirst().getHealthCheckConsentId())
                     .schoolYear(dataList.getFirst().getSchoolYear())
                     .pupilRes(pupilRes)
                     .disease(diseaseForPupil)

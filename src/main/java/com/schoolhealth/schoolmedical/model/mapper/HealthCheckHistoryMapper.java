@@ -18,7 +18,7 @@ public interface HealthCheckHistoryMapper {
     })
     HealthCheckHistory toHealthCheckHistory(HealthCheckHistoryReq historyReq);
     @Mappings({
-            @Mapping(target = "healthCheckConsentRes", source = "healthCheckConsentForm"),
+            @Mapping(target = "healthCheckConsentSimpleRes", source = "healthCheckConsentForm"),
     })
     HealthCheckHistoryRes toHealthCheckHistoryRes(HealthCheckHistory history);
 }

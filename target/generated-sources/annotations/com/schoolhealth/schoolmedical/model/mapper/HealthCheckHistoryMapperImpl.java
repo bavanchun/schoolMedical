@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-26T23:20:11+0700",
+    date = "2025-06-27T00:08:57+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -61,7 +61,7 @@ public class HealthCheckHistoryMapperImpl implements HealthCheckHistoryMapper {
 
         HealthCheckHistoryRes.HealthCheckHistoryResBuilder healthCheckHistoryRes = HealthCheckHistoryRes.builder();
 
-        healthCheckHistoryRes.healthCheckConsentRes( healthCheckConsentMapper.toDto( history.getHealthCheckConsentForm() ) );
+        healthCheckHistoryRes.healthCheckConsentSimpleRes( healthCheckConsentMapper.toSimpleRes( history.getHealthCheckConsentForm() ) );
         healthCheckHistoryRes.height( history.getHeight() );
         healthCheckHistoryRes.weight( history.getWeight() );
         healthCheckHistoryRes.rightEyeVision( history.getRightEyeVision() );
