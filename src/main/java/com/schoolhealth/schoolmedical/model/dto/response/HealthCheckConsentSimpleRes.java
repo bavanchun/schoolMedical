@@ -1,6 +1,5 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -10,10 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class HealthCheckConsentRes {
-    private Long consentFormId;
+public class HealthCheckConsentSimpleRes {
     private int schoolYear;
-    private PupilRes pupilRes;
     private List<HealthCheckDiseaseRes> disease;
 }

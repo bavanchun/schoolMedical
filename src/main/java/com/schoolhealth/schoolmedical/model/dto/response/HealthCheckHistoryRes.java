@@ -33,5 +33,5 @@ public class HealthCheckHistoryRes {
     private String additionalNotes;
     private String unusualSigns;
     private LocalDate createdAt;
-    private HealthCheckConsentRes healthCheckConsentRes;
+    private HealthCheckConsentSimpleRes healthCheckConsentSimpleRes;
 }

@@ -68,7 +68,7 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
                     .toList();
 
             HealthCheckConsentRes consentRes = HealthCheckConsentRes.builder()
-                    .healthCheckConsentId(consentId)
+                    .consentFormId(consentId)
                     .schoolYear(consentDataList.getFirst().getSchoolYear())
                     .pupilRes(pupil)
                     .disease(diseaseRes)
