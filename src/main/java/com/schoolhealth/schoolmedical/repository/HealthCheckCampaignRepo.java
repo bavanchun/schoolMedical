@@ -29,7 +29,8 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
             " where hcc.active = true AND hcc.campaignId = :campaignId")
     List<HealthCheckCampaignFlatData> findHealthCheckCampaignDetails(@Param("campaignId") Long campaignId);
 
-    HealthCheckCampaign findTopByActiveTrueAndStatusHealthCampaignPublishedOrderByCreatedAtDesc();
+    @Query("SELECT h FROM HealthCheckCampaign h WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED ORDER BY h.createdAt DESC")
+    HealthCheckCampaign findTopByStatusHealthCampaignPublishedOrderByCreatedAtDesc();
 
     List<HealthCheckCampaign> findAllByActiveTrue();
 }
