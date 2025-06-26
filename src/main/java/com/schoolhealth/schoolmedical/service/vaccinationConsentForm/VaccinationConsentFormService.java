@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.service.vaccinationConsentForm;
 
+import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationConsentFormRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilsApprovedByGradeResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.VaccinationConsentFormResponse;
@@ -21,6 +22,7 @@ public interface VaccinationConsentFormService {
     List<VaccinationConsentFormResponse> getConsentFormsByCampaignAndStatus(Long campaignId, String status);
 
 
-    int updateExpiredConsentForms();
+//    int updateExpiredConsentForms();
     PupilsApprovedByGradeResponse getPupilsApprovedByGrade(Long campaignId);
+    PupilsApprovedByGradeResponse getPupilsApprovedBySpecificGrade(Long campaignId, GradeLevel gradeLevel);
 }

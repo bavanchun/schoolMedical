@@ -6,7 +6,9 @@ import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.VaccinationCampagin;
 import com.schoolhealth.schoolmedical.entity.VaccinationConsentForm;
 
+import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
+import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus;
 import com.schoolhealth.schoolmedical.exception.EntityNotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.VaccinationConsentFormRequest;
@@ -49,28 +51,30 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
         // Validate parent permission
         VaccinationConsentForm consentForm = validateParentPermission(formId, parentUserId);
 
-        // Check if campaign is still accepting responses
+        // Business Rule: Parents can only respond when campaign is PUBLISHED
+        // Once campaign moves to IN_PROGRESS, responses are locked
         if (!consentForm.getCampaign().getStatus().equals(VaccinationCampaignStatus.PUBLISHED)) {
-            throw new IllegalStateException("Campaign is not in PUBLISHED status");
+            throw new IllegalStateException("Cannot respond: Campaign is not in PUBLISHED status. Responses are locked.");
         }
 
-        // Check if deadline has passed
+        // Business Rule: Responses must be submitted before deadline
         if (LocalDateTime.now().isAfter(consentForm.getCampaign().getFormDeadline().atTime(LocalTime.MAX))) {
-            throw new IllegalStateException("Response deadline has passed");
+            throw new IllegalStateException("Cannot respond: Response deadline has passed");
         }
 
-        // Validate status - parent can only respond with APPROVED or REJECTED
+        // Validate response options - parents can only choose APPROVED or REJECTED
         if (request.getStatus() != ConsentFormStatus.APPROVED &&
                 request.getStatus() != ConsentFormStatus.REJECTED) {
-            throw new IllegalArgumentException("Parents can only respond with APPROVED or REJECTED");
+            throw new IllegalArgumentException("Invalid response: Parents can only respond with APPROVED or REJECTED");
         }
 
-        // Update consent form
+        // Business Rule: Parents can freely toggle between REJECTED ↔ APPROVED before deadline
+        // Default status is REJECTED, so parents must actively approve to participate
         consentForm.setStatus(request.getStatus());
         consentForm.setRespondedAt(LocalDateTime.now());
 
         VaccinationConsentForm savedForm = consentFormRepo.save(consentForm);
-        log.info("Parent response saved successfully for form {}", formId);
+        log.info("Parent response updated successfully for form {} - Status: {}", formId, request.getStatus());
 
         return mapToResponse(savedForm);
     }
@@ -139,16 +143,24 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .flatMap(pupil -> {
                     List<VaccinationConsentForm> activeConsentForms = consentFormRepo.findByPupilAndIsActiveTrue(pupil);
 
-                    // Filter out consent forms for diseases that have been fully completed
+                    // Apply multiple filters to determine which consent forms to show
                     return activeConsentForms.stream()
                             .filter(form -> {
+                                // Filter 1: Exclude campaigns that are COMPLETED
+                                // Parents don't need to see completed campaigns
+                                VaccinationCampaignStatus campaignStatus = form.getCampaign().getStatus();
+                                if (campaignStatus == VaccinationCampaignStatus.COMPLETED) {
+                                    return false; // Exclude completed campaigns
+                                }
+
+                                // Filter 2: Exclude diseases that have been fully vaccinated
                                 Disease disease = form.getCampaign().getDisease();
                                 int requiredDoses = disease.getDoseQuantity(); // Use disease's max doses, not vaccine's
 
                                 // Get completed doses for this pupil and disease (not vaccine)
                                 int completedDoses = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, disease);
 
-                                // If completed doses are less than required, include this form
+                                // Include only if completed doses are less than required
                                 return completedDoses < requiredDoses;
                             });
                 })
@@ -173,24 +185,26 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public int updateExpiredConsentForms() {
-        log.info("Starting automatic update of expired consent forms");
-
-        List<VaccinationConsentForm> expiredForms = consentFormRepo
-                .findExpiredWaitingForms(ConsentFormStatus.WAITING, LocalDateTime.now());
-
-        int updatedCount = 0;
-        for (VaccinationConsentForm form : expiredForms) {
-            form.setStatus(ConsentFormStatus.REJECTED);
-            form.setRespondedAt(LocalDateTime.now());
-            consentFormRepo.save(form);
-            updatedCount++;
-        }
-
-        log.info("Updated {} expired consent forms from WAITING to REJECTED", updatedCount);
-        return updatedCount;
-    }
+//    @Override
+//    public int updateExpiredConsentForms() {
+//        log.info("Starting automatic update of expired consent forms");
+//
+//        List<VaccinationConsentForm> expiredForms = consentFormRepo
+//                .findExpiredWaitingForms(ConsentFormStatus.WAITING, LocalDateTime.now());
+//
+//        int updatedCount = 0;
+//        for (VaccinationConsentForm form : expiredForms) {
+//            form.setStatus(ConsentFormStatus.REJECTED);
+//            form.setRespondedAt(LocalDateTime.now());
+//            consentFormRepo.save(form);
+//            updatedCount++;
+//        }
+//
+//        log.info("Updated {} expired consent forms from WAITING to REJECTED", updatedCount);
+//        return updatedCount;
+//    }
+    // Removed: updateExpiredConsentForms() method
+    // Reason: With new business logic, default status is REJECTED, so no automatic expiry handling needed
 
     @Override
     @Transactional(readOnly = true)
@@ -199,6 +213,23 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
 
         List<VaccinationConsentForm> approvedForms = consentFormRepo
                 .findByCampaignIdAndStatusOrderByGradeAndName(campaignId, ConsentFormStatus.APPROVED);
+
+        List<PupilApprovedInfo> pupilInfos = approvedForms.stream()
+                .map(this::mapToPupilApprovedInfo)
+                .collect(Collectors.toList());
+
+        return PupilsApprovedByGradeResponse.builder()
+                .getPupilsApprovedByGrade(pupilInfos)
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PupilsApprovedByGradeResponse getPupilsApprovedBySpecificGrade(Long campaignId, GradeLevel gradeLevel) {
+        log.info("Getting pupils approved by specific grade {} for campaign {}", gradeLevel, campaignId);
+
+        List<VaccinationConsentForm> approvedForms = consentFormRepo
+                .findByCampaignIdAndStatusAndGradeLevelOrderByName(campaignId, ConsentFormStatus.APPROVED, gradeLevel);
 
         List<PupilApprovedInfo> pupilInfos = approvedForms.stream()
                 .map(this::mapToPupilApprovedInfo)
@@ -229,19 +260,45 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     }
 
     private VaccinationConsentFormResponse mapToResponse(VaccinationConsentForm form) {
+        // Extract campaign, disease, vaccine, and pupil information
+        VaccinationCampagin campaign = form.getCampaign();
+        Disease disease = campaign.getDisease();
+        Vaccine vaccine = form.getVaccine();
+        Pupil pupil = form.getPupil();
+
+        // Calculate current completed doses for this disease from all sources
+        // This includes both campaign injections and approved parent declarations
+        int currDoseNumber = vaccinationHistoryRepo.countByPupilAndDiseaseAndIsActiveTrue(pupil, disease);
+
+        // Get pupil's grade level
+        String gradeLevel = pupil.getPupilGrade().stream()
+                .map(pg -> pg.getGrade().getGradeLevel().toString())
+                .findFirst()
+                .orElse("Unknown");
         return VaccinationConsentFormResponse.builder()
                 .consentFormId(form.getConsentFormId())
                 .respondedAt(form.getRespondedAt())
                 .status(form.getStatus())
-                .campaignName(form.getCampaign().getTitleCampaign())
-                .vaccineName(form.getVaccine().getName())
-                .pupilName(form.getPupil().getFirstName())
-                .pupilId(form.getPupil().getPupilId())
-                .gradeLevel(form.getPupil().getPupilGrade().stream()
-                        .map(pg -> pg.getGrade().getGradeLevel().toString())
-                        .findFirst()
-                        .orElse("Unknown"))
-                .formDeadline(form.getCampaign().getFormDeadline().atTime(LocalTime.MAX))
+                .formDeadline(campaign.getFormDeadline().atTime(LocalTime.MAX))
+
+                // Campaign information
+                .campaignId(campaign.getCampaignId())
+                .campaignName(campaign.getTitleCampaign())
+
+                // Disease information
+                .diseaseId(disease.getDiseaseId())
+                .diseaseName(disease.getName())
+                .doseNumber(disease.getDoseQuantity())       // Total doses required
+                .currDoseNumber(currDoseNumber)              // Current completed doses
+
+                // Vaccine information
+                .vaccineId(vaccine.getVaccineId())
+                .vaccineName(vaccine.getName())
+
+                // Pupil information
+                .pupilId(pupil.getPupilId())
+                .pupilName(pupil.getFirstName())
+                .gradeLevel(gradeLevel)
                 .build();
     }
     private PupilApprovedInfo mapToPupilApprovedInfo(VaccinationConsentForm form) {

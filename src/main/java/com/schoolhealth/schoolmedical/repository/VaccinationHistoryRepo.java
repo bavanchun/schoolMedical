@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.VaccinationHistory;
 import com.schoolhealth.schoolmedical.entity.Vaccine;
+import com.schoolhealth.schoolmedical.entity.enums.VaccinationSource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,10 @@ public interface VaccinationHistoryRepo extends CrudRepository<VaccinationHistor
 
     @Query("SELECT COUNT(vh) FROM VaccinationHistory vh WHERE vh.pupil = :pupil AND vh.disease = :disease AND vh.isActive = true")
     int countByPupilAndDiseaseAndIsActiveTrue(@Param("pupil") Pupil pupil, @Param("disease") Disease disease);
+
+    @Query("SELECT vh FROM VaccinationHistory vh WHERE vh.source = :source AND vh.isActive = false ORDER BY vh.vaccinatedAt DESC")
+    List<VaccinationHistory> findBySourceAndIsActiveFalseOrderByVaccinatedAtDesc(@Param("source") VaccinationSource source);
+
+    @Query("SELECT vh FROM VaccinationHistory vh WHERE vh.pupil = :pupil AND vh.source = :source AND vh.isActive = false ORDER BY vh.vaccinatedAt DESC")
+    List<VaccinationHistory> findByPupilAndSourceAndIsActiveFalseOrderByVaccinatedAtDesc(@Param("pupil") Pupil pupil, @Param("source") VaccinationSource source);
 }
