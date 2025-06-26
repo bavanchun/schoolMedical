@@ -4,5 +4,6 @@ public enum StatusHealthCampaign {
     PENDING,
     PUBLISHED,
     IN_PROGRESS,
-    COMPLETED
+    COMPLETED,
+    CANCELLED;;
 }
