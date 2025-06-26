@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-25T16:07:42+0700",
+    date = "2025-06-26T23:43:29+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -27,6 +27,7 @@ public class DiseaseMapperImpl implements DiseaseMapper {
         HealthCheckDiseaseRes.HealthCheckDiseaseResBuilder healthCheckDiseaseRes = HealthCheckDiseaseRes.builder();
 
         healthCheckDiseaseRes.diseaseName( healthCheckDiseaseDiseaseName( healthCheckDisease ) );
+        healthCheckDiseaseRes.note( healthCheckDisease.getNote() );
         healthCheckDiseaseRes.healthCheckDiseaseId( healthCheckDisease.getHealthCheckDiseaseId() );
 
         return healthCheckDiseaseRes.build();

@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.HealthCheckHistory;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckHistoryMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
 import com.schoolhealth.schoolmedical.repository.HealthCheckHistoryRepo;
@@ -30,5 +31,12 @@ public class HealthCheckHistoryImpl implements HealthCheckHistoryService {
         HealthCheckHistory healthCheckHistory = healthCheckHistoryMapper.toHealthCheckHistory(healthCheckHistoryReq);
         healthCheckHistory.setHealthCheckConsentForm(consentForm);
         return  healthCheckHistoryRepo.save(healthCheckHistory);
+    }
+
+    @Override
+    public HealthCheckHistoryRes getHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear) {
+        HealthCheckHistory healthCheckHistory =  healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear)
+                .orElseThrow(() -> new NotFoundException("Health Check History not found for pupil ID: " + pupilId + " and school year: " + schoolYear));
+        return healthCheckHistoryMapper.toHealthCheckHistoryRes(healthCheckHistory);
     }
 }

@@ -2,16 +2,21 @@ package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckHistory;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-25T16:07:42+0700",
+    date = "2025-06-26T23:20:11+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
 public class HealthCheckHistoryMapperImpl implements HealthCheckHistoryMapper {
+
+    @Autowired
+    private HealthCheckConsentMapper healthCheckConsentMapper;
 
     @Override
     public HealthCheckHistory toHealthCheckHistory(HealthCheckHistoryReq historyReq) {
@@ -46,5 +51,40 @@ public class HealthCheckHistoryMapperImpl implements HealthCheckHistoryMapper {
         healthCheckHistory.active( true );
 
         return healthCheckHistory.build();
+    }
+
+    @Override
+    public HealthCheckHistoryRes toHealthCheckHistoryRes(HealthCheckHistory history) {
+        if ( history == null ) {
+            return null;
+        }
+
+        HealthCheckHistoryRes.HealthCheckHistoryResBuilder healthCheckHistoryRes = HealthCheckHistoryRes.builder();
+
+        healthCheckHistoryRes.healthCheckConsentRes( healthCheckConsentMapper.toDto( history.getHealthCheckConsentForm() ) );
+        healthCheckHistoryRes.height( history.getHeight() );
+        healthCheckHistoryRes.weight( history.getWeight() );
+        healthCheckHistoryRes.rightEyeVision( history.getRightEyeVision() );
+        healthCheckHistoryRes.leftEyeVision( history.getLeftEyeVision() );
+        healthCheckHistoryRes.bloodPressure( history.getBloodPressure() );
+        healthCheckHistoryRes.heartRate( history.getHeartRate() );
+        healthCheckHistoryRes.dentalCheck( history.getDentalCheck() );
+        healthCheckHistoryRes.earCondition( history.getEarCondition() );
+        healthCheckHistoryRes.noseCondition( history.getNoseCondition() );
+        healthCheckHistoryRes.throatCondition( history.getThroatCondition() );
+        healthCheckHistoryRes.skinAndMucosa( history.getSkinAndMucosa() );
+        healthCheckHistoryRes.hearAnuscultaion( history.getHearAnuscultaion() );
+        healthCheckHistoryRes.chestShape( history.getChestShape() );
+        healthCheckHistoryRes.lungs( history.getLungs() );
+        healthCheckHistoryRes.digestiveSystem( history.getDigestiveSystem() );
+        healthCheckHistoryRes.urinarySystem( history.getUrinarySystem() );
+        healthCheckHistoryRes.musculoskeletalSystem( history.getMusculoskeletalSystem() );
+        healthCheckHistoryRes.neurologyAndPsychiatry( history.getNeurologyAndPsychiatry() );
+        healthCheckHistoryRes.genitalExamination( history.getGenitalExamination() );
+        healthCheckHistoryRes.additionalNotes( history.getAdditionalNotes() );
+        healthCheckHistoryRes.unusualSigns( history.getUnusualSigns() );
+        healthCheckHistoryRes.createdAt( history.getCreatedAt() );
+
+        return healthCheckHistoryRes.build();
     }
 }
