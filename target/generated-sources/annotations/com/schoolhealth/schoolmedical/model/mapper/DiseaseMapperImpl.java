@@ -7,12 +7,14 @@ import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-26T23:43:29+0700",
+    date = "2025-06-27T14:10:11+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -31,6 +33,20 @@ public class DiseaseMapperImpl implements DiseaseMapper {
         healthCheckDiseaseRes.healthCheckDiseaseId( healthCheckDisease.getHealthCheckDiseaseId() );
 
         return healthCheckDiseaseRes.build();
+    }
+
+    @Override
+    public List<HealthCheckDiseaseRes> toHealthCheckDiseaseDtoList(List<HealthCheckDisease> healthCheckDiseases) {
+        if ( healthCheckDiseases == null ) {
+            return null;
+        }
+
+        List<HealthCheckDiseaseRes> list = new ArrayList<HealthCheckDiseaseRes>( healthCheckDiseases.size() );
+        for ( HealthCheckDisease healthCheckDisease : healthCheckDiseases ) {
+            list.add( toHealthCheckDiseaseDto( healthCheckDisease ) );
+        }
+
+        return list;
     }
 
     @Override

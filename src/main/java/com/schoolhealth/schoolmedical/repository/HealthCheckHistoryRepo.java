@@ -13,6 +13,8 @@ public interface HealthCheckHistoryRepo extends JpaRepository<HealthCheckHistory
             "JOIN FETCH h.healthCheckConsentForm hc " +
             "JOIN FETCH hc.healthCheckDiseases hcd " +
             "JOIN FETCH hcd.disease " +
-            "WHERE hc.pupil.pupilId = :pupilId AND hc.schoolYear = :schoolYear AND hcd.status = 'APPROVED' ")
+            "WHERE hc.pupil.pupilId = :pupilId " +
+            "AND hc.schoolYear = :schoolYear")
     Optional<HealthCheckHistory> findHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);
 }
+

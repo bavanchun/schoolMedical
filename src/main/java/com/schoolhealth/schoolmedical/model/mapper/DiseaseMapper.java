@@ -9,6 +9,8 @@ import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface DiseaseMapper {
 
@@ -17,6 +19,7 @@ public interface DiseaseMapper {
             , @Mapping(target = "note", source="note")
     })
     HealthCheckDiseaseRes toHealthCheckDiseaseDto(HealthCheckDisease healthCheckDisease);
+    List<HealthCheckDiseaseRes> toHealthCheckDiseaseDtoList(List<HealthCheckDisease> healthCheckDiseases);
     @Mappings({
             @Mapping(target = "diseaseId", ignore = true),
             @Mapping(target = "vaccines", ignore = true),

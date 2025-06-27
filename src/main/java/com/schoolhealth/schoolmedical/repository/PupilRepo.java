@@ -51,5 +51,15 @@ WHERE parent.userId = :parentId AND pg.startYear = (
 
     @Query("SELECT p FROM Pupil p JOIN p.parents parent WHERE parent = :parent")
     List<Pupil> findByParent(@Param("parent") User parent);
-
+        @Query("""
+    SELECT p FROM Pupil p
+    JOIN FETCH p.pupilGrade pg
+    JOIN FETCH pg.grade
+    WHERE p.pupilId = :pupilId AND pg.startYear = (
+        SELECT MAX(sub_pg.startYear)
+        FROM PupilGrade sub_pg
+        WHERE sub_pg.pupil.pupilId = p.pupilId
+    )
+    """)
+    Pupil findPupilById(@Param("pupilId") String pupilId);
 }

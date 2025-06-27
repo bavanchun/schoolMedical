@@ -31,6 +31,7 @@ public class HealthCheckAnnualController {
     }
     @GetMapping("/result")
     public ResponseEntity<?> getHealthCheckHistoryByPupilIdAndSchoolYear(@RequestParam String pupilId, @RequestParam int schoolYear) {
+        System.out.println("Fetching health check history for pupil ID: " + pupilId + " and school year: " + schoolYear);
         HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
     }
