@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseHealthCheckRes;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-27T14:10:11+0700",
+    date = "2025-06-27T17:27:49+0700",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
 )
 @Component
@@ -65,6 +66,21 @@ public class DiseaseMapperImpl implements DiseaseMapper {
         disease.isActive( true );
 
         return disease.build();
+    }
+
+    @Override
+    public DiseaseHealthCheckRes toDtoWithoutVaccines(Disease disease) {
+        if ( disease == null ) {
+            return null;
+        }
+
+        DiseaseHealthCheckRes.DiseaseHealthCheckResBuilder diseaseHealthCheckRes = DiseaseHealthCheckRes.builder();
+
+        diseaseHealthCheckRes.diseaseId( disease.getDiseaseId() );
+        diseaseHealthCheckRes.name( disease.getName() );
+        diseaseHealthCheckRes.description( disease.getDescription() );
+
+        return diseaseHealthCheckRes.build();
     }
 
     @Override

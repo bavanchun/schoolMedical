@@ -3,10 +3,7 @@ package com.schoolhealth.schoolmedical.service;
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseWithVaccinesWrapper;
-import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -27,5 +24,6 @@ public interface DiseaseService {
     DiseaseVaccineResponse removeVaccineFromDisease(DiseaseVaccineRequest request);
     DiseaseWithVaccinesWrapper getAllDiseasesWithVaccines();
 
-    List<Disease> getAllDiseases();
+    List<Disease> getAllDiseasesByisInjectedVaccinationFalse();
+    Page<DiseaseHealthCheckRes> getAllDiseasesByisInjectedVaccinationFalse( int pageNo, int pageSize);
 }
