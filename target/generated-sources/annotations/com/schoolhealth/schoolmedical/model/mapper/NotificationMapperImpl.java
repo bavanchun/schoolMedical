@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-27T22:30:09+0700",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
+    date = "2025-06-28T04:41:04+0700",
+    comments = "version: 1.6.3, compiler: Eclipse JDT (IDE) 3.42.50.v20250624-0847, environment: Java 21.0.7 (Eclipse Adoptium)"
 )
 @Component
 public class NotificationMapperImpl implements NotificationMapper {
@@ -23,11 +23,11 @@ public class NotificationMapperImpl implements NotificationMapper {
 
         NotificationRes.NotificationResBuilder notificationRes1 = NotificationRes.builder();
 
-        notificationRes1.notificationId( notificationRes.getNotificationId() );
-        notificationRes1.message( notificationRes.getMessage() );
         notificationRes1.createdAt( notificationRes.getCreatedAt() );
-        notificationRes1.typeNotification( notificationRes.getTypeNotification() );
+        notificationRes1.message( notificationRes.getMessage() );
+        notificationRes1.notificationId( notificationRes.getNotificationId() );
         notificationRes1.sourceId( notificationRes.getSourceId() );
+        notificationRes1.typeNotification( notificationRes.getTypeNotification() );
 
         return notificationRes1.build();
     }

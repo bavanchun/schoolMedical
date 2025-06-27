@@ -1,0 +1,55 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: school_medical_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Bavan02018779@
+      MYSQL_DATABASE: school_medical
+    ports:
+      - "3307:3306" # Changed from 3306:3306 to 3307:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - school_medical_network
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # Spring Boot Application
+  app:
+    build: .
+    container_name: school_medical_app
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      # Database Configuration
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306 # This stays 3306 because it's the internal port inside Docker network
+      MYSQL_DB: school_medical
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Bavan02018779@
+
+      # JWT Configuration
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      JWT_EXPIRATION: 7200000
+
+      # Firebase Configuration
+      FIREBASE_CONFIG_PATH: firebase/school-f0938-firebase-adminsdk-fbsvc-9ed44fb7a2.json
+
+      # Spring Profile
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - school_medical_network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  school_medical_network:
+    driver: bridge
