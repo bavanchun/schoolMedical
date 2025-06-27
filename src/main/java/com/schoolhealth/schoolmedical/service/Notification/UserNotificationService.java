@@ -9,6 +9,6 @@ import java.util.List;
 public interface UserNotificationService {
     List<UserNotification> saveAllUserNotifications(List<UserNotification> userNotification);
     //NotificationHealthCampaignRes getNotificationHealthCampaignByIdAndPupilAndDisease(Long id, String pupilId, TypeNotification typeNotification);
-    Object getNotificationHealthCampaignByIdAndPupilAndDisease(Long id, String pupilId, TypeNotification typeNotification);
+    Object getNotificationCampaign(Long id, String pupilId, TypeNotification typeNotification);
 
 }
