@@ -1,9 +1,11 @@
 package com.schoolhealth.schoolmedical.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum TypeNotification {
-    med_event("Sự kiện y tế"),
-    health_check_campaign("Kiểm tra sức khỏe"),
-    send_medication("Gửi thuốc"),
+    MED_EVENT("Sự kiện y tế"),
+    HEALTH_CHECK_CAMPAIGN("Kiểm tra sức khỏe"),
+    SEND_MEDICAL("Gửi thuốc"),
     VACCINATION_CAMPAIGN("Chiến dịch tiêm chủng");
     private final String description;
     TypeNotification(String description) {
@@ -11,5 +13,14 @@ public enum TypeNotification {
     }
     public String getDescription() {
         return description;
+    }
+    @JsonCreator
+    public static TypeNotification fromString(String value) {
+        for (TypeNotification type : TypeNotification.values()) {
+            if (type.name().equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown TypeNotification: " + value);
     }
 }

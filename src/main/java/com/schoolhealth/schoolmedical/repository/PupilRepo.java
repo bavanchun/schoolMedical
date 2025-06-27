@@ -61,5 +61,5 @@ WHERE parent.userId = :parentId AND pg.startYear = (
         WHERE sub_pg.pupil.pupilId = p.pupilId
     )
     """)
-    Pupil findPupilById(@Param("pupilId") String pupilId);
+    Optional<Pupil> findPupilById(@Param("pupilId") String pupilId);
 }

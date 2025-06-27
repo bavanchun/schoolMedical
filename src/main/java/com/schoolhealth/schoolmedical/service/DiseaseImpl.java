@@ -6,12 +6,7 @@ import com.schoolhealth.schoolmedical.exception.EntityNotFoundException;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineInfo;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseWithVaccinesWrapper;
-import com.schoolhealth.schoolmedical.model.dto.response.VaccineInfo;
-import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.repository.DiseaseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,12 +80,19 @@ public class DiseaseImpl implements DiseaseService{
     }
 
     @Override
-    public List<Disease> getAllDiseases() {
-        List<Disease> diseases = diseaseRepo.findAllByisActiveTrue();
+    public List<Disease> getAllDiseasesByisInjectedVaccinationFalse() {
+        List<Disease> diseases = diseaseRepo.findAllByisActiveTrueAndIsInjectedVaccinationFalse();
         if (diseases.isEmpty()) {
             throw new NotFoundException("No diseases found");
         }
         return diseases;
+    }
+
+    @Override
+    public Page<DiseaseHealthCheckRes> getAllDiseasesByisInjectedVaccinationFalse(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        Page<Disease> diseasePage = diseaseRepo.findAllByisActiveTrueAndIsInjectedVaccinationFalse(pageable);
+        return diseasePage.map(diseaseMapper::toDtoWithoutVaccines);
     }
 
     @Override

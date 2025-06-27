@@ -77,6 +77,12 @@ public class PupilImpl implements PupilService {
         return pupilMapper.toPupilGradeDtoList(pupil);
     }
 
+    @Override
+    public PupilRes getPupilGradeById(String pupilId) {
+        Pupil pupil = pupilRepo.findPupilById(pupilId).orElseThrow(() -> new NotFoundException("Pupil not found"));
+        return pupilMapper.toDto(pupil);
+    }
+
 
     @Override
     public PupilRes updatePupil(String id, PupilRes dto) {
