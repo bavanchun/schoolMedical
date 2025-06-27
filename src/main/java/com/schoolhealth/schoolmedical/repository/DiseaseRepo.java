@@ -18,4 +18,7 @@ public interface DiseaseRepo extends JpaRepository<Disease, Long> {
     List<Disease> findAllByisActiveTrue();
 
     Optional<Disease> findByNameIgnoreCase(String name);
+
+    List<Disease> findAllByisActiveTrueAndIsInjectedVaccinationFalse();
+    Page<Disease> findAllByisActiveTrueAndIsInjectedVaccinationFalse(Pageable pageable);
 }
