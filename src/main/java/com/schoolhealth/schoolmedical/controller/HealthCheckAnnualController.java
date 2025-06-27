@@ -1,14 +1,12 @@
 package com.schoolhealth.schoolmedical.controller;
 
-import com.schoolhealth.schoolmedical.entity.HealthCheckHistory;
-import com.schoolhealth.schoolmedical.entity.UserNotification;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
-import com.schoolhealth.schoolmedical.model.dto.request.NotificationReq;
+import com.schoolhealth.schoolmedical.model.dto.request.SurveyHealthCheckReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import com.schoolhealth.schoolmedical.service.HealthCheckConsentService;
+import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
-import com.schoolhealth.schoolmedical.service.Notification.UserNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +21,8 @@ public class HealthCheckAnnualController {
 
     @Autowired
     private HealthCheckHistoryService healthCheckHistoryService;
+    @Autowired
+    private HealthCheckDiseaseService healthCheckDiseaseService;
 
     @GetMapping("/student/{grade}")
     public ResponseEntity<?> getHealthCheckConsentByGrade(@PathVariable String grade) {
@@ -37,5 +37,10 @@ public class HealthCheckAnnualController {
     public ResponseEntity<?> getHealthCheckHistoryByPupilIdAndSchoolYear(@RequestParam String pupilId, @RequestParam int schoolYear) {
         HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
+    }
+    @PatchMapping("/disease-status")
+    public ResponseEntity<?> updateHealthCheckDiseaseStatus(@RequestBody SurveyHealthCheckReq survey) {
+        healthCheckDiseaseService.updateHealthCheckDiseaseStatus(survey);
+        return ResponseEntity.ok().body("Health check disease status updated successfully");
     }
 }
