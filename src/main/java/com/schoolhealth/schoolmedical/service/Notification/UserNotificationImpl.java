@@ -52,21 +52,20 @@ public class UserNotificationImpl implements UserNotificationService {
 //        throw new IllegalArgumentException("Invalid type of notification");
 //    }
     @Override
-    public Object getNotificationHealthCampaignByIdAndPupilAndDisease(Long id, String pupilId, TypeNotification typeNotification) {
+    public Object getNotificationCampaign(Long sourceId, String pupilId, TypeNotification typeNotification) {
         switch (typeNotification) {
-            case health_check_campaign:
-                return getHealthCheckCampaignResponse(id, pupilId, typeNotification);
+            case HEALTH_CHECK_CAMPAGIN:
+                return getHealthCheckCampaignResponse(sourceId, pupilId);
             default:
                 throw new IllegalArgumentException("Invalid type of notification");
         }
-        if (typeNotification == TypeNotification.health_check_campaign) {
-            return NotificationHealthCampaignRes.builder()
-                    .healthCheckCampaign(healthCheckCampaignService.getHealthCheckCampaignById(id))
-                    .pupil(pupilService.getPupilById(pupilId))
-                    .disease(diseaseService.getAllDiseasesByisInjectedVaccinationFalse(1, 10))
-                    .build();
-        }
-        throw new IllegalArgumentException("Invalid type of notification");
+    }
+    public NotificationHealthCampaignRes getHealthCheckCampaignResponse(Long id, String pupilId) {
+        return NotificationHealthCampaignRes.builder()
+                .healthCheckCampaign(healthCheckCampaignService.getHealthCheckCampaignById(id))
+                .pupil(pupilService.getPupilById(pupilId))
+                .disease(diseaseService.getAllDiseasesByisInjectedVaccinationFalse(1, 10))
+                .build();
     }
 }
 
