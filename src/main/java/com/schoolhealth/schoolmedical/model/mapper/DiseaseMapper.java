@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.DiseaseHealthCheckRes;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
@@ -28,6 +29,7 @@ public interface DiseaseMapper {
     })
     Disease toEntity(DiseaseRequest request);
 
+    DiseaseHealthCheckRes toDtoWithoutVaccines(Disease disease);
     @Mappings({
             @Mapping(source = "diseaseId", target = "diseaseId"),
             @Mapping(source = "name", target = "name"),

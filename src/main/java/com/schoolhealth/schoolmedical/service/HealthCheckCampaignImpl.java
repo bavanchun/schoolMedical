@@ -59,53 +59,58 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     private HealthCheckHistoryService healthCheckHistoryService;
 
 
-    // This method saves a health check campaign and creates consent forms for all pupils
     @Override
-    @Transactional
-    public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign) {
-        List<Pupil> pupils = pupilService.getAll();
-
-        HealthCheckCampaign campaign = healthCheckCampaignRepo.saveAndFlush(
-                healthCheckCampaignMapper.toEntity(healthCheckCampaign)
-        );
-
-        List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
-        for (Pupil pupil : pupils) {
-            HealthCheckConsentForm consentForm = new HealthCheckConsentForm();
-            consentForm.setPupil(pupil);
-            consentForm.setSchoolYear(Year.now().getValue());
-            consentForm.setHealthCheckCampaign(campaign);
-            healthCheckConsentForm.add(consentForm);
-        }
-        healthCheckConsentService.saveAll(healthCheckConsentForm);
-
-        List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
-        List<Disease> diseases = diseaseService.getAllDiseases();
-        List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getAllHealthCheckConsents();
-        for( HealthCheckConsentForm consentForm : consentForms) {
-            for (Disease disease : diseases) {
-                HealthCheckDisease checkDiseases = new HealthCheckDisease();
-                checkDiseases.setHealthCheckCampaign(campaign);
-                checkDiseases.setDisease(disease);
-                checkDiseases.setHealthCheckConsentForm(consentForm);
-                healthCheckDiseases.add(checkDiseases);
-            }
-        }
-        healthCheckDiseaseService.saveHealthCheckDisease(healthCheckDiseases);
-        List<User> parents = userService.findAllByRole(Role.PARENT);
-        List<UserNotification> listNotification = new ArrayList<>();
-        for( User parent : parents) {
-            UserNotification notification = UserNotification.builder()
-                    .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
-                    .sourceId(campaign.getCampaignId())
-                    .typeNotification(TypeNotification.health_check_campaign)
-                    .user(parent)
-                    .build();
-            listNotification.add(notification);
-        }
-        userNotificationService.saveAllUserNotifications(listNotification);
+    public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign){
+        HealthCheckCampaign campaign = healthCheckCampaignRepo.save(healthCheckCampaignMapper.toEntity(healthCheckCampaign));
         return healthCheckCampaignMapper.toDto(campaign);
     }
+    // This method saves a health check campaign and creates consent forms for all pupils
+//    @Override
+//    @Transactional
+//    public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaign) {
+//        List<Pupil> pupils = pupilService.getAll();
+//
+//        HealthCheckCampaign campaign = healthCheckCampaignRepo.saveAndFlush(
+//                healthCheckCampaignMapper.toEntity(healthCheckCampaign)
+//        );
+//
+//        List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
+//        for (Pupil pupil : pupils) {
+//            HealthCheckConsentForm consentForm = new HealthCheckConsentForm();
+//            consentForm.setPupil(pupil);
+//            consentForm.setSchoolYear(Year.now().getValue());
+//            consentForm.setHealthCheckCampaign(campaign);
+//            healthCheckConsentForm.add(consentForm);
+//        }
+//        healthCheckConsentService.saveAll(healthCheckConsentForm);
+//
+//        List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
+//        List<Disease> diseases = diseaseService.getAllDiseasesByisInjectedVaccinationFalse();
+//        List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getAllHealthCheckConsents();
+//        for( HealthCheckConsentForm consentForm : consentForms) {
+//            for (Disease disease : diseases) {
+//                HealthCheckDisease checkDiseases = new HealthCheckDisease();
+//                checkDiseases.setHealthCheckCampaign(campaign);
+//                checkDiseases.setDisease(disease);
+//                checkDiseases.setHealthCheckConsentForm(consentForm);
+//                healthCheckDiseases.add(checkDiseases);
+//            }
+//        }
+//        healthCheckDiseaseService.saveHealthCheckDisease(healthCheckDiseases);
+//        List<User> parents = userService.findAllByRole(Role.PARENT);
+//        List<UserNotification> listNotification = new ArrayList<>();
+//        for( User parent : parents) {
+//            UserNotification notification = UserNotification.builder()
+//                    .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
+//                    .sourceId(campaign.getCampaignId())
+//                    .typeNotification(TypeNotification.health_check_campaign)
+//                    .user(parent)
+//                    .build();
+//            listNotification.add(notification);
+//        }
+//        userNotificationService.saveAllUserNotifications(listNotification);
+//        return healthCheckCampaignMapper.toDto(campaign);
+//    }
 
     @Override
     public HealthCheckCampaignRes getHealthCheckCampaignDetailsById(Long campaignId) {
@@ -165,13 +170,54 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     }
 
     @Override
+    @Transactional
     public void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign) {
         HealthCheckCampaign campaign = healthCheckCampaignRepo.findById(campaignId).orElseThrow(() -> new NotFoundException("campaign not found to update status"));
         campaign.setStatusHealthCampaign(statusHealthCampaign);
         healthCheckCampaignRepo.save(campaign);
         if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
+            List<Pupil> pupils = pupilService.getAll();
+
+            List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
+            for (Pupil pupil : pupils) {
+                HealthCheckConsentForm consentForm = new HealthCheckConsentForm();
+                consentForm.setPupil(pupil);
+                consentForm.setSchoolYear(Year.now().getValue());
+                consentForm.setHealthCheckCampaign(campaign);
+                healthCheckConsentForm.add(consentForm);
+            }
+            healthCheckConsentService.saveAll(healthCheckConsentForm);
+
+            List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
+            List<Disease> diseases = diseaseService.getAllDiseasesByisInjectedVaccinationFalse();
+            List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getAllHealthCheckConsents();
+            for( HealthCheckConsentForm consentForm : consentForms) {
+                for (Disease disease : diseases) {
+                    HealthCheckDisease checkDiseases = new HealthCheckDisease();
+                    checkDiseases.setHealthCheckCampaign(campaign);
+                    checkDiseases.setDisease(disease);
+                    checkDiseases.setHealthCheckConsentForm(consentForm);
+                    healthCheckDiseases.add(checkDiseases);
+                }
+            }
+            healthCheckDiseaseService.saveHealthCheckDisease(healthCheckDiseases);
+//            List<User> parents = userService.findAllByRole(Role.PARENT);
             List<User> parents = userService.findAllWithPupilByParent();
+            //save notification for parents
+            List<UserNotification> listNotification = new ArrayList<>();
+            for( User parent : parents) {
+                UserNotification notification = UserNotification.builder()
+                        .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
+                        .sourceId(campaign.getCampaignId())
+                        .typeNotification(TypeNotification.health_check_campaign)
+                        .user(parent)
+                        .build();
+                listNotification.add(notification);
+            }
+            userNotificationService.saveAllUserNotifications(listNotification);
+            //notification to parents
             Map<String, List<Pupil>> pupilsByParent = parents.stream()
+                    .filter(parent -> parent.getDeviceToken() != null && !parent.getDeviceToken().isEmpty())
                     .collect(Collectors.groupingBy(User::getDeviceToken, Collectors.mapping(User::getPupils, Collectors.flatMapping(List::stream, Collectors.toList()))));
 
             List<String> tokens = parents.stream()
@@ -195,5 +241,13 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     public List<HealthCheckCampaignRes> getAllHealthCheckCampaigns() {
         return healthCheckCampaignMapper.toDto(healthCheckCampaignRepo.findAllByActiveTrue());
     }
+
+    @Override
+    public HealthCheckCampaignRes getHealthCheckCampaignById(Long campaignId) {
+         HealthCheckCampaign h = healthCheckCampaignRepo.findById(campaignId)
+                .orElseThrow(() -> new NotFoundException("Health check campaign not found with id: " + campaignId));
+         return healthCheckCampaignMapper.toDto(h);
+    }
 }
+
 
