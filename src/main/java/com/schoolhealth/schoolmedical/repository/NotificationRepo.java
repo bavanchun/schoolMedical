@@ -8,4 +8,6 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepo extends JpaRepository<UserNotification,Long> {
+
+    List<UserNotification> findAllByUser_UserId(String parentId);
 }

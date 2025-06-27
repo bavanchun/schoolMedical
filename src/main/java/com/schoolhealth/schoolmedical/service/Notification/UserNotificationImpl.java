@@ -5,8 +5,10 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseHealthCheckRes;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.NotificationHealthCampaignRes;
+import com.schoolhealth.schoolmedical.model.dto.response.NotificationRes;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
+import com.schoolhealth.schoolmedical.model.mapper.NotificationMapper;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.NotificationRepo;
 import com.schoolhealth.schoolmedical.service.DiseaseService;
@@ -30,12 +32,9 @@ public class UserNotificationImpl implements UserNotificationService {
     private PupilService pupilService;
     @Autowired
     private NotificationRepo notificationRepo;
+
     @Autowired
-    private HealthCheckCampaignMapper healthCheckCampaignMapper;
-    @Autowired
-    private PupilMapper pupilMapper;
-    @Autowired
-    private DiseaseMapper diseaseMapper;
+    private NotificationMapper notificationMapper;
     @Override
     public List<UserNotification> saveAllUserNotifications(List<UserNotification> userNotification) {
         return notificationRepo.saveAll(userNotification);
@@ -60,6 +59,13 @@ public class UserNotificationImpl implements UserNotificationService {
                 throw new IllegalArgumentException("Invalid type of notification");
         }
     }
+
+    @Override
+    public List<NotificationRes> getAllNotificationsByParentId(String parentId) {
+        List<UserNotification> userNotification = notificationRepo.findAllByUser_UserId(parentId);
+        return notificationMapper.toDto(userNotification);
+    }
+
     public NotificationHealthCampaignRes getHealthCheckCampaignResponse(Long id, String pupilId) {
         return NotificationHealthCampaignRes.builder()
                 .healthCheckCampaign(healthCheckCampaignService.getHealthCheckCampaignById(id))
