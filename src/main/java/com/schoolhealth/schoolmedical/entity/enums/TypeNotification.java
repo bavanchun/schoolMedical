@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum TypeNotification {
     MED_EVENT("Sự kiện y tế"),
-    HEALTH_CHECK_CAMPAGIN("Kiểm tra sức khỏe"),
+    HEALTH_CHECK_CAMPAIGN("Kiểm tra sức khỏe"),
     SEND_MEDICAL("Gửi thuốc"),
     VACCINATION_CAMPAIGN("Chiến dịch tiêm chủng");
     private final String description;
