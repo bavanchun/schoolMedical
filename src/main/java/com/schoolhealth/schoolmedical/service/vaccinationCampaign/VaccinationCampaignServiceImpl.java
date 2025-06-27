@@ -199,7 +199,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Override
     @Transactional(readOnly = true)
     public List<VaccinationCampaignResponse> getAllCampaigns() {
-        List<VaccinationCampagin> campaigns = vaccinationCampaignRepo.findAll();
+        // Use optimized query to prevent N+1 problem
+        List<VaccinationCampagin> campaigns = vaccinationCampaignRepo.findAllWithVaccineAndDisease();
         return campaigns.stream()
                 .map(mapper::toVaccinationCampaignResponse)
                 .collect(Collectors.toList());
@@ -208,7 +209,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Override
     @Transactional(readOnly = true)
     public VaccinationCampaignResponse getCampaignById(Long campaignId) {
-        VaccinationCampagin campaign = vaccinationCampaignRepo.findById(campaignId)
+        // Use optimized query to prevent N+1 problem
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findByIdWithVaccineAndDisease(campaignId)
                 .orElseThrow(() -> new NotFoundException("Campaign not found with id: " + campaignId));
 
         return mapper.toVaccinationCampaignResponse(campaign);
@@ -217,9 +219,9 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Override
     @Transactional(readOnly = true)
     public NewestCampaignResponse getNewestCampaign() {
-        // Find the newest published campaign
+        // Find the newest published campaign with optimized query
         VaccinationCampagin newestCampaign = vaccinationCampaignRepo
-                .findTopByStatusOrderByCampaignIdDesc(VaccinationCampaignStatus.PUBLISHED)
+                .findTopByStatusWithVaccineAndDisease(VaccinationCampaignStatus.PUBLISHED)
                 .orElse(null);
 
         if (newestCampaign == null) {
@@ -285,7 +287,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Override
     @Transactional(readOnly = true)
     public AllCampaignsResponse getAllCampaignsEnhanced() {
-        List<VaccinationCampagin> campaigns = vaccinationCampaignRepo.findAll();
+        // Use optimized query to prevent N+1 problem
+        List<VaccinationCampagin> campaigns = vaccinationCampaignRepo.findAllWithVaccineAndDisease();
 
         List<AllCampaignInfo> campaignInfos = campaigns.stream()
                 .map(this::mapToAllCampaignInfo)
