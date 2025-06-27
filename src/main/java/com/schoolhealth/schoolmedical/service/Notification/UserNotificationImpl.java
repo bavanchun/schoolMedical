@@ -54,7 +54,7 @@ public class UserNotificationImpl implements UserNotificationService {
     @Override
     public Object getNotificationCampaign(Long sourceId, String pupilId, TypeNotification typeNotification) {
         switch (typeNotification) {
-            case HEALTH_CHECK_CAMPAGIN:
+            case HEALTH_CHECK_CAMPAIGN:
                 return getHealthCheckCampaignResponse(sourceId, pupilId);
             default:
                 throw new IllegalArgumentException("Invalid type of notification");

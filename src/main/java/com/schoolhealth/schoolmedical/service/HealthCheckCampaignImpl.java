@@ -209,7 +209,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 UserNotification notification = UserNotification.builder()
                         .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
                         .sourceId(campaign.getCampaignId())
-                        .typeNotification(TypeNotification.health_check_campaign)
+                        .typeNotification(TypeNotification.HEALTH_CHECK_CAMPAIGN)
                         .user(parent)
                         .build();
                 listNotification.add(notification);
@@ -227,7 +227,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
             if (!pupilsByParent.isEmpty()) {
                 String title = "Chiến dịch kiểm tra sức khỏe hằng năm";
-                fcmService.sendNotification(pupilsByParent, campaignId, TypeNotification.health_check_campaign.name(),title );
+                fcmService.sendNotification(pupilsByParent, campaignId, TypeNotification.HEALTH_CHECK_CAMPAIGN.name(),title );
             }
         }
     }
@@ -249,5 +249,6 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
          return healthCheckCampaignMapper.toDto(h);
     }
 }
+
 
 

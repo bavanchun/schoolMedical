@@ -40,8 +40,4 @@ public class HealthCheckAnnualController {
         HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
     }
-    @GetMapping("/notification")
-    public ResponseEntity<?> getHealthCheckNotificationByPupilIdAndSchoolYear(@RequestBody NotificationReq notificationReq) {
-        return ResponseEntity.ok(userNotificationService.getNotificationHealthCampaignByIdAndPupilAndDisease(notificationReq.getSourceId(), notificationReq.getPupilId(), notificationReq.getTypeNotification()));
-    }
 }
