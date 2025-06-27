@@ -24,8 +24,6 @@ public class HealthCheckAnnualController {
     @Autowired
     private HealthCheckHistoryService healthCheckHistoryService;
 
-    @Autowired
-    private UserNotificationService userNotificationService;
     @GetMapping("/student/{grade}")
     public ResponseEntity<?> getHealthCheckConsentByGrade(@PathVariable String grade) {
         GradeLevel gradeLevel = GradeLevel.fromValue(grade);
