@@ -36,7 +36,7 @@ public class HealthCheckConsentForm {
     private HealthCheckCampaign healthCheckCampaign;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "healthCheckConsentForm")
-    private List<HealthCheckDisease> healthCheckDiseases;
+    private List<ConsentDisease> consentDiseases;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean active;

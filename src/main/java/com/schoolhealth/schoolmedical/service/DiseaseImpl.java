@@ -88,11 +88,11 @@ public class DiseaseImpl implements DiseaseService{
         return diseases;
     }
 
+
+
     @Override
-    public Page<DiseaseHealthCheckRes> getAllDiseasesByisInjectedVaccinationFalse(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
-        Page<Disease> diseasePage = diseaseRepo.findAllByisActiveTrueAndIsInjectedVaccinationFalse(pageable);
-        return diseasePage.map(diseaseMapper::toDtoWithoutVaccines);
+    public List<Disease> getAllDiseasesById(List<Long> diseaseIds) {
+        return diseaseRepo.findAllByDiseaseIdInAndIsActiveTrue(diseaseIds);
     }
 
     @Override

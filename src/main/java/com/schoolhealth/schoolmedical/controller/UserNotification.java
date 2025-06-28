@@ -26,5 +26,5 @@ public class UserNotification {
     public ResponseEntity<?> getAllUserNotifications(HttpServletRequest request) {
         String parentId = userService.getCurrentUserId(request); // Assuming this method retrieves the current user's ID
         return ResponseEntity.ok(userNotificationService.getAllNotificationsByParentId(parentId));
-    }
+}
 }

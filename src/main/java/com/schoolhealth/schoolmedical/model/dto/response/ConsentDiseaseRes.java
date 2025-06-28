@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HealthCheckDiseaseRes {
-    private Long healthCheckDiseaseId;
+public class ConsentDiseaseRes {
+    private Long diseaseId;
     private String diseaseName;
-    private String note;
+    private String description;
 }

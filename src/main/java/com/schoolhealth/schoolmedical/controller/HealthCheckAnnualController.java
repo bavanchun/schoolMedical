@@ -38,9 +38,9 @@ public class HealthCheckAnnualController {
         HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
     }
-    @PatchMapping("/disease-status")
-    public ResponseEntity<?> updateHealthCheckDiseaseStatus(@RequestBody SurveyHealthCheckReq survey) {
-        healthCheckDiseaseService.updateHealthCheckDiseaseStatus(survey);
-        return ResponseEntity.ok().body("Health check disease status updated successfully");
-    }
+//    @PatchMapping("/disease-status")
+//    public ResponseEntity<?> updateHealthCheckDisease(@RequestBody SurveyHealthCheckReq survey) {
+//        healthCheckDiseaseService.updateHealthCheckDisease(survey);
+//        return ResponseEntity.ok().body("Health check disease status updated successfully");
+//    }
 }

@@ -25,5 +25,5 @@ public interface DiseaseService {
     DiseaseWithVaccinesWrapper getAllDiseasesWithVaccines();
 
     List<Disease> getAllDiseasesByisInjectedVaccinationFalse();
-    Page<DiseaseHealthCheckRes> getAllDiseasesByisInjectedVaccinationFalse( int pageNo, int pageSize);
+    List<Disease> getAllDiseasesById(List<Long> diseaseIds);
 }

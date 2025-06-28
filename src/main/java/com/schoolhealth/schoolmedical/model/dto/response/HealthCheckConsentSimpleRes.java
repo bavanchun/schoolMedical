@@ -11,5 +11,5 @@ import java.util.List;
 @Builder
 public class HealthCheckConsentSimpleRes {
     private int schoolYear;
-    private List<HealthCheckDiseaseRes> disease;
+    private List<ConsentDiseaseRes> disease;
 }

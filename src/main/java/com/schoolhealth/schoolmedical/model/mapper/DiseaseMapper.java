@@ -1,13 +1,13 @@
 package com.schoolhealth.schoolmedical.model.mapper;
 
+import com.schoolhealth.schoolmedical.entity.ConsentDisease;
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.entity.Vaccine;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseHealthCheckRes;
+import com.schoolhealth.schoolmedical.model.dto.response.ConsentDiseaseRes;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
 import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -17,10 +17,13 @@ public interface DiseaseMapper {
 
     @Mappings({
             @Mapping(target = "diseaseName", source="disease.name")
-            , @Mapping(target = "note", source="note")
+            , @Mapping(target = "diseaseId", source="disease.diseaseId"),
+            @Mapping(target = "description" , source="disease.description")
     })
-    HealthCheckDiseaseRes toHealthCheckDiseaseDto(HealthCheckDisease healthCheckDisease);
-    List<HealthCheckDiseaseRes> toHealthCheckDiseaseDtoList(List<HealthCheckDisease> healthCheckDiseases);
+    ConsentDiseaseRes toHealthCheckDiseaseDto(HealthCheckDisease healthCheckDisease);
+    List<ConsentDiseaseRes> toHealthCheckDiseaseDtoList(List<HealthCheckDisease> healthCheckDiseases);
+    ConsentDiseaseRes toConsentDiseaseDto(ConsentDisease consentDisease);
+    List<ConsentDiseaseRes> toConsentDiseasesDtoList(List<ConsentDisease> consentDiseases);
     @Mappings({
             @Mapping(target = "diseaseId", ignore = true),
             @Mapping(target = "vaccines", ignore = true),
@@ -29,7 +32,6 @@ public interface DiseaseMapper {
     })
     Disease toEntity(DiseaseRequest request);
 
-    DiseaseHealthCheckRes toDtoWithoutVaccines(Disease disease);
     @Mappings({
             @Mapping(source = "diseaseId", target = "diseaseId"),
             @Mapping(source = "name", target = "name"),
