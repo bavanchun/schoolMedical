@@ -7,7 +7,9 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
 import com.schoolhealth.schoolmedical.model.dto.request.SurveyHealthCheckReq;
 import com.schoolhealth.schoolmedical.repository.HealthCheckDiseaseRepo;
+import jdk.jfr.Label;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class HealthCheckDiseaseImpl implements HealthCheckDiseaseService{
     @Autowired
     private HealthCheckDiseaseRepo healthCheckDiseaseRepo;
     @Autowired
+    @Lazy
     private HealthCheckCampaignService healthCheckCampaignService;
 
     @Override
