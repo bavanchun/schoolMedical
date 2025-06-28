@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilSimpleRes;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -27,5 +28,7 @@ public interface PupilMapper {
     PupilRes toDto(Pupil pupil);
 
     List<PupilRes> toPupilGradeDtoList(List<Pupil> pupils);
+
+    PupilSimpleRes toSimpleDto(Pupil pupil);
 
 }

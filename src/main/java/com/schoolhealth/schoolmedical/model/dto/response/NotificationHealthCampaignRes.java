@@ -3,6 +3,8 @@ package com.schoolhealth.schoolmedical.model.dto.response;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -11,5 +13,5 @@ import org.springframework.data.domain.Page;
 public class NotificationHealthCampaignRes {
     private HealthCheckCampaignRes healthCheckCampaign;
     private PupilRes pupil;
-    private Page<DiseaseHealthCheckRes> disease;
+    private List<ConsentDiseaseRes> disease;
 }

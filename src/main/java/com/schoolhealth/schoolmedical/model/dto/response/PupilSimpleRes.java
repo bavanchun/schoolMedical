@@ -7,8 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class DiseaseHealthCheckRes {
-    private Long diseaseId;
-    private String name;
-    private String description;
+public class PupilSimpleRes {
+    private String pupilId;
+    private String lastName;
+    private String firstName;
 }

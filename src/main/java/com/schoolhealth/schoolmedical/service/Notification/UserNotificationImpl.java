@@ -1,11 +1,10 @@
 package com.schoolhealth.schoolmedical.service.Notification;
 
+import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
+import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.entity.UserNotification;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseHealthCheckRes;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.NotificationHealthCampaignRes;
-import com.schoolhealth.schoolmedical.model.dto.response.NotificationRes;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.model.mapper.NotificationMapper;
@@ -13,6 +12,7 @@ import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.NotificationRepo;
 import com.schoolhealth.schoolmedical.service.DiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckCampaignService;
+import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -29,12 +29,20 @@ public class UserNotificationImpl implements UserNotificationService {
     @Autowired
     private DiseaseService diseaseService;
     @Autowired
+    private HealthCheckDiseaseService healthCheckDiseaseService;
+    @Autowired
     private PupilService pupilService;
     @Autowired
     private NotificationRepo notificationRepo;
 
     @Autowired
     private NotificationMapper notificationMapper;
+    @Autowired
+    private HealthCheckCampaignMapper healthCheckCampaignMapper;
+
+    @Autowired
+    private DiseaseMapper diseaseMapper;
+
     @Override
     public List<UserNotification> saveAllUserNotifications(List<UserNotification> userNotification) {
         return notificationRepo.saveAll(userNotification);
@@ -62,15 +70,17 @@ public class UserNotificationImpl implements UserNotificationService {
 
     @Override
     public List<NotificationRes> getAllNotificationsByParentId(String parentId) {
-        List<UserNotification> userNotification = notificationRepo.findAllByUser_UserId(parentId);
+        List<UserNotification> userNotification = notificationRepo.findAllByUserId(parentId);
         return notificationMapper.toDto(userNotification);
     }
 
     public NotificationHealthCampaignRes getHealthCheckCampaignResponse(Long id, String pupilId) {
+        HealthCheckCampaign healthCheckCampaign = healthCheckCampaignService.getHealthCheckCampaignEntityById(id);
+        List<ConsentDiseaseRes> diseaseResList = diseaseMapper.toHealthCheckDiseaseDtoList(healthCheckCampaign.getHealthCheckDiseases());
         return NotificationHealthCampaignRes.builder()
-                .healthCheckCampaign(healthCheckCampaignService.getHealthCheckCampaignById(id))
+                .healthCheckCampaign(healthCheckCampaignMapper.toDto(healthCheckCampaign))
                 .pupil(pupilService.getPupilById(pupilId))
-                .disease(diseaseService.getAllDiseasesByisInjectedVaccinationFalse(1, 10))
+                .disease(diseaseResList)
                 .build();
     }
 }

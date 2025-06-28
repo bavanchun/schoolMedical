@@ -25,6 +25,7 @@ public class HealthCheckCampaignRes {
     private LocalDateTime endExaminationDate;
     private LocalDate createdAt;
     private StatusHealthCampaign statusHealthCampaign;
+    private List<DiseaseResponse> diseases;
     private List<HealthCheckConsentRes> consentForms;
 }
 

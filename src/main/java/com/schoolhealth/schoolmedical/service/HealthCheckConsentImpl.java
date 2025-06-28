@@ -3,9 +3,9 @@ package com.schoolhealth.schoolmedical.service;
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
+import com.schoolhealth.schoolmedical.model.dto.response.ConsentDiseaseRes;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckDiseaseRes;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckConsentMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
@@ -60,9 +60,9 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
                     .gender(consentDataList.getFirst().getGender())
                     .gradeName(consentDataList.getFirst().getGradeName())
                     .build();
-            List<HealthCheckDiseaseRes> diseaseRes = consentDataList.stream()
-                    .map(data -> HealthCheckDiseaseRes.builder()
-                            .healthCheckDiseaseId(data.getHealthCheckDiseaseId())
+            List<ConsentDiseaseRes> diseaseRes = consentDataList.stream()
+                    .map(data -> ConsentDiseaseRes.builder()
+                            .diseaseId(data.getDiseaseId())
                             .diseaseName(data.getDiseaseName())
                             .build())
                     .toList();

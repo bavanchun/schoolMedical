@@ -29,7 +29,6 @@ public class HealthCheckHistoryRes {
     private String urinarySystem;
     private String musculoskeletalSystem;
     private String neurologyAndPsychiatry;
-    private String genitalExamination;
     private String additionalNotes;
     private String unusualSigns;
     private LocalDate createdAt;

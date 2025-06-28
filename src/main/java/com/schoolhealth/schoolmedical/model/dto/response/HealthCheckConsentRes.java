@@ -15,5 +15,5 @@ public class HealthCheckConsentRes {
     private Long consentFormId;
     private int schoolYear;
     private PupilRes pupilRes;
-    private List<HealthCheckDiseaseRes> disease;
+    private List<ConsentDiseaseRes> disease;
 }

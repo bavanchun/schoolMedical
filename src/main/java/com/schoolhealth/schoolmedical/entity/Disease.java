@@ -45,4 +45,7 @@ public class Disease {
             inverseJoinColumns = @JoinColumn(name = "vaccine_id")
     )
     private List<Vaccine> vaccines;
+
+    @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ConsentDisease> consentDiseases;
 }

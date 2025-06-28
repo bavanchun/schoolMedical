@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 public class HealthCheckCampaginReq {
     @NotBlank
     private String address;
-
     private String title;
     @NotBlank
     private String description;
@@ -26,6 +26,6 @@ public class HealthCheckCampaginReq {
     private LocalDateTime startExaminationDate;
     @NotNull
     private LocalDateTime endExaminationDate;
-
+    private List<Long> diseaseIds;
 
 }

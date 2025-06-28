@@ -10,7 +10,7 @@ import org.mapstruct.Mappings;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = DiseaseMapper.class)
 public interface HealthCheckCampaignMapper {
     @Mappings({
             @Mapping(target = "campaignId", ignore = true),
@@ -18,10 +18,10 @@ public interface HealthCheckCampaignMapper {
             @Mapping(target = "active", constant = "true"),
             @Mapping(target = "statusHealthCampaign", constant = "PENDING"),
             @Mapping(target = "healthCheckConsentForms", ignore = true),
-            @Mapping(target = "healthCheckDiseases", ignore = true)
+            @Mapping(target = "healthCheckDiseases", ignore = true),
     })
     HealthCheckCampaign toEntity(HealthCheckCampaginReq healthCheckCampaign);
-   // @Mapping(target = "consentForms", source = "healthCheckConsentForms")
+    @Mapping(target = "diseases", source = "healthCheckDiseases")
     HealthCheckCampaignRes toDto(HealthCheckCampaign healthCheckCampaign);
     LatestHealthCheckCampaignRes toLatestDto(HealthCheckCampaign healthCheckCampaign);
     List<HealthCheckCampaignRes> toDto(List<HealthCheckCampaign> healthCheckCampaigns);

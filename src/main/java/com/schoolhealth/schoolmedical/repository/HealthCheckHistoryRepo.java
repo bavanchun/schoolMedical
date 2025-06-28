@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface HealthCheckHistoryRepo extends JpaRepository<HealthCheckHistory, Long> {
     @Query("SELECT h FROM HealthCheckHistory h " +
             "JOIN FETCH h.healthCheckConsentForm hc " +
-            "JOIN FETCH hc.healthCheckDiseases hcd " +
-            "JOIN FETCH hcd.disease " +
+            "JOIN FETCH hc.consentDiseases cd " +
+            "JOIN FETCH cd.disease " +
             "WHERE hc.pupil.pupilId = :pupilId " +
             "AND hc.schoolYear = :schoolYear")
     Optional<HealthCheckHistory> findHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);

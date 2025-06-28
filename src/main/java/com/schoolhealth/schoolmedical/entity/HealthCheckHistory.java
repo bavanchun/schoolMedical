@@ -75,9 +75,6 @@ public class HealthCheckHistory {
     @Column(name = "neurology_and_psychiatry", length = 100, nullable = true)
     private String neurologyAndPsychiatry;
 
-    @Column(name = "genital_examination", length = 100, nullable = true)
-    private String genitalExamination;
-
     @Column(name = "additional_notes", length = 255, nullable = true)
     private String additionalNotes;
 

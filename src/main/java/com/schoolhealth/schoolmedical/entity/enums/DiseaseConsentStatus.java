@@ -1,6 +1,6 @@
 package com.schoolhealth.schoolmedical.entity.enums;
 
-public enum HealthCheckDiseaseStatus {
+public enum DiseaseConsentStatus {
     APPROVED,
     REJECTED
 }

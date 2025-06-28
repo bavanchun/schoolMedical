@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface HealthCheckDiseaseService {
     List<HealthCheckDisease> saveHealthCheckDisease(List<HealthCheckDisease> healthCheckDisease);
-    void updateHealthCheckDiseaseStatus(SurveyHealthCheckReq survey);
 
 }

@@ -33,6 +33,6 @@ public class HealthCheckCampaignFlatData {
     private Long gradeId;
     private GradeLevel gradeLevel;
     private String gradeName;
-    private Long healthCheckDiseaseId;
+    private Long diseaseId;
     private String diseaseName;
 }
