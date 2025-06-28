@@ -248,6 +248,12 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 .orElseThrow(() -> new NotFoundException("Health check campaign not found with id: " + campaignId));
          return healthCheckCampaignMapper.toDto(h);
     }
+
+    @Override
+    public HealthCheckCampaign getHealthCheckCampaignEntityById(Long campaignId) {
+        return healthCheckCampaignRepo.findById(campaignId)
+                .orElseThrow(() -> new NotFoundException("Health check campaign not found with id: " + campaignId));
+    }
 }
 
 
