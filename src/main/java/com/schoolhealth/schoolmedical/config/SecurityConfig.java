@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @RequiredArgsConstructor
@@ -31,10 +32,14 @@ public class SecurityConfig {
                                 "/api/v1/login",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
+                                // Public endpoints for health conditions
                         )
                         .permitAll()
-                    .anyRequest()
-                    .authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/pupils").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/pupils/assign").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/pupils/my-children").hasRole("PARENT")
+                        .anyRequest()
+                        .authenticated()
                 )
                 .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

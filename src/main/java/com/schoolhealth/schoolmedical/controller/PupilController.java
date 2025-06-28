@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.controller;
 
+import com.schoolhealth.schoolmedical.constant.ValidationConstants;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
@@ -99,9 +104,28 @@ public class PupilController {
             )
     })
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PupilDto> createPupil(
             @Parameter(description = "Thông tin học sinh cần tạo")
-            @RequestBody PupilDto dto) {
+            @Valid @RequestBody PupilDto dto) {
+        // Kiểm tra ngày sinh
+        if (dto.getBirthDate() != null && dto.getBirthDate().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.BIRTH_DATE_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại của phụ huynh
+        if (dto.getParentPhoneNumber() != null && !Pattern.matches(ValidationConstants.PHONE_NUMBER_REGEX, dto.getParentPhoneNumber())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PHONE_NUMBER_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại phụ huynh có tồn tại và là PARENT active
+        if (dto.getParentPhoneNumber() != null) {
+            boolean isValidParent = userRepository.findActiveParentByPhoneNumber(dto.getParentPhoneNumber()).isPresent();
+            if (!isValidParent) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PARENT_PHONE_NOT_EXIST_MESSAGE);
+            }
+        }
+
         PupilDto created = pupilService.createPupil(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -130,11 +154,30 @@ public class PupilController {
             )
     })
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PupilDto> updatePupil(
             @Parameter(description = "ID của học sinh cần cập nhật")
             @PathVariable String id,
             @Parameter(description = "Thông tin học sinh mới")
-            @RequestBody PupilDto dto) {
+            @Valid @RequestBody PupilDto dto) {
+
+        // Kiểm tra ngày sinh
+        if (dto.getBirthDate() != null && dto.getBirthDate().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.BIRTH_DATE_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại của phụ huynh
+        if (dto.getParentPhoneNumber() != null && !Pattern.matches(ValidationConstants.PHONE_NUMBER_REGEX, dto.getParentPhoneNumber())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PHONE_NUMBER_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại phụ huynh có tồn tại và là PARENT active
+        if (dto.getParentPhoneNumber() != null) {
+            boolean isValidParent = userRepository.findActiveParentByPhoneNumber(dto.getParentPhoneNumber()).isPresent();
+            if (!isValidParent) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PARENT_PHONE_NOT_EXIST_MESSAGE);
+            }
+        }
 
         PupilDto updated = pupilService.updatePupil(id, dto);
         return ResponseEntity.ok(updated);
@@ -205,20 +248,29 @@ public class PupilController {
             )
     })
     @GetMapping("/my-children")
-    @PreAuthorize("hasAuthority('PARENT')")
+    @PreAuthorize("hasRole('PARENT')")
     public ResponseEntity<List<PupilDto>> getMyChildren() {
         // Lấy thông tin người dùng hiện tại từ SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String phoneNumber = authentication.getName(); // Lấy số điện thoại từ authentication
 
-        // Tìm user từ repository để xác minh vai trò
-        User currentUser = userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin người dùng"));
+        System.out.println("DEBUG - Attempting to fetch children for parent with phone: " + phoneNumber);
+        System.out.println("DEBUG - Authentication authorities: " + authentication.getAuthorities());
 
-        // Kiểm tra xem người dùng có phải là phụ huynh không
-        if (currentUser.getRole() != Role.PARENT) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        // Tìm user từ repository với điều kiện là phụ huynh đang hoạt động
+        User currentUser = userRepository.findActiveParentByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> {
+                    System.out.println("ERROR - No active parent found with phone: " + phoneNumber);
+                    // Kiểm tra xem có user nào không phải PARENT hoặc không active với số điện thoại này
+                    userRepository.findByPhoneNumber(phoneNumber).ifPresent(user -> {
+                        System.out.println("DEBUG - Found user with matching phone but wrong role/status: "
+                            + "Role=" + user.getRole() + ", IsActive=" + user.isActive());
+                    });
+                    return new RuntimeException("Không tìm thấy thông tin phụ huynh đang hoạt động");
+                });
+
+        System.out.println("DEBUG - Found parent: " + currentUser.getFirstName() + " " + currentUser.getLastName()
+            + " (ID=" + currentUser.getUserId() + ", Role=" + currentUser.getRole() + ")");
 
         // Phương pháp 1: Lấy danh sách con từ mối quan hệ User-Pupil
         List<Pupil> childrenFromRelationship = new ArrayList<>();
@@ -250,8 +302,8 @@ public class PupilController {
         }
 
         // Đảm bảo không bỏ sót học sinh nào - logging kiểm tra
-        System.out.println("Số lượng học sinh tìm thấy cho phụ huynh " + phoneNumber + ": " + allChildren.size());
-        System.out.println("Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
+        System.out.println("DEBUG - Số lượng học sinh tìm thấy cho phụ huynh " + phoneNumber + ": " + allChildren.size());
+        System.out.println("DEBUG - Chi tiết: Từ mối quan hệ: " + childrenFromRelationship.size() + ", Từ số điện thoại: " + childrenByPhoneNumber.size());
 
         // Chuyển đổi danh sách Pupil thành PupilDto
         List<PupilDto> childrenDtos = allChildren.stream()

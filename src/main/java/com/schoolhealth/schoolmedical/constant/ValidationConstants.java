@@ -1,7 +1,10 @@
 package com.schoolhealth.schoolmedical.constant;
 
 public class ValidationConstants {
-    public static final String PHONE_NUMBER_REGEX = "^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-6|8|9]|9[0-9])[0-9]{7}$";
+    public static final String PHONE_NUMBER_REGEX = "^\\d{10}$";
+    public static final String PHONE_NUMBER_MESSAGE = "Số điện thoại phải đúng 10 chữ số";
+    public static final String BIRTH_DATE_MESSAGE = "Ngày sinh không được lớn hơn ngày hiện tại";
+    public static final String PARENT_PHONE_NOT_EXIST_MESSAGE = "Số điện thoại phụ huynh không tồn tại trong hệ thống";
 
     // Thêm các constants khác nếu cần
 }

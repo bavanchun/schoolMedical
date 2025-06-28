@@ -16,7 +16,6 @@ public class HealthCheckCampaignController {
 
     @PostMapping("/health-check-campaigns")
     public HealCheckCampaign createHealthCheckCampaign(@RequestBody @Valid HealCheckCampaign campaign) {
-        // Logic to create a health check campaign
         return healthCheckCampaignService.saveHealthCheckCampaign(campaign);
     }
 }

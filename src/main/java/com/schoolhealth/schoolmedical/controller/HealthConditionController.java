@@ -22,7 +22,7 @@ public class HealthConditionController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('PARENT')")
-    public ResponseEntity<HealthConditionResponse> create(@RequestBody HealthConditionRequest request) {
+    public ResponseEntity<HealthConditionResponse> create(@RequestBody @jakarta.validation.Valid HealthConditionRequest request) {
         HealthConditionResponse response = healthConditionService.create(request);
         return ResponseEntity.ok(response);
     }
@@ -42,7 +42,7 @@ public class HealthConditionController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('PARENT')")
-    public ResponseEntity<HealthConditionResponse> update(@PathVariable Long id, @RequestBody HealthConditionRequest request) {
+    public ResponseEntity<HealthConditionResponse> update(@PathVariable Long id, @RequestBody @jakarta.validation.Valid HealthConditionRequest request) {
         HealthConditionResponse response = healthConditionService.update(id, request);
         return ResponseEntity.ok(response);
     }

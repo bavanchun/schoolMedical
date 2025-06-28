@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.constant.ValidationConstants;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,11 +28,12 @@ public class RegisterRequest {
     @Email(message = "Email không hợp lệ")
     private String email;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = ValidationConstants.BIRTH_DATE_MESSAGE)
     private LocalDate birthDate;
 
     @NotBlank(message = "Số điện thoại không được để trống")
-    @Pattern(regexp = ValidationConstants.PHONE_NUMBER_REGEX, message = "Số điện thoại không hợp lệ")
+    @Pattern(regexp = ValidationConstants.PHONE_NUMBER_REGEX, message = ValidationConstants.PHONE_NUMBER_MESSAGE)
     private String phoneNumber;
 
     @NotBlank(message = "Mật khẩu không được để trống")

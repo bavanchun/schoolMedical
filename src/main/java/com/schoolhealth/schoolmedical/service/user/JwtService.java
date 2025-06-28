@@ -11,4 +11,12 @@ public interface JwtService {
     boolean isTokenValid(String token, UserDetails userDetails);
 
     String generateToken(Map<String, Objects> extraClaims, UserDetails userDetails);
+
+    /**
+     * Trích xuất thông tin role từ JWT token
+     *
+     * @param token JWT token
+     * @return role của user hoặc null nếu không tìm thấy
+     */
+    String extractRole(String token);
 }

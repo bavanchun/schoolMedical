@@ -99,7 +99,12 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        // Thêm quyền với định dạng thông thường (để dùng với hasAuthority)
+        authorities.add(new SimpleGrantedAuthority(role.name()));
+        // Thêm quyền với prefix "ROLE_" (để dùng với hasRole)
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return authorities;
     }
 
     @Override

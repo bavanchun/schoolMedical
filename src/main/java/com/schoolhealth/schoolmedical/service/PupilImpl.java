@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.service;
 
+import com.schoolhealth.schoolmedical.constant.ValidationConstants;
 import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.PupilDto;
@@ -7,13 +8,16 @@ import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.GradeRepository;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
+import com.schoolhealth.schoolmedical.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class PupilImpl implements PupilService{
@@ -25,11 +29,32 @@ public class PupilImpl implements PupilService{
     private GradeRepository gradeRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private PupilMapper pupilMapper;
 
 
     @Override
     public PupilDto createPupil(PupilDto dto) {
+        // Kiểm tra ngày sinh
+        if (dto.getBirthDate() != null && dto.getBirthDate().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.BIRTH_DATE_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại của phụ huynh
+        if (dto.getParentPhoneNumber() != null && !Pattern.matches(ValidationConstants.PHONE_NUMBER_REGEX, dto.getParentPhoneNumber())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PHONE_NUMBER_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại phụ huynh có tồn tại và là PARENT active
+        if (dto.getParentPhoneNumber() != null) {
+            boolean isValidParent = userRepository.findActiveParentByPhoneNumber(dto.getParentPhoneNumber()).isPresent();
+            if (!isValidParent) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PARENT_PHONE_NOT_EXIST_MESSAGE);
+            }
+        }
+
         Pupil entity = pupilMapper.toEntity(dto);
 
         // Đảm bảo học sinh mới luôn được đánh dấu là active
@@ -48,7 +73,7 @@ public class PupilImpl implements PupilService{
     }
 
     public Optional<List<Pupil>> getAll() {
-        return Optional.ofNullable(pupilRepo.findAll());
+        return Optional.of(pupilRepo.findAll());
     }
 
     public PupilDto getPupilById(String id) {
@@ -66,12 +91,31 @@ public class PupilImpl implements PupilService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pupil not found");
         }
 
+        // Kiểm tra ngày sinh
+        if (dto.getBirthDate() != null && dto.getBirthDate().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.BIRTH_DATE_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại của phụ huynh
+        if (dto.getParentPhoneNumber() != null && !Pattern.matches(ValidationConstants.PHONE_NUMBER_REGEX, dto.getParentPhoneNumber())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PHONE_NUMBER_MESSAGE);
+        }
+
+        // Kiểm tra số điện thoại phụ huynh có tồn tại và là PARENT active
+        if (dto.getParentPhoneNumber() != null) {
+            boolean isValidParent = userRepository.findActiveParentByPhoneNumber(dto.getParentPhoneNumber()).isPresent();
+            if (!isValidParent) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ValidationConstants.PARENT_PHONE_NOT_EXIST_MESSAGE);
+            }
+        }
+
         Pupil existing = existingOptional.get();
         // apply updates (keep pupilId unchanged)
         existing.setFirstName(dto.getFirstName());
         existing.setLastName(dto.getLastName());
         existing.setBirthDate(dto.getBirthDate());
         existing.setGender(dto.getGender());
+        existing.setParentPhoneNumber(dto.getParentPhoneNumber());
         existing.setActive(true); // Đảm bảo pupil luôn active khi update
         // if you include grade or parents in dto, map them here
 
@@ -95,10 +139,18 @@ public class PupilImpl implements PupilService{
     @Override
     public Pupil assignPupilClass(AssignClassRequest assignClassRequest) {
         // pupilId => pupil
-        Pupil pupil = pupilRepo.findById(assignClassRequest.getPupilId()).get();
+        Optional<Pupil> pupilOptional = pupilRepo.findById(assignClassRequest.getPupilId());
+        if (pupilOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy học sinh với ID đã cung cấp");
+        }
+        Pupil pupil = pupilOptional.get();
 
         // gradeId => grade
-        Grade grade = gradeRepository.findById(assignClassRequest.getGradeId()).get();
+        Optional<Grade> gradeOptional = gradeRepository.findById(assignClassRequest.getGradeId());
+        if (gradeOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy lớp học với ID đã cung cấp");
+        }
+        Grade grade = gradeOptional.get();
 
         pupil.setGrade(grade);
 

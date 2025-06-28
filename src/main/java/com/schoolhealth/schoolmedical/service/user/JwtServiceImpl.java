@@ -49,9 +49,18 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(Map<String, Objects> extraClaims, UserDetails userDetails) {
+        // Lấy thông tin role từ authorities của UserDetails
+        String role = userDetails.getAuthorities().stream()
+                .findFirst() // Lấy authority đầu tiên (không có ROLE_ prefix)
+                .map(authority -> authority.getAuthority())
+                .orElse("UNKNOWN");
+
+        Map<String, Object> claims = new HashMap<>(extraClaims);
+        claims.put("role", role); // Thêm trường role vào token
+
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
@@ -77,5 +86,15 @@ public class JwtServiceImpl implements JwtService {
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Trích xuất thông tin role từ JWT token
+     *
+     * @param token JWT token
+     * @return role của user hoặc null nếu không tìm thấy
+     */
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
     }
 }

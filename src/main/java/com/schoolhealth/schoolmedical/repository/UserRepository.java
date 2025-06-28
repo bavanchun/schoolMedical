@@ -20,4 +20,13 @@ public interface UserRepository extends JpaRepository<User, String> {
      */
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.pupils WHERE u.phoneNumber = :phoneNumber")
     Optional<User> findByPhoneNumberWithPupils(@Param("phoneNumber") String phoneNumber);
+
+    /**
+     * Tìm User là phụ huynh (PARENT) đang active theo số điện thoại
+     *
+     * @param phoneNumber Số điện thoại của phụ huynh
+     * @return Optional<User> phù hợp với điều kiện
+     */
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.pupils WHERE u.phoneNumber = :phoneNumber AND u.role = 'PARENT' AND u.isActive = true")
+    Optional<User> findActiveParentByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 }

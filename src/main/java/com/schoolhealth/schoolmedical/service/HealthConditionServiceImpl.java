@@ -34,7 +34,7 @@ public class HealthConditionServiceImpl implements HealthConditionService {
      */
     private HealthConditionResponse toResponse(HealthConditionHistory entity) {
         HealthConditionResponse res = new HealthConditionResponse();
-        res.setConditionId(entity.getConditionHistoryId().intValue()); // hoặc .longValue() nếu DTO dùng Long
+        res.setConditionId(entity.getConditionHistoryId().intValue());
         res.setName(entity.getName());
         res.setReactionOrNote(entity.getReactionOrNote());
         res.setImageUrl(entity.getImageUrl());
