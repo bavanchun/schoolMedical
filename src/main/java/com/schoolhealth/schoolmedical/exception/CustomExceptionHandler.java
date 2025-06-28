@@ -14,4 +14,10 @@ public class CustomExceptionHandler {
     public ErrorResponse handleNotFoundException(NotFoundException ex, WebRequest req) {
         return new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), req.getDescription(false));
     }
+
+    @ExceptionHandler(UpdateNotAllowedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleUpdateNotAllowedException(UpdateNotAllowedException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), req.getDescription(false));
+    }
 }

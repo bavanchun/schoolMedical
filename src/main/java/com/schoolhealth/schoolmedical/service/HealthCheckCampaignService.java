@@ -18,4 +18,5 @@ public interface HealthCheckCampaignService {
     LatestHealthCheckCampaignRes getLatestHealthCheckCampaign();
     List<HealthCheckCampaignRes> getAllHealthCheckCampaigns();
     HealthCheckCampaignRes getHealthCheckCampaignById(Long campaignId);
+    HealthCheckCampaign getHealthCheckCampaignEntityById(Long campaignId);
 }
