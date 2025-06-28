@@ -172,9 +172,9 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     @Override
     @Transactional
     public void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign) {
-        HealthCheckCampaign campaign = healthCheckCampaignRepo.findById(campaignId).orElseThrow(() -> new NotFoundException("campaign not found to update status"));
-        campaign.setStatusHealthCampaign(statusHealthCampaign);
-        healthCheckCampaignRepo.save(campaign);
+        HealthCheckCampaign campaign1 = healthCheckCampaignRepo.findById(campaignId).orElseThrow(() -> new NotFoundException("campaign not found to update status"));
+        campaign1.setStatusHealthCampaign(statusHealthCampaign);
+        HealthCheckCampaign campaign = healthCheckCampaignRepo.save(campaign1);
         if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
             List<Pupil> pupils = pupilService.getAll();
 
