@@ -52,4 +52,9 @@ public class ConsentDiseaseImpl implements ConsentDiseaseService{
             consentDiseaseRepo.saveAll(newConsentDiseases);
         }
     }
+
+    @Override
+    public void saveConsentDisease(List<ConsentDisease> consentDisease) {
+        consentDiseaseRepo.saveAll(consentDisease);
+    }
 }

@@ -96,6 +96,11 @@ public class DiseaseImpl implements DiseaseService{
     }
 
     @Override
+    public Disease getDiseaseEntityById(Long diseaseId) {
+        return diseaseRepo.findById(diseaseId).orElseThrow(() -> new NotFoundException("Disease not found with id: " + diseaseId));
+    }
+
+    @Override
     public DiseaseVaccineResponse assignVaccineToDisease(DiseaseVaccineRequest request) {
         try {
             // Find disease by ID

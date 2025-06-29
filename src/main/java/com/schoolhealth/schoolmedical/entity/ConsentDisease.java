@@ -13,7 +13,6 @@ import lombok.*;
 @Table(name = "consent_disease")
 public class ConsentDisease {
     @EmbeddedId
-    @Column(name = "id")
     private ConsentDiseaseId id;
 
     @ManyToOne(fetch = FetchType.LAZY)

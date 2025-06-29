@@ -39,7 +39,7 @@ public class HealthCheckAnnualController {
         HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
     }
-    @PatchMapping("/disease-status")
+    @PatchMapping("/disease")
     public ResponseEntity<?> updateConsentDisease(@RequestBody SurveyHealthCheckReq survey) {
         consentDiseaseService.updateConsentDisease(survey);
         return ResponseEntity.ok().body("Health check disease status updated successfully");
