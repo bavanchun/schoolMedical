@@ -18,7 +18,7 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
 
     Optional<HealthCheckCampaign> findHealthCheckCampaignByCampaignId (Long campaignId);
 
-    @Query("SELECT h FROM HealthCheckCampaign h WHERE h.statusHealthCampaign in (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS) ORDER BY h.createdAt DESC LIMIT 1")
+    @Query("SELECT h FROM HealthCheckCampaign h WHERE h.statusHealthCampaign in (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS, com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.COMPLETED) ORDER BY h.createdAt DESC LIMIT 1")
     HealthCheckCampaign findStatusCampaignPublishedInProgressOrderByCreatedAtDesc();
 
     @Query("SELECT h FROM HealthCheckCampaign h ORDER BY h.createdAt DESC LIMIT 1")

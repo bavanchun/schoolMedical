@@ -76,11 +76,9 @@ public class UserNotificationImpl implements UserNotificationService {
 
     public NotificationHealthCampaignRes getHealthCheckCampaignResponse(Long id, String pupilId) {
         HealthCheckCampaign healthCheckCampaign = healthCheckCampaignService.getHealthCheckCampaignEntityById(id);
-        List<ConsentDiseaseRes> diseaseResList = diseaseMapper.toHealthCheckDiseaseDtoList(healthCheckCampaign.getHealthCheckDiseases());
         return NotificationHealthCampaignRes.builder()
                 .healthCheckCampaign(healthCheckCampaignMapper.toDto(healthCheckCampaign))
                 .pupil(pupilService.getPupilById(pupilId))
-                .disease(diseaseResList)
                 .build();
     }
 }

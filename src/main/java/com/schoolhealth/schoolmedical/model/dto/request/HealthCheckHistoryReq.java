@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,4 +35,5 @@ public class HealthCheckHistoryReq {
     private String genitalExamination;
     private String additionalNotes;
     private String unusualSigns;
+    private List<ConsentDiseaseReq> diseases;
 }

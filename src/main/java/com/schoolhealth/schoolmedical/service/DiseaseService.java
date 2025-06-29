@@ -26,4 +26,5 @@ public interface DiseaseService {
 
     List<ConsentDiseaseRes> getAllDiseasesByisInjectedVaccinationFalse();
     List<Disease> getAllDiseasesById(List<Long> diseaseIds);
+    Disease getDiseaseEntityById( Long diseaseId);
 }

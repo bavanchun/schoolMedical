@@ -22,5 +22,7 @@ public class HealthCheckConsentFlatData {
     private String avatar;
     private String gradeName;
     private Long diseaseId;
-    private String diseaseName;
+    private String name;
+    private String description;
+    private String note;
 }

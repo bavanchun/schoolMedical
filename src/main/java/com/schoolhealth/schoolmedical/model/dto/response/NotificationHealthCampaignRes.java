@@ -13,5 +13,4 @@ import java.util.List;
 public class NotificationHealthCampaignRes {
     private HealthCheckCampaignRes healthCheckCampaign;
     private PupilRes pupil;
-    private List<ConsentDiseaseRes> disease;
 }

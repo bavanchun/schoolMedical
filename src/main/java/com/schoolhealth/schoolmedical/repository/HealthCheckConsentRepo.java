@@ -11,14 +11,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsentForm, Long> {
     @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData(" +
-            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name)" +
+            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name,d.description,hcd.note)" +
             "FROM HealthCheckConsentForm hccf " +
             "JOIN hccf.pupil p " +
-            "JOIN p.pupilGrade pg " +
+            "JOIN p.pupilGrade pg ON pg.startYear = ( " +
+            " SELECT MAX(sub_pg.startYear) " +
+            "  FROM PupilGrade sub_pg " +
+            "  WHERE sub_pg.pupil.pupilId = p.pupilId )" +
             "JOIN pg.grade g ON g.gradeLevel = :grade  " +
             "LEFT JOIN hccf.consentDiseases hcd " +
             "LEFT JOIN hcd.disease d " +
@@ -30,5 +34,26 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
             "HealthCheckConsentForm h " +
             "WHERE h.pupil.pupilId = :pupilId AND h.healthCheckCampaign.campaignId = :campaignId ")
     HealthCheckConsentForm findHealthCheckConsentByPupilIdAndCampaignId(@Param("pupilId") String pupilId, @Param("campaignId") Long campaignId);
+
+    @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData(" +
+            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name,d.description,hcd.note)" +
+            "FROM HealthCheckConsentForm hccf " +
+            "JOIN hccf.pupil p " +
+            "JOIN p.pupilGrade pg ON pg.startYear = (" +
+            "    SELECT MAX(sub_pg.startYear)" +
+            "    FROM PupilGrade sub_pg" +
+            "    WHERE sub_pg.pupil.pupilId = p.pupilId" +
+            ") " +
+            "JOIN pg.grade g " +
+            "LEFT JOIN hccf.consentDiseases hcd " +
+            "LEFT JOIN hcd.disease d " +
+            "JOIN hccf.healthCheckCampaign hc " +
+            "WHERE hccf.healthCheckCampaign.campaignId = :campaignId " )
+    List<HealthCheckConsentFlatData> findHealthCheckConsentFormByCampaignId(@Param("campaignId") Long campaignId);
+
+    @Query("SELECT c FROM HealthCheckConsentForm c " +
+            "join fetch c.healthCheckHistory " +
+            "where c.consentFormId in :consentFormId")
+    List<HealthCheckConsentForm> findAllById(@Param("consentFormId") List<Long> consentFormId);
 
 }

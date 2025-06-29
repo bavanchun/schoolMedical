@@ -12,11 +12,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {PupilMapper.class, DiseaseMapper.class})
+@Mapper(componentModel = "spring", uses = {PupilMapper.class, DiseaseMapper.class, HealthCheckHistoryMapper.class})
 public interface HealthCheckConsentMapper {
     @Mapping(target = "pupilRes", source = "pupil")
     @Mapping(target = "disease", source = "consentDiseases")
     @Mapping(target = "consentFormId" , source = "consentFormId")
+    @Mapping(target = "healthCheckHistoryRes", source = "healthCheckHistory")
     HealthCheckConsentRes toDto(HealthCheckConsentForm healthCheckConsentForm);
     List<HealthCheckConsentRes> toDtoList(List<HealthCheckConsentForm> healthCheckConsentForms);
 
