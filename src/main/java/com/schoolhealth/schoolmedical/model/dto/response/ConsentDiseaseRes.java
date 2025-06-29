@@ -11,6 +11,6 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConsentDiseaseRes {
     private Long diseaseId;
-    private String diseaseName;
+    private String name;
     private String description;
 }

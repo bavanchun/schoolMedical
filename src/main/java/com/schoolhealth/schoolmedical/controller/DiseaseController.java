@@ -2,10 +2,7 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseVaccineResponse;
-import com.schoolhealth.schoolmedical.model.dto.response.DiseaseWithVaccinesWrapper;
-import com.schoolhealth.schoolmedical.model.dto.response.VaccineResponse;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.service.DiseaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -217,5 +214,14 @@ public class DiseaseController {
     public ResponseEntity<DiseaseWithVaccinesWrapper> getAllDiseasesWithVaccines() {
         DiseaseWithVaccinesWrapper response = diseaseService.getAllDiseasesWithVaccines();
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/injected-vaccination-false")
+    @Operation(
+            summary = "Get All Diseases with isInjectedVaccination = false",
+            description = "Retrieve all diseases for HealthCheckCampaigns"
+    )
+    public ResponseEntity<List<ConsentDiseaseRes>> getAllDiseasesByisInjectedVaccinationFalse() {
+        List<ConsentDiseaseRes> diseases = diseaseService.getAllDiseasesByisInjectedVaccinationFalse();
+        return ResponseEntity.ok(diseases);
     }
 }

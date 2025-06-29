@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsentForm, Long> {
@@ -24,5 +25,10 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
             "JOIN hccf.healthCheckCampaign hc " +
             "WHERE hccf.schoolYear = :schoolYear AND hc.statusHealthCampaign IN (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS) " )
     List<HealthCheckConsentFlatData> findListPupilByGradeAndSchoolYear(@Param("grade") GradeLevel grade, @Param("schoolYear") int schoolYear);
+
+    @Query("SELECT h FROM " +
+            "HealthCheckConsentForm h " +
+            "WHERE h.pupil.pupilId = :pupilId AND h.healthCheckCampaign.campaignId = :campaignId ")
+    HealthCheckConsentForm findHealthCheckConsentByPupilIdAndCampaignId(@Param("pupilId") String pupilId, @Param("campaignId") Long campaignId);
 
 }

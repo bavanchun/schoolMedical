@@ -3,6 +3,8 @@ package com.schoolhealth.schoolmedical.entity;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -10,7 +12,7 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode
 @Embeddable
-public class ConsentDiseaseId {
+public class ConsentDiseaseId implements Serializable {
     private Long consentFormId;
     private Long diseaseId;
 }

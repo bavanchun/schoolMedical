@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.model.dto.request;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -12,5 +13,5 @@ import java.util.Set;
 public class SurveyHealthCheckReq {
     private Long campaignId;
     private String pupilId;
-    Set<Long> diseaseId;
+    private List<Long> diseaseId;
 }

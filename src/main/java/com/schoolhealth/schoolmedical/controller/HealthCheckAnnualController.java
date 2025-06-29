@@ -7,6 +7,7 @@ import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import com.schoolhealth.schoolmedical.service.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
+import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class HealthCheckAnnualController {
     @Autowired
     private HealthCheckHistoryService healthCheckHistoryService;
     @Autowired
-    private HealthCheckDiseaseService healthCheckDiseaseService;
+    private ConsentDiseaseService consentDiseaseService;
 
     @GetMapping("/student/{grade}")
     public ResponseEntity<?> getHealthCheckConsentByGrade(@PathVariable String grade) {
@@ -38,9 +39,9 @@ public class HealthCheckAnnualController {
         HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
     }
-//    @PatchMapping("/disease-status")
-//    public ResponseEntity<?> updateHealthCheckDisease(@RequestBody SurveyHealthCheckReq survey) {
-//        healthCheckDiseaseService.updateHealthCheckDisease(survey);
-//        return ResponseEntity.ok().body("Health check disease status updated successfully");
-//    }
+    @PatchMapping("/disease-status")
+    public ResponseEntity<?> updateConsentDisease(@RequestBody SurveyHealthCheckReq survey) {
+        consentDiseaseService.updateConsentDisease(survey);
+        return ResponseEntity.ok().body("Health check disease status updated successfully");
+    }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public interface DiseaseMapper {
 
     @Mappings({
-            @Mapping(target = "diseaseName", source="disease.name")
+            @Mapping(target = "name", source="disease.name")
             , @Mapping(target = "diseaseId", source="disease.diseaseId"),
             @Mapping(target = "description" , source="disease.description")
     })
@@ -24,6 +24,8 @@ public interface DiseaseMapper {
     List<ConsentDiseaseRes> toHealthCheckDiseaseDtoList(List<HealthCheckDisease> healthCheckDiseases);
     ConsentDiseaseRes toConsentDiseaseDto(ConsentDisease consentDisease);
     List<ConsentDiseaseRes> toConsentDiseasesDtoList(List<ConsentDisease> consentDiseases);
+    ConsentDiseaseRes toDiseaseDto(Disease disease);
+    List<ConsentDiseaseRes> toDiseasesDtoList(List<Disease> diseases);
     @Mappings({
             @Mapping(target = "diseaseId", ignore = true),
             @Mapping(target = "vaccines", ignore = true),

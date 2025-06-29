@@ -3,9 +3,12 @@ package com.schoolhealth.schoolmedical.service;
 import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
+import com.schoolhealth.schoolmedical.exception.CampaignAlreadyExistsForYearException;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
+import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
+import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
@@ -56,9 +59,16 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     @Autowired
     private HealthCheckHistoryService healthCheckHistoryService;
 
+    @Autowired
+    private DiseaseMapper diseaseMapper;
+
 
     @Override
     public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaignReq){
+        HealthCheckCampaign currentCampaign = healthCheckCampaignRepo.findCurrentCampaign();
+        if(currentCampaign != null && currentCampaign.getCreatedAt().getYear() == Year.now().getValue() && currentCampaign.getStatusHealthCampaign() != StatusHealthCampaign.CANCELLED) {
+            throw new CampaignAlreadyExistsForYearException("A health check campaign already exists for the year:"  + Year.now().getValue() + ". Please cancel the existing campaign before creating a new one.");
+        }
         HealthCheckCampaign campaign = healthCheckCampaignRepo.save(healthCheckCampaignMapper.toEntity(healthCheckCampaignReq));
         List<Disease> diseases = diseaseService.getAllDiseasesById(healthCheckCampaignReq.getDiseaseIds());
         List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
@@ -75,14 +85,13 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
     @Override
     public HealthCheckCampaignRes getHealthCheckCampaignDetailsById(Long campaignId) {
-        List<HealthCheckCampaignFlatData> rs = healthCheckCampaignRepo.findHealthCheckCampaignDetails(campaignId);
-        if (rs.isEmpty()) {
-            throw new NotFoundException("Campaign not found");
-        }
-        List<HealthCheckConsentRes> healthCheckConsentResList = new ArrayList<>();
+        HealthCheckCampaign rs = healthCheckCampaignRepo.findHealthCheckCampaignByCampaignId(campaignId)
+                .orElseThrow(() -> new NotFoundException("Health check campaign not found with id: " + campaignId));
 
-        Map<String, List<HealthCheckCampaignFlatData>> groupedData = rs.stream()
-                .collect(Collectors.groupingBy(HealthCheckCampaignFlatData::getPupilId));
+        List<ConsentDiseaseRes> diseaseOfCampaign = diseaseMapper.toHealthCheckDiseaseDtoList(rs.getHealthCheckDiseases());
+        // Check if the campaign is active
+        List<HealthCheckConsentRes> healthCheckConsentResList = new ArrayList<>();
+        List<ConsentDiseaseRes> diseaseForPupil = null;
 
         for (Map.Entry<String, List<HealthCheckCampaignFlatData>> entry : groupedData.entrySet()) {
             String pupilId = entry.getKey();
@@ -100,31 +109,31 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                     .gradeName(dataList.getFirst().getGradeName())
                     .build();
             // Collect disease names for this pupil
-            List<ConsentDiseaseRes> diseaseForPupil = dataList.stream()
+            diseaseForPupil = dataList.stream()
                     .map(data -> ConsentDiseaseRes.builder()
                             .diseaseId(data.getDiseaseId())
-                            .diseaseName(data.getDiseaseName())
+                            .name(data.getDiseaseName())
                             .build())
                     .toList();
             HealthCheckConsentRes healthCheckConsentRes = HealthCheckConsentRes.builder()
                     .consentFormId(dataList.getFirst().getHealthCheckConsentId())
                     .schoolYear(dataList.getFirst().getSchoolYear())
                     .pupilRes(pupilRes)
-                    .disease(diseaseForPupil)
                     .build();
             healthCheckConsentResList.add(healthCheckConsentRes);
         }
         // Create HealthCheckCampaignRes object
         return  HealthCheckCampaignRes.builder()
-                    .campaignId(rs.getFirst().getCampaignId())
-                    .title(rs.getFirst().getTitle())
-                    .address(rs.getFirst().getAddress())
-                    .description(rs.getFirst().getDescription())
-                    .deadlineDate(rs.getFirst().getDeadlineDate())
-                    .startExaminationDate(rs.getFirst().getStartExaminationDate())
-                    .endExaminationDate(rs.getFirst().getEndExaminationDate())
-                    .createdAt(rs.getFirst().getCreatedAt())
-                    .statusHealthCampaign(rs.getFirst().getStatusHealthCampaign())
+                    .campaignId(rs.getCampaignId())
+                    .title(rs.getTitle())
+                    .address(rs.getAddress())
+                    .description(rs.getDescription())
+                    .deadlineDate(rs.getDeadlineDate())
+                    .startExaminationDate(rs.getStartExaminationDate())
+                    .endExaminationDate(rs.getEndExaminationDate())
+                    .createdAt(rs.getCreatedAt())
+                    .statusHealthCampaign(rs.getStatusHealthCampaign())
+                    .diseases(diseaseOfCampaign)
                     .consentForms(healthCheckConsentResList)
                     .build();
 
@@ -182,7 +191,10 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
     @Override
     public LatestHealthCheckCampaignRes getLatestHealthCheckCampaign() {
-        return healthCheckCampaignMapper.toLatestDto(healthCheckCampaignRepo.findTopByStatusHealthCampaignPublishedOrderByCreatedAtDesc());
+        return healthCheckCampaignMapper.toLatestDto(healthCheckCampaignRepo.findStatusCampaignPublishedInProgressOrderByCreatedAtDesc());
+    }
+    public HealthCheckCampaign getLatestHealthCheckCampaignEntity() {
+        return healthCheckCampaignRepo.findCurrentCampaign();
     }
 
     @Override

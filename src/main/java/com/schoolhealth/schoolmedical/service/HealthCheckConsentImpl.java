@@ -63,7 +63,7 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
             List<ConsentDiseaseRes> diseaseRes = consentDataList.stream()
                     .map(data -> ConsentDiseaseRes.builder()
                             .diseaseId(data.getDiseaseId())
-                            .diseaseName(data.getDiseaseName())
+                            .name(data.getDiseaseName())
                             .build())
                     .toList();
 
@@ -76,6 +76,21 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
             res.add(consentRes);
         }
         return res;
+    }
+
+    @Override
+    public HealthCheckConsentForm getHealthCheckConsentByPupilIdAndCampaignId(String pupilId, Long campaignId) {
+        return healthCheckConsentRepo.findHealthCheckConsentByPupilIdAndCampaignId(pupilId, campaignId);
+    }
+
+    @Override
+    public void saveHealthCheckConsentForm(HealthCheckConsentForm healthCheckConsentForm) {
+        healthCheckConsentRepo.save(healthCheckConsentForm);
+    }
+
+    @Override
+    public List<HealthCheckConsentForm> getHealthCheckConsentByCampaignId(Long campaignId) {
+        return List.of();
     }
 
 }

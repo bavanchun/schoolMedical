@@ -11,4 +11,7 @@ public interface HealthCheckConsentService {
     HealthCheckConsentForm saveHealthCheckConsent(HealthCheckConsentForm healthCheckConsentForm);
     List<HealthCheckConsentForm> saveAll(List<HealthCheckConsentForm> healthCheckConsentForms);
     List<HealthCheckConsentRes> getHealthCheckConsentByGradeAndSchoolYear(GradeLevel gradeId, int schoolYear);
+    HealthCheckConsentForm getHealthCheckConsentByPupilIdAndCampaignId(String pupilId, Long campaignId);
+    void saveHealthCheckConsentForm(HealthCheckConsentForm healthCheckConsentForm);
+    List<HealthCheckConsentForm> getHealthCheckConsentByCampaignId(Long campaignId);
 }
