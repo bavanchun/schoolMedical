@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
+import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckConsentMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckHistoryMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
@@ -24,6 +25,8 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
 
     @Autowired
     private HealthCheckHistoryMapper healthCheckHistoryMapper;
+    @Autowired
+    private DiseaseMapper diseaseMapper;
 
     @Override
     public List<HealthCheckConsentForm> getAllHealthCheckConsents() {
@@ -146,7 +149,13 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
 
     @Override
     public HealthCheckConsentRes getHealthCheckConsentById(Long consentId) {
-        return null;
+        HealthCheckConsentForm consentForm = healthCheckConsentRepo.findByConsentFormId(consentId);
+        return HealthCheckConsentRes.builder()
+                .consentFormId(consentForm.getConsentFormId())
+                .schoolYear(consentForm.getSchoolYear())
+                .healthCheckHistoryRes(healthCheckHistoryMapper.toHealthCheckHistoryRes(consentForm.getHealthCheckHistory()))
+                .disease(diseaseMapper.toConsentDiseasesDtoList(consentForm.getConsentDiseases()))
+                .build();
     }
 
 }

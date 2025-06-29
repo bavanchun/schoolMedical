@@ -56,4 +56,10 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
             "where c.consentFormId in :consentFormId")
     List<HealthCheckConsentForm> findAllById(@Param("consentFormId") List<Long> consentFormId);
 
+    @Query("SELECT hc FROM HealthCheckConsentForm hc " +
+            "JOIN FETCH hc.healthCheckHistory hch " +
+            "LEFT JOIN FETCH hc.consentDiseases cd " +
+            "WHERE hc.consentFormId = :consentFormId " )
+    HealthCheckConsentForm findByConsentFormId(@Param("consentFormId") Long consentFormId);
+
 }
