@@ -44,4 +44,8 @@ public class HealthCheckAnnualController {
         consentDiseaseService.updateConsentDisease(survey);
         return ResponseEntity.ok().body("Health check disease status updated successfully");
     }
+    @GetMapping("/result/{consentId}")
+    public ResponseEntity<?> getHealthCheckHistoryByConsentId(@PathVariable Long consentId) {
+        return ResponseEntity.ok(healthCheckConsentService.getHealthCheckConsentById(consentId));
+    }
 }

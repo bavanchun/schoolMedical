@@ -22,6 +22,11 @@ public interface DiseaseMapper {
     })
     ConsentDiseaseRes toHealthCheckDiseaseDto(HealthCheckDisease healthCheckDisease);
     List<ConsentDiseaseRes> toHealthCheckDiseaseDtoList(List<HealthCheckDisease> healthCheckDiseases);
+    @Mappings({
+            @Mapping(target = "diseaseId", source="consentDisease.disease.diseaseId"),
+            @Mapping(target = "name", source="consentDisease.disease.name"),
+            @Mapping(target = "description", source="consentDisease.disease.description"),
+    })
     ConsentDiseaseRes toConsentDiseaseDto(ConsentDisease consentDisease);
     List<ConsentDiseaseRes> toConsentDiseasesDtoList(List<ConsentDisease> consentDiseases);
     ConsentDiseaseRes toDiseaseDto(Disease disease);
