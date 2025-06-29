@@ -11,26 +11,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampaign, Long> {
-    @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData(" +
-            "hcc.campaignId, hcc.address, hcc.title, hcc.description, hcc.deadlineDate, hcc.startExaminationDate, hcc.endExaminationDate, hcc.createdAt, hcc.statusHealthCampaign, " +
-            "hccs.consentFormId, hccs.schoolYear, " +
-            "pp.pupilId, pp.lastName, pp.firstName, pp.birthDate, pp.gender, pp.avatar,pg.grade.gradeId, g.gradeLevel,pg.gradeName, " +
-            "d.diseaseId ,d.name) " +
-            "FROM HealthCheckCampaign hcc " +
-            "LEFT JOIN hcc.healthCheckConsentForms hccs " +
-            "LEFT JOIN hccs.pupil pp " +
-            "LEFT JOIN pp.pupilGrade pg " +
-            "LEFT JOIN pg.grade g " +
-            "LEFT JOIN hcc.healthCheckDiseases hcd " +
-            "LEFT JOIN hcd.disease d  " +
-            " where hcc.active = true AND hcc.campaignId = :campaignId")
-    List<HealthCheckCampaignFlatData> findHealthCheckCampaignDetails(@Param("campaignId") Long campaignId);
 
-    @Query("SELECT h FROM HealthCheckCampaign h WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED ORDER BY h.createdAt DESC")
-    HealthCheckCampaign findTopByStatusHealthCampaignPublishedOrderByCreatedAtDesc();
+    Optional<HealthCheckCampaign> findHealthCheckCampaignByCampaignId (Long campaignId);
+
+    @Query("SELECT h FROM HealthCheckCampaign h WHERE h.statusHealthCampaign in (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS) ORDER BY h.createdAt DESC LIMIT 1")
+    HealthCheckCampaign findStatusCampaignPublishedInProgressOrderByCreatedAtDesc();
+
+    @Query("SELECT h FROM HealthCheckCampaign h ORDER BY h.createdAt DESC LIMIT 1")
+    HealthCheckCampaign findCurrentCampaign();
 
     List<HealthCheckCampaign> findAllByActiveTrue();
 }

@@ -20,4 +20,10 @@ public class CustomExceptionHandler {
     public ErrorResponse handleUpdateNotAllowedException(UpdateNotAllowedException ex, WebRequest req) {
         return new ErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), req.getDescription(false));
     }
+
+    @ExceptionHandler(CampaignAlreadyExistsForYearException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleCampaignAlreadyExistsForYearException(CampaignAlreadyExistsForYearException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), req.getDescription(false));
+    }
 }

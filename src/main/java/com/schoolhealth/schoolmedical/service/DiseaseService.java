@@ -24,6 +24,6 @@ public interface DiseaseService {
     DiseaseVaccineResponse removeVaccineFromDisease(DiseaseVaccineRequest request);
     DiseaseWithVaccinesWrapper getAllDiseasesWithVaccines();
 
-    List<Disease> getAllDiseasesByisInjectedVaccinationFalse();
+    List<ConsentDiseaseRes> getAllDiseasesByisInjectedVaccinationFalse();
     List<Disease> getAllDiseasesById(List<Long> diseaseIds);
 }

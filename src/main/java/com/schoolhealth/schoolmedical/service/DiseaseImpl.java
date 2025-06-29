@@ -80,12 +80,12 @@ public class DiseaseImpl implements DiseaseService{
     }
 
     @Override
-    public List<Disease> getAllDiseasesByisInjectedVaccinationFalse() {
+    public List<ConsentDiseaseRes> getAllDiseasesByisInjectedVaccinationFalse() {
         List<Disease> diseases = diseaseRepo.findAllByisActiveTrueAndIsInjectedVaccinationFalse();
         if (diseases.isEmpty()) {
             throw new NotFoundException("No diseases found");
         }
-        return diseases;
+        return diseaseMapper.toDiseasesDtoList(diseases);
     }
 
 
