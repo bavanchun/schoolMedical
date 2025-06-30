@@ -44,9 +44,9 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
     }
 
     @Override
-    public List<HealthCheckConsentRes> getHealthCheckConsentByGradeAndSchoolYear(GradeLevel grade, int schoolYear) {
-        List<HealthCheckConsentFlatData> rs = healthCheckConsentRepo.findListPupilByGradeAndSchoolYear(grade, schoolYear);
-        if(rs.isEmpty()) throw new NotFoundException("No health check consent found for grade: " + grade + " and school year: " + schoolYear);
+    public List<HealthCheckConsentRes> getHealthCheckConsentByGradeAndSchoolYear(GradeLevel grade) {
+        List<HealthCheckConsentFlatData> rs = healthCheckConsentRepo.findListPupilByGradeAndSchoolYear(grade);
+        if(rs.isEmpty()) throw new NotFoundException("No health check consent found for grade: " + grade );
         List<HealthCheckConsentRes> res = new ArrayList<>();
         Map<Long, List<HealthCheckConsentFlatData>> groupedByConsentId = rs.stream()
                 .collect(Collectors.groupingBy(HealthCheckConsentFlatData::getHealthCheckConsentId));

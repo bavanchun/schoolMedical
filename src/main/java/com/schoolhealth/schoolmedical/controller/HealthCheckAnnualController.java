@@ -28,7 +28,7 @@ public class HealthCheckAnnualController {
     @GetMapping("/student/{grade}")
     public ResponseEntity<?> getHealthCheckConsentByGrade(@PathVariable String grade) {
         GradeLevel gradeLevel = GradeLevel.fromValue(grade);
-        return ResponseEntity.ok(healthCheckConsentService.getHealthCheckConsentByGradeAndSchoolYear(gradeLevel, Year.now().getValue()));
+        return ResponseEntity.ok(healthCheckConsentService.getHealthCheckConsentByGradeAndSchoolYear(gradeLevel));
     }
     @PostMapping("/result/{consentId}")
     public ResponseEntity<?> saveHealthCheckHistory(@RequestBody HealthCheckHistoryReq healthCheckHistoryReq, @PathVariable Long consentId) {

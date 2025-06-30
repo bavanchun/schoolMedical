@@ -18,11 +18,16 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
 
     Optional<HealthCheckCampaign> findHealthCheckCampaignByCampaignId (Long campaignId);
 
-    @Query("SELECT h FROM HealthCheckCampaign h WHERE h.statusHealthCampaign in (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS, com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.COMPLETED) ORDER BY h.createdAt DESC LIMIT 1")
+    @Query("SELECT h FROM HealthCheckCampaign h LEFT JOIN FETCH h.healthCheckDiseases WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED ORDER BY h.createdAt DESC LIMIT 1")
     HealthCheckCampaign findStatusCampaignPublishedInProgressOrderByCreatedAtDesc();
 
-    @Query("SELECT h FROM HealthCheckCampaign h ORDER BY h.createdAt DESC LIMIT 1")
-    HealthCheckCampaign findCurrentCampaign();
+    @Query("SELECT h FROM HealthCheckCampaign h " +
+            "WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED AND YEAR(h.createdAt) = :year " )
+    Optional<HealthCheckCampaign> findCurrentCampaignByPushlished(@Param("year") int year);
+
+    @Query("SELECT h FROM HealthCheckCampaign h " +
+            "WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS AND YEAR(h.createdAt) = :year " )
+    Optional<HealthCheckCampaign> findCurrentCampaignByInprogress(@Param("year") int year);
 
     List<HealthCheckCampaign> findAllByActiveTrue();
 }
