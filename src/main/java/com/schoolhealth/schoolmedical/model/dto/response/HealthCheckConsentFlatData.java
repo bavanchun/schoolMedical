@@ -25,4 +25,5 @@ public class HealthCheckConsentFlatData {
     private String name;
     private String description;
     private String note;
+    private boolean active;
 }

@@ -15,6 +15,7 @@ public class HealthCheckConsentRes {
     private Long consentFormId;
     private int schoolYear;
     private PupilRes pupilRes;
+    private boolean active;
     private HealthCheckHistoryRes healthCheckHistoryRes;
     private List<ConsentDiseaseRes> disease;
 }

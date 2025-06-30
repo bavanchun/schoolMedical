@@ -74,6 +74,7 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
                     .consentFormId(consentId)
                     .schoolYear(consentDataList.getFirst().getSchoolYear())
                     .pupilRes(pupil)
+                    .active(consentDataList.getFirst().isActive())
                     .disease(diseaseRes)
                     .build();
             res.add(consentRes);
@@ -139,6 +140,7 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
                     .consentFormId(consentId)
                     .schoolYear(consentDataList.getFirst().getSchoolYear())
                     .pupilRes(pupil)
+                    .active(consentDataList.getFirst().isActive())
                     .healthCheckHistoryRes(healthCheckHistoryRes)
                     .disease(diseaseRes)
                     .build();

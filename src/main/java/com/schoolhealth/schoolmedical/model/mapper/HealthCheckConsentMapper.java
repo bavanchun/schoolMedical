@@ -18,6 +18,7 @@ public interface HealthCheckConsentMapper {
     @Mapping(target = "disease", source = "consentDiseases")
     @Mapping(target = "consentFormId" , source = "consentFormId")
     @Mapping(target = "healthCheckHistoryRes", source = "healthCheckHistory")
+    @Mapping(target = "active", source = "active")
     HealthCheckConsentRes toDto(HealthCheckConsentForm healthCheckConsentForm);
     List<HealthCheckConsentRes> toDtoList(List<HealthCheckConsentForm> healthCheckConsentForms);
 
