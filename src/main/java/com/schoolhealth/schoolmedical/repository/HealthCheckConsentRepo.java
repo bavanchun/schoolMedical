@@ -23,12 +23,18 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
             " SELECT MAX(sub_pg.startYear) " +
             "  FROM PupilGrade sub_pg " +
             "  WHERE sub_pg.pupil.pupilId = p.pupilId )" +
-            "JOIN pg.grade g ON g.gradeLevel = :grade  " +
+            "JOIN pg.grade g  " +
             "LEFT JOIN hccf.consentDiseases hcd " +
             "LEFT JOIN hcd.disease d " +
-            "JOIN hccf.healthCheckCampaign hc " +
-            "WHERE hccf.schoolYear = :schoolYear AND hc.statusHealthCampaign IN (com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED,com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS) " )
-    List<HealthCheckConsentFlatData> findListPupilByGradeAndSchoolYear(@Param("grade") GradeLevel grade, @Param("schoolYear") int schoolYear);
+            "WHERE  g.gradeLevel = :grade  " +
+            "AND hccf.healthCheckCampaign.campaignId = (" +
+            "       SELECT hc.campaignId " +
+            "       From HealthCheckCampaign hc " +
+            "       WHERE hc.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS" +
+            "       Order by hc.createdAt DESC " +
+            "       LIMIT 1" +
+            ")" )
+    List<HealthCheckConsentFlatData> findListPupilByGradeAndSchoolYear(@Param("grade") GradeLevel grade);
 
     @Query("SELECT h FROM " +
             "HealthCheckConsentForm h " +

@@ -24,6 +24,7 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,10 +66,10 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
     @Override
     public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaignReq){
-        HealthCheckCampaign currentCampaign = healthCheckCampaignRepo.findCurrentCampaign();
-        if(currentCampaign != null && currentCampaign.getCreatedAt().getYear() == Year.now().getValue() && currentCampaign.getStatusHealthCampaign() != StatusHealthCampaign.CANCELLED) {
-            throw new CampaignAlreadyExistsForYearException("A health check campaign already exists for the year:"  + Year.now().getValue() + ". Please cancel the existing campaign before creating a new one.");
-        }
+        //HealthCheckCampaign currentCampaign = healthCheckCampaignRepo.findCurrentCampaign();
+//        if(currentCampaign != null && currentCampaign.getCreatedAt().getYear() == Year.now().getValue() && currentCampaign.getStatusHealthCampaign() != StatusHealthCampaign.CANCELLED) {
+//            throw new CampaignAlreadyExistsForYearException("A health check campaign already exists for the year:"  + Year.now().getValue() + ". Please cancel the existing campaign before creating a new one.");
+//        }
         HealthCheckCampaign campaign = healthCheckCampaignRepo.save(healthCheckCampaignMapper.toEntity(healthCheckCampaignReq));
         List<Disease> diseases = diseaseService.getAllDiseasesById(healthCheckCampaignReq.getDiseaseIds());
         List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
@@ -125,9 +126,15 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     @Transactional
     public void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign) {
         HealthCheckCampaign campaign1 = healthCheckCampaignRepo.findById(campaignId).orElseThrow(() -> new NotFoundException("campaign not found to update status"));
-        campaign1.setStatusHealthCampaign(statusHealthCampaign);
-        HealthCheckCampaign campaign = healthCheckCampaignRepo.save(campaign1);
+
         if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
+            Optional<HealthCheckCampaign> currentCampaign = healthCheckCampaignRepo.findCurrentCampaignByPushlished(Year.now().getValue());
+            if(currentCampaign.isPresent()){
+                throw new UpdateNotAllowedException("a health campaign in system already published");
+            }
+            campaign1.setStatusHealthCampaign(statusHealthCampaign);
+            HealthCheckCampaign campaign = healthCheckCampaignRepo.save(campaign1);
+
             List<Pupil> pupils = pupilService.getAll();
 
             List<HealthCheckConsentForm> healthCheckConsentForm = new ArrayList<>();
@@ -168,6 +175,14 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 String title = "Chiến dịch kiểm tra sức khỏe hằng năm";
                 fcmService.sendNotification(pupilsByParent, campaignId, TypeNotification.HEALTH_CHECK_CAMPAIGN.name(),title );
             }
+        }
+        else if(statusHealthCampaign == StatusHealthCampaign.IN_PROGRESS){
+            Optional<HealthCheckCampaign> currentCampaign = healthCheckCampaignRepo.findCurrentCampaignByInprogress(Year.now().getValue());
+            if(currentCampaign.isPresent()){
+                throw new UpdateNotAllowedException("a health campaign in system already in progress");
+            }
+            campaign1.setStatusHealthCampaign(statusHealthCampaign);
+            HealthCheckCampaign campaign = healthCheckCampaignRepo.save(campaign1);
         }
     }
 
