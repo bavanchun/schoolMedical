@@ -37,6 +37,7 @@ public class HealthCheckHistoryImpl implements HealthCheckHistoryService {
                 .orElseThrow(() -> new NotFoundException("Health Check Consent Form not found with ID: " + healthCheckConsentId));;
         HealthCheckHistory healthCheckHistory = healthCheckHistoryMapper.toHealthCheckHistory(healthCheckHistoryReq);
         healthCheckHistory.setHealthCheckConsentForm(consentForm);
+        healthCheckHistory.setActive(true);
         if(healthCheckHistoryReq.getDiseases()!=null){
             List<ConsentDisease> consentDisease = healthCheckHistoryReq.getDiseases().stream()
                     .map(diseaseReq -> {

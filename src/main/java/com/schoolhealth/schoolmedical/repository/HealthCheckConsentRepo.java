@@ -16,7 +16,7 @@ import java.util.Set;
 @Repository
 public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsentForm, Long> {
     @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData(" +
-            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name,d.description,hcd.note)" +
+            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name,d.description,hcd.note,hccf.active)" +
             "FROM HealthCheckConsentForm hccf " +
             "JOIN hccf.pupil p " +
             "JOIN p.pupilGrade pg ON pg.startYear = ( " +
@@ -42,7 +42,7 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
     HealthCheckConsentForm findHealthCheckConsentByPupilIdAndCampaignId(@Param("pupilId") String pupilId, @Param("campaignId") Long campaignId);
 
     @Query("SELECT new com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData(" +
-            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name,d.description,hcd.note)" +
+            "hccf.consentFormId, hccf.schoolYear,p.pupilId,p.lastName,p.firstName,p.birthDate,p.gender,p.avatar,pg.gradeName,d.diseaseId,d.name,d.description,hcd.note,hccf.active)" +
             "FROM HealthCheckConsentForm hccf " +
             "JOIN hccf.pupil p " +
             "JOIN p.pupilGrade pg ON pg.startYear = (" +
