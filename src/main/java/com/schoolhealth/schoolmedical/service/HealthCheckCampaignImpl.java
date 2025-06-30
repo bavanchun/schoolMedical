@@ -190,9 +190,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     public HealthCheckCampaignRes getLatestHealthCheckCampaign() {
         return healthCheckCampaignMapper.toDto(healthCheckCampaignRepo.findStatusCampaignPublishedInProgressOrderByCreatedAtDesc());
     }
-    public HealthCheckCampaign getLatestHealthCheckCampaignEntity() {
-        return healthCheckCampaignRepo.findCurrentCampaign();
-    }
+
 
     @Override
     public List<HealthCheckCampaignRes> getAllHealthCheckCampaigns() {
