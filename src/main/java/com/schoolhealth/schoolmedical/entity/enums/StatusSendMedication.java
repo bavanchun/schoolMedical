@@ -1,5 +1,7 @@
 package com.schoolhealth.schoolmedical.entity.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum StatusSendMedication {
     PENDING("Đang chờ"),
     APPROVED("Đã duyệt"),
@@ -15,5 +17,15 @@ public enum StatusSendMedication {
 
     public String getDescription() {
         return description;
+    }
+
+    @JsonCreator
+    public static StatusSendMedication fromString(String key) {
+        for (StatusSendMedication status : StatusSendMedication.values()) {
+            if (status.name().equalsIgnoreCase(key)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Unknown status: " + key);
     }
 }

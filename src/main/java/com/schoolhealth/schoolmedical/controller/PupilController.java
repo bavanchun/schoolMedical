@@ -39,8 +39,7 @@ public class PupilController {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private SendMedicalService sendMedicalService;
+
 //    @Autowired
 //    private VaccinationHistoryService vaccinationHistoryService;
 
@@ -268,14 +267,5 @@ public class PupilController {
     public ResponseEntity<?> test(HttpServletRequest request) {
         return ResponseEntity.ok( userService.getCurrentUserId( request));
     }
-    @PostMapping("/send-medication")
-    public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq) {
-        // Logic to create send medication will go here
-        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq));
-    }
-    @GetMapping("/{pupilId}/send-medication")
-    public ResponseEntity<?> getSendMedicationByPupilId(@PathVariable String pupilId) {
-        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getAllSendMedication(pupilId);
-        return ResponseEntity.ok(sendMedicationRes);
-    }
+
 }
