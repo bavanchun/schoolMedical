@@ -1,12 +1,15 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 //import com.schoolhealth.schoolmedical.service.vaccinationHistory.VaccinationHistoryService;
+import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +39,8 @@ public class PupilController {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private SendMedicalService sendMedicalService;
 //    @Autowired
 //    private VaccinationHistoryService vaccinationHistoryService;
 
@@ -263,5 +267,15 @@ public class PupilController {
     @GetMapping("/all")
     public ResponseEntity<?> test(HttpServletRequest request) {
         return ResponseEntity.ok( userService.getCurrentUserId( request));
+    }
+    @PostMapping("/send-medication")
+    public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq) {
+        // Logic to create send medication will go here
+        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq));
+    }
+    @GetMapping("/{pupilId}/send-medication")
+    public ResponseEntity<?> getSendMedicationByPupilId(@PathVariable String pupilId) {
+        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getAllSendMedication(pupilId);
+        return ResponseEntity.ok(sendMedicationRes);
     }
 }
