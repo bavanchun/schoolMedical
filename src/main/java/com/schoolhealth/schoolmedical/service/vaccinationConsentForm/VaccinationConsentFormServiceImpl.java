@@ -240,6 +240,29 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .build();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public VaccinationConsentFormResponse getConsentFormById(Long formId) {
+        log.info("Getting consent form by ID: {}", formId);
+
+        // Validate input
+        if (formId == null || formId <= 0) {
+            throw new IllegalArgumentException("Invalid consent form ID: " + formId);
+        }
+
+        // Find consent form by ID with optimized query
+        VaccinationConsentForm consentForm = consentFormRepo.findById(formId)
+                .orElseThrow(() -> new EntityNotFoundException("VaccinationConsentForm", "id", formId));
+
+        // Check if consent form is active
+        if (!consentForm.isActive()) {
+            throw new EntityNotFoundException("VaccinationConsentForm", "id", formId);
+        }
+
+        // Map to response DTO - reuse existing mapping logic for consistency
+        return mapToResponse(consentForm);
+    }
+
     private VaccinationConsentForm validateParentPermission(Long formId, String parentUserId) {
         VaccinationConsentForm consentForm = consentFormRepo.findById(formId)
                 .orElseThrow(() -> new EntityNotFoundException("VaccinationConsentForm", "id", formId));
