@@ -345,7 +345,7 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
 
                 // Pupil information
                 .pupilId(pupil.getPupilId())
-                .pupilName(pupil.getFirstName())
+                .pupilName(pupil.getLastName() + " " + pupil.getFirstName())
                 .gradeLevel(gradeLevel)
                 .build();
     }
