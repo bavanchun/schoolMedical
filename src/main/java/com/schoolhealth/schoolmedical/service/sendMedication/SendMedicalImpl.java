@@ -34,27 +34,32 @@ public class SendMedicalImpl implements SendMedicalService{
     @Autowired
     private UserNotificationService userNotificationService;
     @Override
-    public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq, String userId) {
-        User user = userService.findById(userId);
+    public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq) {
         Pupil pupil = pupilService.findPupilById(sendMedicationReq.getPupilId());
-        SendMedication sendMedication = sendMedicationMapper.toEntity(sendMedicationReq);
-        sendMedication.setUser(user);
-        sendMedication.setPupil(pupil);
-        SendMedication savedSendMedication = sendMedicationRepo.save(sendMedication);
+        List<User> parent = pupil.getParents();
+        List<SendMedication> sendMedicationList = new ArrayList<>();
+        for(User user : parent){
+            SendMedication sendMedication = sendMedicationMapper.toEntity(sendMedicationReq);
+            sendMedication.setPupil(pupil);
+            sendMedication.setUser(user);
+            sendMedicationList.add(sendMedication);
+        }
+
+        List<SendMedication> savedSendMedication = sendMedicationRepo.saveAll(sendMedicationList);
         // Create notifications for all school nurses
         List<User> schoolNurses = userService.findAllByRole(Role.SCHOOL_NURSE);
         List<UserNotification> listNotification = new ArrayList<>();
         for( User schoolNurse : schoolNurses) {
             UserNotification notification = UserNotification.builder()
                     .message("Have a new prescription. Please check it.")
-                    .sourceId(savedSendMedication.getSendMedicationId())
+                    .sourceId(savedSendMedication.getFirst().getSendMedicationId())
                     .typeNotification(TypeNotification.SEND_MEDICAL)
                     .user(schoolNurse)
                     .build();
             listNotification.add(notification);
         }
         userNotificationService.saveAllUserNotifications(listNotification);
-        return sendMedicationMapper.toDto(savedSendMedication);
+        return sendMedicationMapper.toDto(savedSendMedication.getFirst());
     }
 
     @Override

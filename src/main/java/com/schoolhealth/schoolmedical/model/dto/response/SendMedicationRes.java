@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class SendMedicationRes {
     private Long sendMedicationId;
+    private String diseaseName;
     private String pupilId;
     private String medicationImg;
     private String unitMeasure;
@@ -25,4 +27,5 @@ public class SendMedicationRes {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate requestedDate;
     private StatusSendMedication status;
+    private List<MedicationLogsRes> medicationLogs;
 }

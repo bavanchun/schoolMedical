@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusMedLogs;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -19,8 +20,8 @@ public class MedicationLogs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long logId;
 
-    @Column(name = "given_time", nullable = true)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "given_time", nullable = false)
+    @CreationTimestamp
     private LocalDateTime givenTime;
 
     @Enumerated(EnumType.STRING)

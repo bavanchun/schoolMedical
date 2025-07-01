@@ -22,6 +22,9 @@ public class SendMedication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sendMedicationId;
 
+    @Column(name = "disease_name", nullable = false, length = 100)
+    private String diseaseName;
+
     @Column(name = "medication_img", nullable = true, length = 255)
     private String medicationImg;
 

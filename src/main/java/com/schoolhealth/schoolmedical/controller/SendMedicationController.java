@@ -20,9 +20,8 @@ public class SendMedicationController {
     @Autowired
     private UserService userService;
     @PostMapping("/create")
-    public ResponseEntity<SendMedicationRes> createSendMedication(HttpServletRequest request, @RequestBody SendMedicationReq sendMedicationReq) {
+    public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq) {
         // Logic to create send medication will go here
-        String userId = userService.getCurrentUserId(request);
-        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq,userId));
+        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq));
     }
 }

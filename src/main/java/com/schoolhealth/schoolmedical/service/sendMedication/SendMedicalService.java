@@ -7,7 +7,7 @@ import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import java.util.List;
 
 public interface SendMedicalService {
-    SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq, String userId);
+    SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq);
     List<SendMedicationRes> getAllSendMedication(String userId);
     void updateStatus(Long sendMedicationId, StatusSendMedication statusSendMedication);
 }
