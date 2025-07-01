@@ -27,6 +27,9 @@ public class MedicalEventMedicationUsed {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive = true;
 
-    @OneToMany(mappedBy = "medicalEventMedicationUsed", cascade = CascadeType.ALL)
-    private List<MedicalEventSupplyUsed> medicalEventSuppliesUsed;
+//    @OneToMany(mappedBy = "medicalEventMedicationUsed", cascade = CascadeType.ALL)
+//    private List<MedicalEventSupplyUsed> medicalEventSuppliesUsed;
+// Many-to-many relationship with medical events
+@ManyToMany(mappedBy = "medicationUsed")
+private List<MedicalEvent> medicalEvents;
 }
