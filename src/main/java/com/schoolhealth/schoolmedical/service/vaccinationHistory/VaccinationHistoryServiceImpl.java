@@ -232,7 +232,7 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
         return VaccinationHistoryResponse.builder()
                 .historyId(history.getHistoryId())
                 .pupilId(history.getPupil().getPupilId())
-                .pupilName(history.getPupil().getFirstName()) // Fixed: Assumed getName() exists
+                .pupilName(history.getPupil().getLastName() + " " + history.getPupil().getFirstName()) // Fixed: Assumed getName() exists
                 .vaccineName(history.getVaccine().getName()) // Fixed: Assumed getName() exists
                 .diseaseName(history.getDisease().getName()) // Fixed: Assumed getName() exists
                 .campaignName(history.getCampaign() != null ? history.getCampaign().getTitleCampaign() : null) // Fixed: Used getTitleCampaign for consistency
