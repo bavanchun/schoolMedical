@@ -63,9 +63,9 @@ public class SendMedicalImpl implements SendMedicalService{
     }
 
     @Override
-    public List<SendMedicationRes> getAllSendMedication(String userId) {
-        List<SendMedication> list = sendMedicationRepo.findByUserId(userId);
-        return List.of();
+    public List<SendMedicationRes> getAllSendMedication(String pupilId) {
+        List<SendMedication> list = sendMedicationRepo.findByPupilId(pupilId);
+        return sendMedicationMapper.toDtoWithMedicationLog(list);
     }
 
     @Override
