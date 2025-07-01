@@ -67,8 +67,4 @@ public class SendMedication {
     @JoinColumn(name = "pupil_id", nullable = false)
     private Pupil pupil;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
 }
