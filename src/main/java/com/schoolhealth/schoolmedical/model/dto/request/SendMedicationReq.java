@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class SendMedicationReq {
     private String pupilId;
+    private String diseaseName;
     private String medicationImg;
     private String unitMeasure;
     private String note;
