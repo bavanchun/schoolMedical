@@ -12,7 +12,7 @@ public class MedicationItemImpl implements MedicationItemService {
     @Autowired
     private MedicationItemRepo medicationItemRepo;
     @Override
-    public List<MedicationItem> saveMedicationItem(List<MedicationItem> medicationItems) {
+    public List<MedicationItem> saveAllMedicationItem(List<MedicationItem> medicationItems) {
         return medicationItemRepo.saveAll(medicationItems);
     }
 }

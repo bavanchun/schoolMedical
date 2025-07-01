@@ -1,10 +1,12 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,20 +14,22 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SendMedicationRes {
+    private String pupilId;
     private Long sendMedicationId;
     private String diseaseName;
-    private String pupilId;
-    private String medicationImg;
-    private String unitMeasure;
-    private String note;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
-    private String medicationSchedule;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime requestedDate;
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate requestedDate;
+    private LocalDate confirmedDate;
+    private String prescriptionImage;
+    private String note;
+    private String medicationSchedule;
     private StatusSendMedication status;
     private List<MedicationItemRes> medicationItems;
     private List<MedicationLogsRes> medicationLogs;

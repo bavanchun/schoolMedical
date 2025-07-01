@@ -36,13 +36,13 @@ public class SendMedicalImpl implements SendMedicalService{
     public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq) {
         Pupil pupil = pupilService.findPupilById(sendMedicationReq.getPupilId());
         SendMedication sendMedication = sendMedicationMapper.toEntity(sendMedicationReq);
-        sendMedication.setPupil(pupil);
         List<MedicationItem> medicationItems = sendMedicationMapper.toEntity(sendMedicationReq.getMedicationItems());
-        SendMedication savedSendMedication = sendMedicationRepo.save(sendMedication);
+        sendMedication.setPupil(pupil);
+        sendMedication.setMedicationItems(medicationItems);
         for(MedicationItem medicationItem : medicationItems){
-            medicationItem.setSendMedication(savedSendMedication);
+            medicationItem.setSendMedication(sendMedication);
         }
-        medicationItemService.saveMedicationItem(medicationItems);
+        SendMedication savedSendMedication = sendMedicationRepo.save(sendMedication);
         // Create notifications for all school nurses
         List<User> schoolNurses = userService.findAllByRole(Role.SCHOOL_NURSE);
         List<UserNotification> listNotification = new ArrayList<>();
@@ -62,6 +62,9 @@ public class SendMedicalImpl implements SendMedicalService{
     @Override
     public List<SendMedicationRes> getAllSendMedication(String pupilId) {
         List<SendMedication> list = sendMedicationRepo.findByPupilId(pupilId);
+        if (list.isEmpty()) {
+            throw new NotFoundException("No prescriptions found for pupil with id: " + pupilId);
+        }
         return sendMedicationMapper.toDtoWithMedicationLog(list);
     }
 

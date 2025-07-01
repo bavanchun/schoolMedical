@@ -4,8 +4,11 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,8 +27,8 @@ public class SendMedication {
     @Column(name = "disease_name", nullable = false, length = 100)
     private String diseaseName;
 
-    @Column(name = "medication_img", nullable = true, length = 255)
-    private String medicationImg;
+    @Column(name = "prescription_image", nullable = true, length = 255)
+    private String prescriptionImage;
 
     @Column(name = "note", nullable = true, columnDefinition = "TEXT")
     private String note;
@@ -35,7 +38,7 @@ public class SendMedication {
 
     @Column(name = "requested_date", nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDate requestedDate;
+    private LocalDateTime requestedDate;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -50,10 +53,12 @@ public class SendMedication {
     private boolean active;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "sendMedication",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             orphanRemoval = true
     )
+    @Fetch(FetchMode.SUBSELECT)
     private List<MedicationLogs> medicationLogs;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,6 +66,7 @@ public class SendMedication {
     private Pupil pupil;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sendMedication", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @Fetch(FetchMode.SUBSELECT)
     private List<MedicationItem> medicationItems;
 
 }

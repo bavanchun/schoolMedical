@@ -5,5 +5,5 @@ import com.schoolhealth.schoolmedical.entity.MedicationItem;
 import java.util.List;
 
 public interface MedicationItemService {
-    List<MedicationItem> saveMedicationItem(List<MedicationItem> medicationItems);
+    List<MedicationItem> saveAllMedicationItem(List<MedicationItem> medicationItems);
 }
