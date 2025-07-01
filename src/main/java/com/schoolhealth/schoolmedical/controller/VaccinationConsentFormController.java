@@ -50,7 +50,7 @@ public class VaccinationConsentFormController {
     }
 
     @GetMapping("/campaign/{campaignId}")
-    @Operation(summary = "Get consent forms by campaign", description = "Get list of consent forms for a campaign (for nurse)")
+    @Operation(summary = "Get consent forms by campaign", description = "Get all consent forms for a campaign. Use status parameter to filter by specific status (for nurse/manager/admin)")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('SCHOOL_NURSE')")
     public ResponseEntity<List<VaccinationConsentFormResponse>> getConsentFormsByCampaign(
             @PathVariable Long campaignId,
@@ -59,7 +59,8 @@ public class VaccinationConsentFormController {
         if (status != null) {
             forms = consentFormService.getConsentFormsByCampaignAndStatus(campaignId, status);
         } else {
-            forms = consentFormService.getApprovedPupilsByCampaign(campaignId);
+//            forms = consentFormService.getApprovedPupilsByCampaign(campaignId);
+            forms = consentFormService.getAllConsentFormsByCampaign(campaignId);
         }
         return ResponseEntity.ok(forms);
     }
@@ -87,6 +88,14 @@ public class VaccinationConsentFormController {
             @PathVariable Long campaignId,
             @PathVariable GradeLevel gradeLevel) {
         PupilsApprovedByGradeResponse response = consentFormService.getPupilsApprovedBySpecificGrade(campaignId, gradeLevel);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{formId}")
+    @Operation(summary = "Get consent form by ID", description = "Get vaccination consent form details by ID (for school nurse, manager, admin)")
+    @PreAuthorize("hasRole('SCHOOL_NURSE') or  hasRole('MANAGER') or hasRole('ADMIN')")
+    public ResponseEntity<VaccinationConsentFormResponse> getConsentFormById(@PathVariable Long formId) {
+        VaccinationConsentFormResponse response = consentFormService.getConsentFormById(formId);
         return ResponseEntity.ok(response);
     }
 }
