@@ -1,13 +1,14 @@
 package com.schoolhealth.schoolmedical.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,29 +21,24 @@ import java.util.List;
 public class SendMedication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "send_medication_id", nullable = false, unique = true)
     private Long sendMedicationId;
 
     @Column(name = "disease_name", nullable = false, length = 100)
     private String diseaseName;
 
-    @Column(name = "medication_img", nullable = true, length = 255)
-    private String medicationImg;
+    @Column(name = "prescription_image", nullable = true, length = 255)
+    private String prescriptionImage;
 
     @Column(name = "note", nullable = true, columnDefinition = "TEXT")
     private String note;
-
-    @Column(name = "unit_measure", nullable = false, length = 50)
-    private String unitMeasure;
-
-    @Column(name = "medication_schedule", nullable = false, length = 255)
-    private String medicationSchedule;
 
     @Column(name = "confirmed_date", nullable = true)
     private LocalDate confirmedDate;
 
     @Column(name = "requested_date", nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDate requestedDate;
+    private LocalDateTime requestedDate;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -57,14 +53,20 @@ public class SendMedication {
     private boolean active;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "sendMedication",
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             orphanRemoval = true
     )
+    @Fetch(FetchMode.SUBSELECT)
     private List<MedicationLogs> medicationLogs;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pupil_id", nullable = false)
     private Pupil pupil;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sendMedication", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @Fetch(FetchMode.SUBSELECT)
+    private List<MedicationItem> medicationItems;
 
 }
