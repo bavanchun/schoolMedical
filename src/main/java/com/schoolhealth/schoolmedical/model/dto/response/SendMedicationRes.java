@@ -27,5 +27,6 @@ public class SendMedicationRes {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate requestedDate;
     private StatusSendMedication status;
+    private List<MedicationItemRes> medicationItems;
     private List<MedicationLogsRes> medicationLogs;
 }

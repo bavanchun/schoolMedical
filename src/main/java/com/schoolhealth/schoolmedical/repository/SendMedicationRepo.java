@@ -12,7 +12,8 @@ import java.util.List;
 public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> {
     // Custom query methods can be defined here if needed
     @Query("SELECT sm FROM SendMedication sm " +
-            "JOIN FETCH sm.medicationLogs md " +
+            "JOIN FETCH sm.medicationLogs  " +
+            "JOIN FETCH sm.medicationItems " +
             "WHERE sm.pupil.pupilId = :pupilId " )
     List<SendMedication> findByPupilId(@Param("pupilId") String pupilId);
 }
