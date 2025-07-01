@@ -89,4 +89,12 @@ public class VaccinationConsentFormController {
         PupilsApprovedByGradeResponse response = consentFormService.getPupilsApprovedBySpecificGrade(campaignId, gradeLevel);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{formId}")
+    @Operation(summary = "Get consent form by ID", description = "Get vaccination consent form details by ID (for school nurse, manager, admin)")
+    @PreAuthorize("hasRole('SCHOOL_NURSE') or  hasRole('MANAGER') or hasRole('ADMIN')")
+    public ResponseEntity<VaccinationConsentFormResponse> getConsentFormById(@PathVariable Long formId) {
+        VaccinationConsentFormResponse response = consentFormService.getConsentFormById(formId);
+        return ResponseEntity.ok(response);
+    }
 }
