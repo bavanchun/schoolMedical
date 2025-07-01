@@ -1,11 +1,13 @@
-package com.schoolhealth.schoolmedical.service.sendMedical;
+package com.schoolhealth.schoolmedical.service.sendMedication;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.UserNotification;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
+import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
+import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
@@ -53,5 +55,19 @@ public class SendMedicalImpl implements SendMedicalService{
         }
         userNotificationService.saveAllUserNotifications(listNotification);
         return sendMedicationMapper.toDto(savedSendMedication);
+    }
+
+    @Override
+    public List<SendMedicationRes> getAllSendMedication(String userId) {
+        List<SendMedication> list = sendMedicationRepo.findByUserId(userId);
+        return List.of();
+    }
+
+    @Override
+    public void updateStatus(Long sendMedicationId, StatusSendMedication statusSendMedication) {
+        SendMedication sendMedication = sendMedicationRepo.findById(sendMedicationId)
+                .orElseThrow(() -> new NotFoundException("Prescription not found with id:" + sendMedicationId));
+        sendMedication.setStatus(statusSendMedication);
+        sendMedicationRepo.save(sendMedication);
     }
 }

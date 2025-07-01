@@ -2,7 +2,7 @@ package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
-import com.schoolhealth.schoolmedical.service.sendMedical.SendMedicalService;
+import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,6 +6,8 @@ import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface SendMedicationMapper {
 
@@ -17,4 +19,5 @@ public interface SendMedicationMapper {
 
     @Mapping(target = "pupilId", source = "pupil.pupilId")
     SendMedicationRes toDto(SendMedication sendMedication);
+    List<SendMedicationRes> toDto(List<SendMedication> sendMedications);
 }
