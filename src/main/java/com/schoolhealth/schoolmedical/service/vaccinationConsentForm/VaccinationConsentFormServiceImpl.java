@@ -240,6 +240,54 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .build();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public VaccinationConsentFormResponse getConsentFormById(Long formId) {
+        log.info("Getting consent form by ID: {}", formId);
+
+        // Validate input
+        if (formId == null || formId <= 0) {
+            throw new IllegalArgumentException("Invalid consent form ID: " + formId);
+        }
+
+        // Find consent form by ID with optimized query
+        VaccinationConsentForm consentForm = consentFormRepo.findById(formId)
+                .orElseThrow(() -> new EntityNotFoundException("VaccinationConsentForm", "id", formId));
+
+        // Check if consent form is active
+        if (!consentForm.isActive()) {
+            throw new EntityNotFoundException("VaccinationConsentForm", "id", formId);
+        }
+
+        // Map to response DTO - reuse existing mapping logic for consistency
+        return mapToResponse(consentForm);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<VaccinationConsentFormResponse> getAllConsentFormsByCampaign(Long campaignId) {
+        log.info("Getting all active consent forms for campaign {}", campaignId);
+
+        // Validate input
+        if (campaignId == null || campaignId <= 0) {
+            throw new IllegalArgumentException("Invalid campaign ID: " + campaignId);
+        }
+
+        // Validate campaign exists first (for better error handling)
+        if (!vaccinationCampaignRepo.existsById(campaignId)) {
+            throw new EntityNotFoundException("VaccinationCampaign", "id", campaignId);
+        }
+
+        // Get all active consent forms for this campaign with optimized query
+        List<VaccinationConsentForm> consentForms = consentFormRepo
+                .findAllActiveByCampaignIdOrderByGradeAndName(campaignId);
+
+        // Map to response DTOs - no need to filter as query already filters active
+        return consentForms.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     private VaccinationConsentForm validateParentPermission(Long formId, String parentUserId) {
         VaccinationConsentForm consentForm = consentFormRepo.findById(formId)
                 .orElseThrow(() -> new EntityNotFoundException("VaccinationConsentForm", "id", formId));
