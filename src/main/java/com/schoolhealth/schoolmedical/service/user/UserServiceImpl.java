@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.service.user;
 
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
+import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
@@ -59,6 +60,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllWithPupilByParent() {
         return userRepository.findAllWithPupilsByParent();
+    }
+
+    @Override
+    public User findById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
     }
 
 }

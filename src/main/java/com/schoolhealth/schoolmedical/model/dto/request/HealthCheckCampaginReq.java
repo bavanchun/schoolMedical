@@ -22,13 +22,10 @@ public class HealthCheckCampaginReq {
     @NotBlank
     private String description;
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate deadlineDate;
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime startExaminationDate;
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime endExaminationDate;
     private List<Long> diseaseIds;
 
