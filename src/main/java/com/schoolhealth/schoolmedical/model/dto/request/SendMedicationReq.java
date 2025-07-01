@@ -14,9 +14,9 @@ import java.util.List;
 public class SendMedicationReq {
     private String pupilId;
     private String diseaseName;
-    private String medicationImg;
-    private String note;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String prescriptionImage;
+    private String note;
     private List<MedicationItemReq> medicationItems;
 }

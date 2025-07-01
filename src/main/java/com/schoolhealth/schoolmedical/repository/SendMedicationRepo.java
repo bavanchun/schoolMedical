@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.SendMedication;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,8 +13,6 @@ import java.util.List;
 public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> {
     // Custom query methods can be defined here if needed
     @Query("SELECT sm FROM SendMedication sm " +
-            "JOIN FETCH sm.medicationLogs  " +
-            "JOIN FETCH sm.medicationItems " +
             "WHERE sm.pupil.pupilId = :pupilId " )
     List<SendMedication> findByPupilId(@Param("pupilId") String pupilId);
 }
