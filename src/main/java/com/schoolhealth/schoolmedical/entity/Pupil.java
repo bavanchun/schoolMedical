@@ -57,8 +57,7 @@ public class Pupil {
 //    @OneToMany(mappedBy = "pupil", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<PupilParent> pupilParents;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
-    @JoinColumn(name = "pupil_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
     private List<SendMedication> sendMedications;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)

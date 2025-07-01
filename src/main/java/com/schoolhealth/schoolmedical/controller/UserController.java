@@ -3,6 +3,8 @@ package com.schoolhealth.schoolmedical.controller;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,5 +27,4 @@ public class UserController {
             ? ResponseEntity.ok("Device token updated successfully")
             : ResponseEntity.status(500).body("Failed to update device token");
     }
-
 }

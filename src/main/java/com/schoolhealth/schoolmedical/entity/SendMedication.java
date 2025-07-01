@@ -31,31 +31,27 @@ public class SendMedication {
     @Column(name = "unit_measure", nullable = false, length = 50)
     private String unitMeasure;
 
-//    @Column(name = "medication_schedule", nullable = false, length = 255)
-//    private String medicationSchedule;
+    @Column(name = "medication_schedule", nullable = false, length = 255)
+    private String medicationSchedule;
 
-    @Column(name = "confirmed_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "confirmed_date", nullable = true)
     private LocalDate confirmedDate;
 
-    @Column(name = "requested_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @Column(name = "requested_date", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDate requestedDate;
 
     @Column(name = "start_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     private StatusSendMedication status;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean isActive;
+    private boolean active;
 
     @OneToMany(
             mappedBy = "sendMedication",
@@ -63,5 +59,13 @@ public class SendMedication {
             orphanRemoval = true
     )
     private List<MedicationLogs> medicationLogs;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pupil_id", nullable = false)
+    private Pupil pupil;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }
