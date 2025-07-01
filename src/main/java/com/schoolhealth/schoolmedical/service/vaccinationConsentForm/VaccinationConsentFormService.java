@@ -27,4 +27,5 @@ public interface VaccinationConsentFormService {
 
     VaccinationConsentFormResponse getConsentFormById(Long formId);
 
+    List<VaccinationConsentFormResponse> getAllConsentFormsByCampaign(Long campaignId);
 }

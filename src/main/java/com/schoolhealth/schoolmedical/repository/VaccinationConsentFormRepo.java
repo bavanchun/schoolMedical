@@ -32,4 +32,7 @@ public interface VaccinationConsentFormRepo extends JpaRepository<VaccinationCon
 
     @Query("SELECT vcf FROM VaccinationConsentForm vcf JOIN vcf.pupil p JOIN p.pupilGrade pg WHERE vcf.campaign.campaignId = :campaignId AND vcf.status = :status AND pg.grade.gradeLevel = :gradeLevel AND vcf.isActive = true ORDER BY p.firstName")
     List<VaccinationConsentForm> findByCampaignIdAndStatusAndGradeLevelOrderByName(@Param("campaignId") Long campaignId, @Param("status") ConsentFormStatus status, @Param("gradeLevel") GradeLevel gradeLevel);
+
+    @Query("SELECT vcf FROM VaccinationConsentForm vcf JOIN vcf.pupil p JOIN p.pupilGrade pg WHERE vcf.campaign.campaignId = :campaignId AND vcf.isActive = true ORDER BY pg.grade.gradeLevel, p.firstName")
+    List<VaccinationConsentForm> findAllActiveByCampaignIdOrderByGradeAndName(@Param("campaignId") Long campaignId);
 }
