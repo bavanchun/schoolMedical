@@ -29,11 +29,12 @@ public class EquipmentServiceImpl implements EquipmentService {
         log.info("Creating new equipment with name: {}", request.getName());
 
         // Validate equipment name uniqueness
-        if (equipmentRepository.existsByNameAndIsActiveTrue(request.getName())) {
-            throw new IllegalArgumentException("Equipment with name '" + request.getName() + "' already exists");
+        if (equipmentRepository.existsByNameAndIsActiveTrue(request.getName().trim())) {
+            throw new IllegalArgumentException("Equipment with name '" + request.getName().trim() + "' already exists");
         }
 
         Equipment equipment = equipmentMapper.toEntity(request);
+        equipment.setName(equipment.getName().trim()); // Clean name
         Equipment savedEquipment = equipmentRepository.save(equipment);
 
         log.info("Successfully created equipment with ID: {}", savedEquipment.getEquipmentId());
@@ -48,11 +49,13 @@ public class EquipmentServiceImpl implements EquipmentService {
                 .orElseThrow(() -> new NotFoundException("Equipment not found with ID: " + equipmentId));
 
         // Validate equipment name uniqueness (excluding current equipment)
-        if (equipmentRepository.existsByNameAndIsActiveTrueAndEquipmentIdNot(request.getName(), equipmentId)) {
-            throw new IllegalArgumentException("Equipment with name '" + request.getName() + "' already exists");
+        String trimmedName = request.getName().trim();
+        if (equipmentRepository.existsByNameAndIsActiveTrueAndEquipmentIdNot(trimmedName, equipmentId)) {
+            throw new IllegalArgumentException("Equipment with name '" + trimmedName + "' already exists");
         }
 
         equipmentMapper.updateEntityFromRequest(request, existingEquipment);
+        existingEquipment.setName(existingEquipment.getName().trim()); // Clean name
         Equipment updatedEquipment = equipmentRepository.save(existingEquipment);
 
         log.info("Successfully updated equipment with ID: {}", equipmentId);
@@ -113,5 +116,28 @@ public class EquipmentServiceImpl implements EquipmentService {
         equipmentRepository.save(equipment);
 
         log.info("Successfully soft deleted equipment with ID: {}", equipmentId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Equipment> findEquipmentByIds(List<Long> equipmentIds) {
+        log.info("Finding equipment by IDs: {}", equipmentIds);
+
+        if (equipmentIds == null || equipmentIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Equipment> equipments = equipmentRepository.findByEquipmentIdInAndIsActiveTrue(equipmentIds);
+
+        // Validate that all requested equipment were found
+        if (equipments.size() != equipmentIds.size()) {
+            List<Long> foundIds = equipments.stream().map(Equipment::getEquipmentId).toList();
+            List<Long> notFoundIds = equipmentIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .toList();
+            throw new NotFoundException("Equipment not found with IDs: " + notFoundIds);
+        }
+
+        return equipments;
     }
 }
