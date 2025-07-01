@@ -1,9 +1,6 @@
 package com.schoolhealth.schoolmedical.service.sendMedication;
 
-import com.schoolhealth.schoolmedical.entity.Pupil;
-import com.schoolhealth.schoolmedical.entity.SendMedication;
-import com.schoolhealth.schoolmedical.entity.User;
-import com.schoolhealth.schoolmedical.entity.UserNotification;
+import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
@@ -33,12 +30,19 @@ public class SendMedicalImpl implements SendMedicalService{
     private PupilService pupilService;
     @Autowired
     private UserNotificationService userNotificationService;
+    @Autowired
+    private MedicationItemService medicationItemService;
     @Override
     public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq) {
         Pupil pupil = pupilService.findPupilById(sendMedicationReq.getPupilId());
         SendMedication sendMedication = sendMedicationMapper.toEntity(sendMedicationReq);
         sendMedication.setPupil(pupil);
+        List<MedicationItem> medicationItems = sendMedicationMapper.toEntity(sendMedicationReq.getMedicationItems());
         SendMedication savedSendMedication = sendMedicationRepo.save(sendMedication);
+        for(MedicationItem medicationItem : medicationItems){
+            medicationItem.setSendMedication(savedSendMedication);
+        }
+        medicationItemService.saveMedicationItem(medicationItems);
         // Create notifications for all school nurses
         List<User> schoolNurses = userService.findAllByRole(Role.SCHOOL_NURSE);
         List<UserNotification> listNotification = new ArrayList<>();
