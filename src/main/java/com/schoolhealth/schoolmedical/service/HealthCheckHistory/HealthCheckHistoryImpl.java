@@ -38,6 +38,7 @@ public class HealthCheckHistoryImpl implements HealthCheckHistoryService {
         HealthCheckHistory healthCheckHistory = healthCheckHistoryMapper.toHealthCheckHistory(healthCheckHistoryReq);
         healthCheckHistory.setHealthCheckConsentForm(consentForm);
         healthCheckHistory.setActive(true);
+        consentForm.setActive(true);
         if(healthCheckHistoryReq.getDiseases()!=null){
             List<ConsentDisease> consentDisease = healthCheckHistoryReq.getDiseases().stream()
                     .map(diseaseReq -> {
@@ -54,6 +55,7 @@ public class HealthCheckHistoryImpl implements HealthCheckHistoryService {
                     .toList();
             consentDiseaseService.saveConsentDisease(consentDisease);
         }
+        healthCheckConsentRepo.save(consentForm);
         return  healthCheckHistoryRepo.save(healthCheckHistory);
     }
 
