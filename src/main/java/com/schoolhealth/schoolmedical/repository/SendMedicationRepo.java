@@ -13,6 +13,6 @@ import java.util.List;
 public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> {
     // Custom query methods can be defined here if needed
     @Query("SELECT sm FROM SendMedication sm " +
-            "WHERE sm.pupil.pupilId = :pupilId " )
+            "WHERE sm.pupil.pupilId = :pupilId AND sm.active = true " )
     List<SendMedication> findByPupilId(@Param("pupilId") String pupilId);
 }
