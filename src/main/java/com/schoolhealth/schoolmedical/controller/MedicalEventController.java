@@ -59,7 +59,7 @@ public class MedicalEventController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN', 'SCHOOL_NURSE')")
     @Operation(summary = "Get all medical events", description = "Only managers and admins can view all medical events")
     public ResponseEntity<Page<MedicalEventResponse>> getAllMedicalEvents(
             @PageableDefault(size = 20) Pageable pageable,
@@ -70,7 +70,7 @@ public class MedicalEventController {
     }
 
     @GetMapping("/pupil/{pupilId}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN', 'PARENT')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN', 'PARENT', 'SCHOOL_NURSE')")
     @Operation(summary = "Get medical events by pupil ID", description = "Managers/admins can access any pupil, parents only their children")
     public ResponseEntity<List<MedicalEventResponse>> getMedicalEventsByPupilId(
             @PathVariable String pupilId,
@@ -82,7 +82,7 @@ public class MedicalEventController {
     }
 
     @GetMapping("/grade/{gradeLevel}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN', 'SCHOOL_NURSE')")
     @Operation(summary = "Get medical events by grade level", description = "Only managers and admins can view events by grade")
     public ResponseEntity<List<MedicalEventResponse>> getMedicalEventsByGradeLevel(
             @PathVariable String gradeLevel,
