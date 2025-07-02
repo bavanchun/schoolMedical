@@ -15,5 +15,5 @@ public interface SendMedicalService {
     void deleteSendMedication(Long sendMedicationId);
 
     List<QuantityPupilForSessionRes> getQuantityPupilForSession();
-
+    List<SendMedicationRes> getSendMedicationByPending();
 }

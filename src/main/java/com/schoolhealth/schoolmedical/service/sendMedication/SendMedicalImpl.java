@@ -68,7 +68,7 @@ public class SendMedicalImpl implements SendMedicalService{
         if (list.isEmpty()) {
             throw new NotFoundException("No prescriptions found for pupil with id: " + pupilId);
         }
-        return sendMedicationMapper.toDtoWithMedicationLog(list);
+        return sendMedicationMapper.toDtoSendMedication(list);
     }
 
     @Override
@@ -115,6 +115,15 @@ public class SendMedicalImpl implements SendMedicalService{
         sessionRes.add(session2);
         sessionRes.add(session3);
         return sessionRes;
+    }
+
+    @Override
+    public List<SendMedicationRes> getSendMedicationByPending() {
+        List<SendMedication> sendMedications = sendMedicationRepo.findAllByStatus(StatusSendMedication.PENDING);
+        if(sendMedications.isEmpty()) {
+            throw new NotFoundException("No pending prescriptions found");
+        }
+        return sendMedicationMapper.toDtoSendMedication(sendMedications);
     }
 
 }

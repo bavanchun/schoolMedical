@@ -43,9 +43,9 @@ public interface SendMedicationMapper {
     @Mapping(target = "pupilId", source = "pupil.pupilId")
     @Mapping(target = "medicationLogs", source = "medicationLogs")
     @Mapping(target = "medicationItems", source = "medicationItems")
-    SendMedicationRes toDtoWithMedicationLog(SendMedication sendMedication);
+    SendMedicationRes toDtoSendMedication(SendMedication sendMedication);
 
     @IterableMapping(qualifiedByName = "toDtoWithMedicationLog")
-    List<SendMedicationRes> toDtoWithMedicationLog(List<SendMedication> sendMeditions);
+    List<SendMedicationRes> toDtoSendMedication(List<SendMedication> sendMeditions);
 
 }

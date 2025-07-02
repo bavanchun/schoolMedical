@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.SendMedication;
+import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,9 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
             "WHERE sm.pupil.pupilId = :pupilId AND sm.active = true " )
     List<SendMedication> findByPupilId(@Param("pupilId") String pupilId);
 
+    @Query("SELECT sm FROM SendMedication sm WHERE sm.status = :status AND sm.active = true")
+    List<SendMedication> findAllByStatus(@Param("status") StatusSendMedication status);
+    
 
     @Query(value = """
         select pg.grade_id as grade, count(distinct p.pupil_id) as quantity

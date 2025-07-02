@@ -43,4 +43,8 @@ public class SendMedicationController {
     public ResponseEntity<?> getAllSendMedicationByPupilId() {
         return ResponseEntity.ok(sendMedicalService.getQuantityPupilForSession());
     }
+    @GetMapping("/pending")
+    public ResponseEntity<?> getAllPendingSendMedication() {
+        return ResponseEntity.ok(sendMedicalService.getSendMedicationByPending());
+    }
 }
