@@ -23,6 +23,7 @@
         @GetMapping("/{campaignId}")
         public ResponseEntity<?> getHealthCheckCampaigns(@PathVariable Long campaignId) {
             // Logic to get all health check campaigns
+            System.out.println("System default timezone: " + java.time.ZoneId.systemDefault());
             return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignDetailsById(campaignId));
         }
         @PatchMapping("/status/{campaignId}")

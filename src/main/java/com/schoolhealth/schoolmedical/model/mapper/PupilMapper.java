@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface PupilMapper {
 
     //PupilMapper INSTANCE = Mappers.getMapper(PupilMapper.class);
@@ -25,7 +25,9 @@ public interface PupilMapper {
     @Mapping(target = "startYear", expression = "java(pupil.getPupilGrade().getFirst().getStartYear())")
     @Mapping(target = "gradeLevel", expression = "java(pupil.getPupilGrade().getFirst().getGrade().getGradeLevel())")
     @Mapping(target = "gradeName", expression = "java(pupil.getPupilGrade().getFirst().getGradeName())")
+    @Mapping(target = "parents", source = "pupil.parents")
     PupilRes toDto(Pupil pupil);
+
 
     List<PupilRes> toPupilGradeDtoList(List<Pupil> pupils);
 

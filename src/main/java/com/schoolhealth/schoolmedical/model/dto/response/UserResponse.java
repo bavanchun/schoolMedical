@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
     private String userId;
     private String lastName;
@@ -29,7 +31,5 @@ public class UserResponse {
     private LocalDate createdAt;
 
     private Role role;
-    private boolean isActive;
-
 
 }
