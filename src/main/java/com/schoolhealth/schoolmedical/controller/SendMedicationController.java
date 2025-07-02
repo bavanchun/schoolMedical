@@ -34,4 +34,9 @@ public class SendMedicationController {
         sendMedicalService.updateStatus(sendMedicationId,statusSendMedication.getStatusSendMedication());
         return ResponseEntity.ok("Send medication status updated successfully");
     }
+    @PatchMapping("/delete/{sendMedicationId}")
+    public  ResponseEntity<?> deleteSendMedication(@PathVariable Long sendMedicationId) {
+        sendMedicalService.deleteSendMedication(sendMedicationId);
+        return ResponseEntity.ok("Send medication status deleted successfully");
+    }
 }

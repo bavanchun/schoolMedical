@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
+import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
@@ -78,6 +79,12 @@ public class SendMedicalImpl implements SendMedicalService{
 
     @Override
     public void deleteSendMedication(Long sendMedicationId) {
-
+        SendMedication sendMedication = sendMedicationRepo.findById(sendMedicationId)
+                .orElseThrow(() -> new NotFoundException("Prescription not found with id:" + sendMedicationId));
+        if(sendMedication.getStatus() == StatusSendMedication.PENDING){
+            throw new UpdateNotAllowedException("Prescription can't deleted");
+        }
+        sendMedication.setActive(false);
+        sendMedicationRepo.save(sendMedication);
     }
 }

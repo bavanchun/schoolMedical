@@ -65,7 +65,7 @@ public class SendMedication {
     @JoinColumn(name = "pupil_id", nullable = false)
     private Pupil pupil;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sendMedication", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sendMedication", cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private List<MedicationItem> medicationItems;
 
