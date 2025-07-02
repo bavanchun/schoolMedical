@@ -10,6 +10,7 @@ import com.schoolhealth.schoolmedical.model.dto.response.MedicalEventResponse;
 import com.schoolhealth.schoolmedical.model.mapper.MedicalEventMapper;
 import com.schoolhealth.schoolmedical.repository.*;
 import com.schoolhealth.schoolmedical.service.Notification.UserNotificationService;
+import com.schoolhealth.schoolmedical.service.Notification.FCMService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,7 @@ public class MedicalEventServiceImpl implements MedicalEventService {
     private final MedicationRepository medicationRepository;
     private final MedicalEventMapper medicalEventMapper;
     private final UserNotificationService userNotificationService;
+    private final FCMService fcmService;
 
     @Override
     public MedicalEventResponse createMedicalEvent(CreateMedicalEventRequest request, String createdBy) {
@@ -265,14 +267,18 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
     private void sendNotificationToParents(MedicalEvent medicalEvent) {
         try {
+            // Create severity-based message
+            String severityText = getSeverityText(medicalEvent.getStatus());
+            String title = String.format("Medical Alert - %s Priority", severityText);
             String message = String.format(
-                    "Medical event recorded for %s %s. Injury: %s. Please check your child's medical records.",
+                    "Medical event (%s priority) recorded for %s %s.\nInjury: %s\nPlease check your child's medical records for details.",
+                    severityText,
                     medicalEvent.getPupil().getFirstName(),
                     medicalEvent.getPupil().getLastName(),
                     medicalEvent.getInjuryDescription()
             );
 
-            // Create notifications for parents
+            // Get parents and create notifications
             List<User> parents = medicalEvent.getPupil().getParents();
             List<UserNotification> notifications = new ArrayList<>();
 
@@ -282,16 +288,62 @@ public class MedicalEventServiceImpl implements MedicalEventService {
                         .sourceId(medicalEvent.getMedicalEventId())
                         .typeNotification(TypeNotification.MED_EVENT)
                         .user(parent)
+                        .active(false) // Unread by default
                         .build();
                 notifications.add(notification);
             }
 
+            // Save notifications to database
             userNotificationService.saveAllUserNotifications(notifications);
 
-            log.info("Sent medical event notification to parents for pupil: {}", medicalEvent.getPupil().getPupilId());
+            // Send real-time FCM push notifications
+            sendRealTimePushNotifications(parents, medicalEvent, title, message);
+
+            log.info("Sent medical event notification to {} parents for pupil: {}",
+                    parents.size(), medicalEvent.getPupil().getPupilId());
         } catch (Exception e) {
-            log.error("Failed to send notification to parents for medical event: {}", medicalEvent.getMedicalEventId(), e);
+            log.error("Failed to send notification to parents for medical event: {}",
+                    medicalEvent.getMedicalEventId(), e);
             // Don't fail the entire operation if notification fails
         }
+    }
+
+    private void sendRealTimePushNotifications(List<User> parents, MedicalEvent medicalEvent, String title, String message) {
+        try {
+            // Get device tokens from parents
+            List<String> tokens = parents.stream()
+                    .map(User::getDeviceToken)
+                    .filter(token -> token != null && !token.isEmpty())
+                    .collect(Collectors.toList());
+
+            if (!tokens.isEmpty()) {
+                // Create notification for FCM multicast
+                UserNotification fcmNotification = UserNotification.builder()
+                        .message(title)
+                        .sourceId(medicalEvent.getMedicalEventId())
+                        .typeNotification(TypeNotification.MED_EVENT)
+                        .build();
+
+                // Send multicast notification
+                fcmService.sendMulticastNotification(tokens, fcmNotification);
+
+                log.info("Sent FCM push notifications to {} devices for medical event: {}",
+                        tokens.size(), medicalEvent.getMedicalEventId());
+            } else {
+                log.warn("No valid device tokens found for parents of pupil: {}",
+                        medicalEvent.getPupil().getPupilId());
+            }
+        } catch (Exception e) {
+            log.error("Failed to send FCM push notifications for medical event: {}",
+                    medicalEvent.getMedicalEventId(), e);
+        }
+    }
+
+    private String getSeverityText(MedicalEventStatus status) {
+        return switch (status) {
+            case LOW -> "Low";
+            case MEDIUM -> "Medium";
+            case HIGH -> "High";
+        };
     }
 }
