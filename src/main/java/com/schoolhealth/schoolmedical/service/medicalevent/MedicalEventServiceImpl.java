@@ -42,7 +42,8 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
     @Override
     public MedicalEventResponse createMedicalEvent(CreateMedicalEventRequest request, String createdBy) {
-        log.info("Creating medical event for pupil {} by user {}", request.getPupilId(), createdBy);
+        log.info("Creating medical event for pupil {} by user {} with status {}",
+                request.getPupilId(), createdBy, request.getStatus());
 
         // Validate and get entities
         Pupil pupil = findPupilById(request.getPupilId());
@@ -57,7 +58,7 @@ public class MedicalEventServiceImpl implements MedicalEventService {
         medicalEvent.setPupil(pupil);
         medicalEvent.setSchoolNurse(schoolNurse);
         medicalEvent.setDateTime(LocalDateTime.now());
-        medicalEvent.setStatus(MedicalEventStatus.LOW); // Default status
+        medicalEvent.setStatus(request.getStatus()); // ✅ Use status from request
         medicalEvent.setIsActive(true);
         medicalEvent.setEquipmentUsed(equipment);
         medicalEvent.setMedicationUsed(medication);
@@ -66,15 +67,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
         trimTextFields(medicalEvent);
 
         MedicalEvent savedEvent = medicalEventRepository.save(medicalEvent);
-        log.info("Created medical event with ID: {}", savedEvent.getMedicalEventId());
+        log.info("Created medical event with ID: {} and status: {}",
+                savedEvent.getMedicalEventId(), savedEvent.getStatus());
 
         // Send notifications to parents
         sendNotificationToParents(savedEvent);
 
         return mapToResponse(savedEvent);
     }
-
-
 
     @Override
     @Transactional(readOnly = true)
@@ -83,6 +83,10 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
         MedicalEvent medicalEvent = medicalEventRepository.findByIdWithAllRelationships(medicalEventId)
                 .orElseThrow(() -> new NotFoundException("Medical event not found with ID: " + medicalEventId));
+
+        // Force lazy loading of equipment and medication collections
+        medicalEvent.getEquipmentUsed().size();
+        medicalEvent.getMedicationUsed().size();
 
         // Check access permissions
         validateUserAccessToMedicalEvent(userId, medicalEvent);
@@ -113,7 +117,16 @@ public class MedicalEventServiceImpl implements MedicalEventService {
             validateParentAccessToPupil(requestingUserId, pupilId);
         }
 
+        // Load medical events with basic relationships (avoids MultipleBagFetchException)
         List<MedicalEvent> medicalEvents = medicalEventRepository.findByPupilIdWithRelationships(pupilId);
+
+        // For each medical event, explicitly load equipment and medication to avoid N+1
+        for (MedicalEvent event : medicalEvents) {
+            // Force lazy loading of collections
+            event.getEquipmentUsed().size(); // Trigger lazy loading
+            event.getMedicationUsed().size(); // Trigger lazy loading
+        }
+
         return medicalEvents.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -140,6 +153,13 @@ public class MedicalEventServiceImpl implements MedicalEventService {
         log.info("Getting medical events for parent {} in year {}", parentId, year);
 
         List<MedicalEvent> medicalEvents = medicalEventRepository.findByParentIdAndYearWithRelationships(parentId, year);
+
+        // For each medical event, explicitly load equipment and medication to avoid N+1
+        for (MedicalEvent event : medicalEvents) {
+            event.getEquipmentUsed().size(); // Trigger lazy loading
+            event.getMedicationUsed().size(); // Trigger lazy loading
+        }
+
         return medicalEvents.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());

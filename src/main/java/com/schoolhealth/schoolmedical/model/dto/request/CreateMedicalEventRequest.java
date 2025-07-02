@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
+import com.schoolhealth.schoolmedical.entity.enums.MedicalEventStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,6 +28,9 @@ public class CreateMedicalEventRequest {
 
     @Size(max = 5000, message = "Detailed information must not exceed 5000 characters")
     private String detailedInformation;
+
+    @NotNull(message = "Medical event status is required")
+    private MedicalEventStatus status;
 
     // Optional equipment IDs used in treatment
     private List<Long> equipmentIds;

@@ -17,15 +17,14 @@ import java.util.Optional;
 @Repository
 public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long> {
 
-    // Find medical event by ID with all relationships (prevent N+1)
+
+    // Find medical event by ID with all relationships (prevent N+1) - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
             "pupil.pupilGrade",
             "pupil.pupilGrade.grade",
             "pupil.parents",
-            "schoolNurse",
-            "equipmentUsed",
-            "medicationUsed"
+            "schoolNurse"
     })
     @Query("SELECT me FROM MedicalEvent me WHERE me.medicalEventId = :eventId AND me.isActive = true")
     Optional<MedicalEvent> findByIdWithAllRelationships(@Param("eventId") Long eventId);
@@ -40,45 +39,40 @@ public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long
     @Query("SELECT me FROM MedicalEvent me WHERE me.isActive = true ORDER BY me.dateTime DESC")
     Page<MedicalEvent> findAllWithBasicRelationships(Pageable pageable);
 
-    // Find medical events by pupil ID
+    // Find medical events by pupil ID - FIXED MultipleBagFetchException
+    @Query("SELECT me FROM MedicalEvent me WHERE me.pupil.pupilId = :pupilId AND me.isActive = true ORDER BY me.dateTime DESC")
+    List<MedicalEvent> findByPupilIdBasic(@Param("pupilId") String pupilId);
+
     @EntityGraph(attributePaths = {
             "pupil",
-            "schoolNurse",
-            "equipmentUsed",
-            "medicationUsed"
+            "schoolNurse"
     })
     @Query("SELECT me FROM MedicalEvent me WHERE me.pupil.pupilId = :pupilId AND me.isActive = true ORDER BY me.dateTime DESC")
     List<MedicalEvent> findByPupilIdWithRelationships(@Param("pupilId") String pupilId);
 
-    // Find medical events by pupil ID with pagination
+    // Find medical events by pupil ID with pagination - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
-            "schoolNurse",
-            "equipmentUsed",
-            "medicationUsed"
+            "schoolNurse"
     })
     @Query("SELECT me FROM MedicalEvent me WHERE me.pupil.pupilId = :pupilId AND me.isActive = true ORDER BY me.dateTime DESC")
     Page<MedicalEvent> findByPupilIdWithRelationships(@Param("pupilId") String pupilId, Pageable pageable);
 
-    // Find medical events by school nurse ID
+    // Find medical events by school nurse ID - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
             "pupil.pupilGrade",
-            "pupil.pupilGrade.grade",
-            "equipmentUsed",
-            "medicationUsed"
+            "pupil.pupilGrade.grade"
     })
     @Query("SELECT me FROM MedicalEvent me WHERE me.schoolNurse.userId = :schoolNurseId AND me.isActive = true ORDER BY me.dateTime DESC")
     Page<MedicalEvent> findBySchoolNurseIdWithRelationships(@Param("schoolNurseId") String schoolNurseId, Pageable pageable);
 
-    // Find medical events by grade level
+    // Find medical events by grade level - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
             "pupil.pupilGrade",
             "pupil.pupilGrade.grade",
-            "schoolNurse",
-            "equipmentUsed",
-            "medicationUsed"
+            "schoolNurse"
     })
     @Query("""
         SELECT me FROM MedicalEvent me
@@ -96,14 +90,12 @@ public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long
     """)
     Page<MedicalEvent> findByGradeLevelWithRelationships(@Param("gradeLevel") GradeLevel gradeLevel, Pageable pageable);
 
-    // Find medical events by parent ID (through pupil relationships)
+    // Find medical events by parent ID - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
             "pupil.pupilGrade",
             "pupil.pupilGrade.grade",
-            "schoolNurse",
-            "equipmentUsed",
-            "medicationUsed"
+            "schoolNurse"
     })
     @Query("""
         SELECT me FROM MedicalEvent me
@@ -115,14 +107,12 @@ public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long
     """)
     List<MedicalEvent> findByParentIdWithRelationships(@Param("parentId") String parentId);
 
-    // Find medical events by parent ID and year
+    // Find medical events by parent ID and year - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
             "pupil.pupilGrade",
             "pupil.pupilGrade.grade",
-            "schoolNurse",
-            "equipmentUsed",
-            "medicationUsed"
+            "schoolNurse"
     })
     @Query("""
         SELECT me FROM MedicalEvent me
