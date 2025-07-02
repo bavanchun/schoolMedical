@@ -7,6 +7,8 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
+import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
+import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilForSessionRes;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
 import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
@@ -87,4 +89,32 @@ public class SendMedicalImpl implements SendMedicalService{
         sendMedication.setActive(false);
         sendMedicationRepo.save(sendMedication);
     }
+
+    @Override
+    public List<QuantityPupilForSessionRes> getQuantityPupilForSession() {
+        List<QuantityPupilByGradeRes> afterBreakfast = sendMedicationRepo.getQuantityPupilByGradeAndAfterBreakfast();
+        List<QuantityPupilByGradeRes> beforeLunch = sendMedicationRepo.getQuantityPupilByGradeAndBeforeLunch();
+        List<QuantityPupilByGradeRes> afterLunch = sendMedicationRepo.getQuantityPupilByGradeAndAfterLunch();
+        if( afterBreakfast.isEmpty() && beforeLunch.isEmpty() && afterLunch.isEmpty()) {
+            throw new NotFoundException("No data found for quantity of pupils by grade and session");
+        }
+        List<QuantityPupilForSessionRes> sessionRes = new ArrayList<>();
+        QuantityPupilForSessionRes session1 = QuantityPupilForSessionRes.builder()
+                .session("After Breakfast")
+                .quantityPupilByGrade(afterBreakfast)
+                .build();
+        QuantityPupilForSessionRes session2 = QuantityPupilForSessionRes.builder()
+                .session("Before Lunch")
+                .quantityPupilByGrade(beforeLunch)
+                .build();
+        QuantityPupilForSessionRes session3 = QuantityPupilForSessionRes.builder()
+                .session("After Lunch")
+                .quantityPupilByGrade(afterLunch)
+                .build();
+        sessionRes.add(session1);
+        sessionRes.add(session2);
+        sessionRes.add(session3);
+        return sessionRes;
+    }
+
 }
