@@ -10,4 +10,5 @@ public interface SendMedicalService {
     SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq);
     List<SendMedicationRes> getAllSendMedication(String pupilId);
     void updateStatus(Long sendMedicationId, StatusSendMedication statusSendMedication);
+    void deleteSendMedication(Long sendMedicationId);
 }

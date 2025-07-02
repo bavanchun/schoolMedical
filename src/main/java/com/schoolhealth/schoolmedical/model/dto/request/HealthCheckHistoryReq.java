@@ -13,7 +13,6 @@ import java.util.List;
 @Builder
 public class HealthCheckHistoryReq {
 
-    private Long healthId;
     private BigDecimal height;
     private BigDecimal weight;
     private String rightEyeVision;

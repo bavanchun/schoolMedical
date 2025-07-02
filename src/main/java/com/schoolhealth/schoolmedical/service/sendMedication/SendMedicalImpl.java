@@ -75,4 +75,9 @@ public class SendMedicalImpl implements SendMedicalService{
         sendMedication.setStatus(statusSendMedication);
         sendMedicationRepo.save(sendMedication);
     }
+
+    @Override
+    public void deleteSendMedication(Long sendMedicationId) {
+
+    }
 }

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class HealthCheckHistoryRes {
+    private Long healthId;
     private BigDecimal height;
     private BigDecimal weight;
     private String rightEyeVision;
