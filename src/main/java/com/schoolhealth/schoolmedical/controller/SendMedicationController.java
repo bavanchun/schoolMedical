@@ -39,4 +39,8 @@ public class SendMedicationController {
         sendMedicalService.deleteSendMedication(sendMedicationId);
         return ResponseEntity.ok("Send medication status deleted successfully");
     }
+    @GetMapping("/pupil")
+    public ResponseEntity<?> getAllSendMedicationByPupilId() {
+        return ResponseEntity.ok(sendMedicalService.getQuantityPupilForSession());
+    }
 }

@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.SendMedication;
+import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,50 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
     @Query("SELECT sm FROM SendMedication sm " +
             "WHERE sm.pupil.pupilId = :pupilId AND sm.active = true " )
     List<SendMedication> findByPupilId(@Param("pupilId") String pupilId);
+
+
+    @Query(value = """
+        select pg.grade_id as grade, count(distinct p.pupil_id) as quantity
+        from pupil p
+                 join pupil_grade pg on p.pupil_id = pg.pupil_id
+                 join send_medication sm on sm.pupil_id = p.pupil_id
+                 join medication_item mi on sm.send_medication_id = mi.send_medication_id
+        where sm.status = 'APPROVED' and mi.medication_schedule = 'After breakfast: 9h00-9h30' and pg.start_year = (
+            select max(start_year)
+            from pupil_grade
+            where pupil_id = p.pupil_id
+        )
+        group by pg.grade_id
+        """, nativeQuery = true)
+    List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndAfterBreakfast();
+
+    @Query(value = """
+        select pg.grade_id as grade, count(distinct p.pupil_id) as quantity
+        from pupil p
+                 join pupil_grade pg on p.pupil_id = pg.pupil_id
+                 join send_medication sm on sm.pupil_id = p.pupil_id
+                 join medication_item mi on sm.send_medication_id = mi.send_medication_id
+        where sm.status = 'APPROVED' and mi.medication_schedule = 'After lunch: 11h30-12h00' and pg.start_year = (
+            select max(start_year)
+            from pupil_grade
+            where pupil_id = p.pupil_id
+        )
+        group by pg.grade_id
+        """, nativeQuery = true)
+    List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndAfterLunch();
+
+    @Query(value = """
+        select pg.grade_id as grade, count(distinct p.pupil_id) as quantity
+        from pupil p
+                 join pupil_grade pg on p.pupil_id = pg.pupil_id
+                 join send_medication sm on sm.pupil_id = p.pupil_id
+                 join medication_item mi on sm.send_medication_id = mi.send_medication_id
+        where sm.status = 'APPROVED' and mi.medication_schedule = 'Before lunch: 10h30-11h00' and pg.start_year = (
+            select max(start_year)
+            from pupil_grade
+            where pupil_id = p.pupil_id
+        )
+        group by pg.grade_id
+        """, nativeQuery = true)
+    List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndBeforeLunch();
 }
