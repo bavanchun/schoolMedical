@@ -20,6 +20,12 @@ public class MedicalEvent {
     @Column(name = "medical_event_id")
     private Long medicalEventId;
 
+    @Column(name = "injury_description", columnDefinition = "TEXT")
+    private String injuryDescription;
+
+    @Column(name = "treatment_description", columnDefinition = "TEXT")
+    private String treatmentDescription;
+
     @Column(name = "detailed_information", columnDefinition = "TEXT")
     private String detailedInformation;
 
@@ -42,16 +48,14 @@ public class MedicalEvent {
     @JoinColumn(name = "pupil_id", referencedColumnName = "pupil_id", nullable = false)
     private Pupil pupil;
 
-//    @OneToMany(mappedBy = "medicalEvent", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<MedicalEventSupplyUsed> supplyUsages;
-// Many-to-many relationship with equipment used
-@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-@JoinTable(
-        name = "medical_event_equipment_mapping",
-        joinColumns = @JoinColumn(name = "medical_event_id"),
-        inverseJoinColumns = @JoinColumn(name = "equipment_id")
-)
-private List<Equipment> equipmentUsed;
+    // Many-to-many relationship with equipment used
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "medical_event_equipment_mapping",
+            joinColumns = @JoinColumn(name = "medical_event_id"),
+            inverseJoinColumns = @JoinColumn(name = "equipment_id")
+    )
+    private List<Equipment> equipmentUsed;
 
     // Many-to-many relationship with medication used
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
