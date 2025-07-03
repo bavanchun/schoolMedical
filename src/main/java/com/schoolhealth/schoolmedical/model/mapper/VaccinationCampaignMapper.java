@@ -9,6 +9,13 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface VaccinationCampaignMapper {
+    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "campaignId", ignore = true)
+    @Mapping(target = "vaccine", ignore = true)
+    @Mapping(target = "disease", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "vaccinationHistories", ignore = true)
+    @Mapping(target = "consentForms", ignore = true)
     VaccinationCampagin toVaccinationCampaign(VaccinationCampaignRequest request);
 
     @Mapping(target = "campaignId", ignore = true)
