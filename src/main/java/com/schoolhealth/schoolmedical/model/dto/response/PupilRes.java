@@ -23,7 +23,6 @@ public class PupilRes {
     private char gender;
     private String avatar;
     private Long gradeId;
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int startYear;
     private GradeLevel gradeLevel;
     private String gradeName;

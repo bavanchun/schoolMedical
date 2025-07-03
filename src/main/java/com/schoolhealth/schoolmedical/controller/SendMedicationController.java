@@ -1,8 +1,10 @@
 package com.schoolhealth.schoolmedical.controller;
 
+import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusSendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
+import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +48,12 @@ public class SendMedicationController {
     @GetMapping("/pending")
     public ResponseEntity<?> getAllPendingSendMedication() {
         return ResponseEntity.ok(sendMedicalService.getSendMedicationByPending());
+    }
+    @Autowired
+    private SendMedicationRepo sendMedicationRepo;
+    @GetMapping("pupil/session")
+    public ResponseEntity<?> getAllPupilBySessionAndGrade(@RequestParam int session, @RequestParam Long grade) {
+       // return ResponseEntity.ok(sendMedicalService.getAllPupilBySessionAndGrade(session, grade));
+        return ResponseEntity.ok(sendMedicalService.getAllPupilBySessionAndGrade(session, grade));
     }
 }

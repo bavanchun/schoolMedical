@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.repository;
 
+import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
@@ -28,11 +29,7 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
                  join pupil_grade pg on p.pupil_id = pg.pupil_id
                  join send_medication sm on sm.pupil_id = p.pupil_id
                  join medication_item mi on sm.send_medication_id = mi.send_medication_id
-        where sm.status = 'APPROVED' and mi.medication_schedule = 'After breakfast: 9h00-9h30' and sm.is_active = true and pg.start_year = (
-            select max(start_year)
-            from pupil_grade
-            where pupil_id = p.pupil_id
-        )
+        where sm.status = 'APPROVED' and mi.medication_schedule = 'After breakfast: 9h00-9h30' and sm.is_active = true and pg.start_year = Year(CURRENT_DATE)
         group by pg.grade_id
         """, nativeQuery = true)
     List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndAfterBreakfast();
@@ -43,11 +40,7 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
                  join pupil_grade pg on p.pupil_id = pg.pupil_id
                  join send_medication sm on sm.pupil_id = p.pupil_id
                  join medication_item mi on sm.send_medication_id = mi.send_medication_id
-        where sm.status = 'APPROVED' and mi.medication_schedule = 'After lunch: 11h30-12h00'  and sm.is_active = true and pg.start_year = (
-            select max(start_year)
-            from pupil_grade
-            where pupil_id = p.pupil_id
-        )
+        where sm.status = 'APPROVED' and mi.medication_schedule = 'After lunch: 11h30-12h00'  and sm.is_active = true and pg.start_year = Year(CURRENT_DATE)
         group by pg.grade_id
         """, nativeQuery = true)
     List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndAfterLunch();
@@ -58,12 +51,18 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
                  join pupil_grade pg on p.pupil_id = pg.pupil_id
                  join send_medication sm on sm.pupil_id = p.pupil_id
                  join medication_item mi on sm.send_medication_id = mi.send_medication_id
-        where sm.status = 'APPROVED' and mi.medication_schedule = 'Before lunch: 10h30-11h00'  and sm.is_active = true and pg.start_year = (
-            select max(start_year)
-            from pupil_grade
-            where pupil_id = p.pupil_id
-        )
+        where sm.status = 'APPROVED' and mi.medication_schedule = 'Before lunch: 10h30-11h00'  and sm.is_active = true and pg.start_year = Year(CURRENT_DATE)
         group by pg.grade_id
         """, nativeQuery = true)
     List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndBeforeLunch();
+
+    @Query(value = """
+select distinct p.* from pupil p
+        join pupil_grade pg on p.pupil_id = pg.pupil_id
+        join send_medication sm on sm.pupil_id = p.pupil_id
+        join medication_item mi on sm.send_medication_id = mi.send_medication_id
+where sm.status = :status and mi.medication_schedule = :session and pg.grade_id = :gradeId and sm.is_active = true and pg.start_year = Year(CURRENT_DATE)
+    """, nativeQuery = true)
+List<Pupil> findAllPupilBySessionAndGrade(@Param("session") String session, @Param("gradeId") Long gradeId, @Param("status") StatusSendMedication status);
+
 }

@@ -7,9 +7,11 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
 import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilForSessionRes;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
+import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
 import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
 import com.schoolhealth.schoolmedical.service.Notification.UserNotificationService;
@@ -35,6 +37,9 @@ public class SendMedicalImpl implements SendMedicalService{
     private UserNotificationService userNotificationService;
     @Autowired
     private MedicationItemService medicationItemService;
+    @Autowired
+    private PupilMapper pupilMapper;
+
     @Override
     public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq) {
         Pupil pupil = pupilService.findPupilById(sendMedicationReq.getPupilId());
@@ -124,6 +129,28 @@ public class SendMedicalImpl implements SendMedicalService{
             throw new NotFoundException("No pending prescriptions found");
         }
         return sendMedicationMapper.toDtoSendMedication(sendMedications);
+    }
+
+    @Override
+    public List<PupilRes> getAllPupilBySessionAndGrade(int session, Long gradeId) {
+        List<Pupil> pupils = new ArrayList<>();
+        String sessionName = null;
+        if(session == 1){
+            sessionName = "After breakfast: 9h00-9h30";
+            pupils = sendMedicationRepo.findAllPupilBySessionAndGrade(sessionName, gradeId, StatusSendMedication.APPROVED);
+        } else if(session == 2) {
+            sessionName = "Before lunch: 10h30-11h00";
+            pupils = sendMedicationRepo.findAllPupilBySessionAndGrade(sessionName, gradeId, StatusSendMedication.APPROVED);
+        } else if(session == 3) {
+            sessionName = "After lunch: 11h30-12h00";
+            pupils = sendMedicationRepo.findAllPupilBySessionAndGrade(sessionName, gradeId, StatusSendMedication.APPROVED);
+        } else {
+            throw new NotFoundException("Session not found");
+        }
+        if (pupils.isEmpty()) {
+            throw new NotFoundException("No pupils found for grade id: " + gradeId + " and session: " + session + "and year: " + java.time.Year.now().getValue());
+        }
+        return pupilMapper.toPupilResWithoutParent(pupils);
     }
 
 }
