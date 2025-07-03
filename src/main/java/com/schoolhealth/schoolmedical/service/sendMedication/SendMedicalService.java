@@ -10,7 +10,7 @@ import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import java.util.List;
 
 public interface SendMedicalService {
-    SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq);
+    SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq, String parentId);
     List<SendMedicationRes> getAllSendMedication(String pupilId);
     void updateStatus(Long sendMedicationId, StatusSendMedication statusSendMedication);
     void deleteSendMedication(Long sendMedicationId);
@@ -18,4 +18,5 @@ public interface SendMedicalService {
     List<QuantityPupilForSessionRes> getQuantityPupilForSession();
     List<SendMedicationRes> getSendMedicationByPending();
     List<PupilRes> getAllPupilBySessionAndGrade(int session, Long gradeId);
+    List<SendMedicationRes> getSendMedicationByPupil(String pupilId, int session);
 }

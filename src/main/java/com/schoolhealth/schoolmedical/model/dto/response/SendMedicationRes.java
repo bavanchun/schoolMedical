@@ -17,6 +17,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SendMedicationRes {
     private String pupilId;
+    private String senderName;
     private Long sendMedicationId;
     private String diseaseName;
     @JsonFormat(pattern = "dd-MM-yyyy")

@@ -6,6 +6,8 @@ import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusSendMedicati
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
+import com.schoolhealth.schoolmedical.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,11 +20,13 @@ import java.util.List;
 public class SendMedicationController {
     @Autowired
     private SendMedicalService sendMedicalService;
-
+    @Autowired
+    private UserService userService;
     @PostMapping()
-    public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq) {
+    public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq, HttpServletRequest request) {
         // Logic to create send medication will go here
-        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq));
+        String parentId = userService.getCurrentUserId(request);
+        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq, parentId));
     }
     @GetMapping("/{pupilId}")
     public ResponseEntity<?> getSendMedicationByPupilId(@PathVariable String pupilId) {
@@ -49,11 +53,15 @@ public class SendMedicationController {
     public ResponseEntity<?> getAllPendingSendMedication() {
         return ResponseEntity.ok(sendMedicalService.getSendMedicationByPending());
     }
-    @Autowired
-    private SendMedicationRepo sendMedicationRepo;
+
     @GetMapping("pupil/session")
     public ResponseEntity<?> getAllPupilBySessionAndGrade(@RequestParam int session, @RequestParam Long grade) {
        // return ResponseEntity.ok(sendMedicalService.getAllPupilBySessionAndGrade(session, grade));
         return ResponseEntity.ok(sendMedicalService.getAllPupilBySessionAndGrade(session, grade));
+    }
+    @GetMapping("/detailPupil/{pupilId}/session/{session}")
+    public ResponseEntity<?> getSendMedicationByPupil(@PathVariable String pupilId, @PathVariable int session) {
+        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getSendMedicationByPupil(pupilId, session);
+        return ResponseEntity.ok(sendMedicationRes);
     }
 }

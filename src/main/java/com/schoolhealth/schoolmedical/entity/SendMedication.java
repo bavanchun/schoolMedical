@@ -49,6 +49,9 @@ public class SendMedication {
     @Enumerated(EnumType.STRING)
     private StatusSendMedication status;
 
+    @Column(name = "sender_name", nullable = false, length = 100)
+    private String senderName;
+
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean active;
 

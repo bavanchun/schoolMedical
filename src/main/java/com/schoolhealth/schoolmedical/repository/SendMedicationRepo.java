@@ -57,12 +57,18 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
     List<QuantityPupilByGradeRes> getQuantityPupilByGradeAndBeforeLunch();
 
     @Query(value = """
-select distinct p.* from pupil p
+        select distinct p.* from pupil p
         join pupil_grade pg on p.pupil_id = pg.pupil_id
         join send_medication sm on sm.pupil_id = p.pupil_id
         join medication_item mi on sm.send_medication_id = mi.send_medication_id
-where sm.status = :status and mi.medication_schedule = :session and pg.grade_id = :gradeId and sm.is_active = true and pg.start_year = Year(CURRENT_DATE)
+        where sm.status = :status and mi.medication_schedule = :session and pg.grade_id = :gradeId and sm.is_active = true and pg.start_year = Year(CURRENT_DATE)
     """, nativeQuery = true)
-List<Pupil> findAllPupilBySessionAndGrade(@Param("session") String session, @Param("gradeId") Long gradeId, @Param("status") StatusSendMedication status);
+    List<Pupil> findAllPupilBySessionAndGrade(@Param("session") String session, @Param("gradeId") Long gradeId, @Param("status") StatusSendMedication status);
 
+    @Query(value = """
+    select sm.*
+    from send_medication sm
+    where sm.status = :status and sm.pupil_id = :pupilId and sm.is_active = true
+""", nativeQuery = true)
+    List<SendMedication> findByPupilIdAndStatus(@Param("pupilId") String pupilId, @Param("status") StatusSendMedication status);
 }
