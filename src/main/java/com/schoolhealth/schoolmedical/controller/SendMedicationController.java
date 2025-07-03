@@ -1,13 +1,16 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
+import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusSendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
+import com.schoolhealth.schoolmedical.service.sendMedication.MedicationLogsService;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +25,8 @@ public class SendMedicationController {
     private SendMedicalService sendMedicalService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private MedicationLogsService  medicationLogsService;
     @PostMapping()
     public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq, HttpServletRequest request) {
         // Logic to create send medication will go here
@@ -63,5 +68,9 @@ public class SendMedicationController {
     public ResponseEntity<?> getSendMedicationByPupil(@PathVariable String pupilId, @PathVariable int session) {
         List<SendMedicationRes> sendMedicationRes = sendMedicalService.getSendMedicationByPupil(pupilId, session);
         return ResponseEntity.ok(sendMedicationRes);
+    }
+    @PostMapping("/medicationLog")
+    public ResponseEntity<?> saveMedicationLogForPrescription(@RequestBody @Valid MedicationLogReq medicationLogReq){
+        return ResponseEntity.ok(medicationLogsService.saveMedicationLogForPrescription(medicationLogReq));
     }
 }

@@ -1,20 +1,17 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
+import com.schoolhealth.schoolmedical.entity.enums.StatusMedLogs;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class SurveyHealthCheckReq {
+public class MedicationLogReq {
     @NotNull
-    private Long campaignId;
+    private Long sendMedicationId;
     @NotNull
-    private String pupilId;
-    private List<Long> diseaseId;
+    private StatusMedLogs status;
 }

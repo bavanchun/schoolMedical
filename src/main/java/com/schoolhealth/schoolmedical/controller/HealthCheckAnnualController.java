@@ -8,6 +8,7 @@ import com.schoolhealth.schoolmedical.service.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class HealthCheckAnnualController {
         return ResponseEntity.ok(healthCheckConsentService.getHealthCheckConsentByGradeAndSchoolYear(gradeLevel));
     }
     @PostMapping("/result/{consentId}")
-    public ResponseEntity<?> saveHealthCheckHistory(@RequestBody HealthCheckHistoryReq healthCheckHistoryReq, @PathVariable Long consentId) {
+    public ResponseEntity<?> saveHealthCheckHistory(@RequestBody @Valid HealthCheckHistoryReq healthCheckHistoryReq, @PathVariable Long consentId) {
         return ResponseEntity.ok(healthCheckHistoryService.saveHealthCheckHistory(healthCheckHistoryReq, consentId));
     }
     @GetMapping("/result")
@@ -40,7 +41,7 @@ public class HealthCheckAnnualController {
         return ResponseEntity.ok(healthCheckHistory);
     }
     @PatchMapping("/disease")
-    public ResponseEntity<?> updateConsentDisease(@RequestBody SurveyHealthCheckReq survey) {
+    public ResponseEntity<?> updateConsentDisease(@RequestBody @Valid SurveyHealthCheckReq survey) {
         consentDiseaseService.updateConsentDisease(survey);
         return ResponseEntity.ok().body("Health check disease status updated successfully");
     }

@@ -6,11 +6,9 @@ import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
+import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
-import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
-import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
-import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilForSessionRes;
-import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
 import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
@@ -176,5 +174,12 @@ public class SendMedicalImpl implements SendMedicalService{
         }
         return sendMedicationRes;
     }
+
+    @Override
+    public SendMedication findById(Long sendMedicationId) {
+        return sendMedicationRepo.findById(sendMedicationId)
+                .orElseThrow(() -> new NotFoundException("SendMedication not found"));
+    }
+
 
 }

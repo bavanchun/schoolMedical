@@ -32,11 +32,7 @@ SELECT p FROM Pupil p
 JOIN FETCH p.pupilGrade pg
 JOIN FETCH pg.grade
 JOIN p.parents parent
-WHERE parent.userId = :parentId AND pg.startYear = (
-    SELECT MAX(sub_pg.startYear)
-    FROM PupilGrade sub_pg
-    WHERE sub_pg.pupil.pupilId = p.pupilId
-)
+WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
 """)
     List<Pupil> getAllPupilsByParent(@Param("parentId") String parentId);
 
@@ -55,11 +51,7 @@ WHERE parent.userId = :parentId AND pg.startYear = (
     SELECT p FROM Pupil p
     JOIN FETCH p.pupilGrade pg
     JOIN FETCH pg.grade
-    WHERE p.pupilId = :pupilId AND pg.startYear = (
-        SELECT MAX(sub_pg.startYear)
-        FROM PupilGrade sub_pg
-        WHERE sub_pg.pupil.pupilId = p.pupilId
-    )
+    WHERE p.pupilId = :pupilId AND pg.startYear = Year(CURRENT_DATE)
     """)
     Optional<Pupil> findPupilById(@Param("pupilId") String pupilId);
 }

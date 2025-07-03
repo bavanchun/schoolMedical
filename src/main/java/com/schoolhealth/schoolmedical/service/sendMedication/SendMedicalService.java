@@ -1,11 +1,10 @@
 package com.schoolhealth.schoolmedical.service.sendMedication;
 
+import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
+import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
-import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
-import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
-import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilForSessionRes;
-import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
+import com.schoolhealth.schoolmedical.model.dto.response.*;
 
 import java.util.List;
 
@@ -19,4 +18,5 @@ public interface SendMedicalService {
     List<SendMedicationRes> getSendMedicationByPending();
     List<PupilRes> getAllPupilBySessionAndGrade(int session, Long gradeId);
     List<SendMedicationRes> getSendMedicationByPupil(String pupilId, int session);
+    SendMedication findById(Long sendMedicationId);
 }
