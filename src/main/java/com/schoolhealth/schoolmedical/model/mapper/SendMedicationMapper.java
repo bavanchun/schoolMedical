@@ -33,19 +33,42 @@ public interface SendMedicationMapper {
     @Mapping(target = "medicationItems", source = "medicationItems")
     SendMedicationRes toDto(SendMedication sendMedication);
 
-    MedicationItemRes toDto(MedicationItem medicationItem);
-    List<MedicationItemRes> toMedicationItemDto(List<MedicationItem> medicationItems);
+    MedicationItemRes toMedicationItemDto(MedicationItem medicationItem);
+    List<MedicationItemRes> toMedicationItemDtoList(List<MedicationItem> medicationItems);
 
     MedicationLogsRes toMedicationLogsDto(MedicationLogs sendMedication);
     List<MedicationLogsRes> toMedicationLogsDto(List<MedicationLogs> sendMedications);
 
-    @Named("toDtoWithMedicationLog")
+    @Named("toDtoSendMedication")
     @Mapping(target = "pupilId", source = "pupil.pupilId")
     @Mapping(target = "medicationLogs", source = "medicationLogs")
     @Mapping(target = "medicationItems", source = "medicationItems")
     SendMedicationRes toDtoSendMedication(SendMedication sendMedication);
 
-    @IterableMapping(qualifiedByName = "toDtoWithMedicationLog")
+    @IterableMapping(qualifiedByName = "toDtoSendMedication")
     List<SendMedicationRes> toDtoSendMedication(List<SendMedication> sendMeditions);
 
+    @Named("toDtoWithAfterBreakfast")
+    @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "medicationLogs", source = "medicationLogs")
+    @Mapping(target = "medicationItems", expression = "java(sendMedication.getMedicationItems().stream().filter(item -> \"After breakfast: 9h00-9h30\".equals(item.getMedicationSchedule())).map(this::toMedicationItemDto).toList())")
+    SendMedicationRes toDtoWithAfterBreakfast(SendMedication sendMedication);
+    @IterableMapping(qualifiedByName = "toDtoWithAfterBreakfast")
+    List<SendMedicationRes> toDtoWithAfterBreakfast(List<SendMedication> sendMedications);
+
+    @Named("toDtoWithBeforeLunch")
+    @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "medicationLogs", source = "medicationLogs")
+    @Mapping(target = "medicationItems", expression = "java(sendMedication.getMedicationItems().stream().filter(item -> \"Before lunch: 10h30-11h00\".equals(item.getMedicationSchedule())).map(this::toMedicationItemDto).toList())")
+    SendMedicationRes toDtoWithBeforeLunch(SendMedication sendMedication);
+    @IterableMapping(qualifiedByName = "toDtoWithBeforeLunch")
+    List<SendMedicationRes> toDtoWithBeforeLunch(List<SendMedication> sendMedications);
+
+    @Named("toDtoWithAfterLunch")
+    @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "medicationLogs", source = "medicationLogs")
+    @Mapping(target = "medicationItems", expression = "java(sendMedication.getMedicationItems().stream().filter(item -> \"After lunch: 11h30-12h00\".equals(item.getMedicationSchedule())).map(this::toMedicationItemDto).toList())")
+    SendMedicationRes toDtoWithAfterLunch(SendMedication sendMedication);
+    @IterableMapping(qualifiedByName = "toDtoWithAfterLunch")
+    List<SendMedicationRes> toDtoWithAfterLunch(List<SendMedication> sendMedications);
 }

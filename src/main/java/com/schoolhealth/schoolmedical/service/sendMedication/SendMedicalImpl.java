@@ -41,12 +41,14 @@ public class SendMedicalImpl implements SendMedicalService{
     private PupilMapper pupilMapper;
 
     @Override
-    public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq) {
+    public SendMedicationRes createSendMedication(SendMedicationReq sendMedicationReq, String parentId) {
+        User parent = userService.findById(parentId);
         Pupil pupil = pupilService.findPupilById(sendMedicationReq.getPupilId());
         SendMedication sendMedication = sendMedicationMapper.toEntity(sendMedicationReq);
         List<MedicationItem> medicationItems = sendMedicationMapper.toEntity(sendMedicationReq.getMedicationItems());
         sendMedication.setPupil(pupil);
         sendMedication.setMedicationItems(medicationItems);
+        sendMedication.setSenderName(parent.getLastName() + parent.getFirstName());
         for(MedicationItem medicationItem : medicationItems){
             medicationItem.setSendMedication(sendMedication);
         }
@@ -88,7 +90,7 @@ public class SendMedicalImpl implements SendMedicalService{
     public void deleteSendMedication(Long sendMedicationId) {
         SendMedication sendMedication = sendMedicationRepo.findById(sendMedicationId)
                 .orElseThrow(() -> new NotFoundException("Prescription not found with id:" + sendMedicationId));
-        if(sendMedication.getStatus() == StatusSendMedication.PENDING){
+        if(sendMedication.getStatus() != StatusSendMedication.PENDING){
             throw new UpdateNotAllowedException("Prescription can't deleted");
         }
         sendMedication.setActive(false);
@@ -151,6 +153,25 @@ public class SendMedicalImpl implements SendMedicalService{
             throw new NotFoundException("No pupils found for grade id: " + gradeId + " and session: " + session + "and year: " + java.time.Year.now().getValue());
         }
         return pupilMapper.toPupilResWithoutParent(pupils);
+    }
+
+    @Override
+    public List<SendMedicationRes> getSendMedicationByPupil(String pupilId,int session) {
+        List<SendMedication> sendMedications = sendMedicationRepo.findByPupilIdAndStatus(pupilId,StatusSendMedication.APPROVED);;
+        List<SendMedicationRes> sendMedicationRes = new ArrayList<>();
+        if (sendMedications.isEmpty()) {
+            throw new NotFoundException("No SendMedication found");
+        }
+        if(session == 1){
+            sendMedicationRes = sendMedicationMapper.toDtoWithAfterBreakfast(sendMedications);
+        }else if(session == 2) {
+            sendMedicationRes = sendMedicationMapper.toDtoWithBeforeLunch(sendMedications);
+        } else if(session == 3) {
+            sendMedicationRes = sendMedicationMapper.toDtoWithAfterLunch(sendMedications);
+        } else {
+            throw new NotFoundException("Session not found");
+        }
+        return sendMedicationRes;
     }
 
 }
