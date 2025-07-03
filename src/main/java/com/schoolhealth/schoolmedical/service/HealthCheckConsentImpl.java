@@ -55,12 +55,12 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
             List<HealthCheckConsentFlatData> consentDataList = entry.getValue();
 
             PupilRes pupil = PupilRes.builder()
-                    .pupilId(consentDataList.getFirst().getPupilId())
-                    .lastName(consentDataList.getFirst().getLastName())
-                    .firstName(consentDataList.getFirst().getFirstName())
-                    .birthDate(consentDataList.getFirst().getBirthDate())
-                    .gender(consentDataList.getFirst().getGender())
-                    .gradeName(consentDataList.getFirst().getGradeName())
+                    .pupilId(consentDataList.get(0).getPupilId())
+                    .lastName(consentDataList.get(0).getLastName())
+                    .firstName(consentDataList.get(0).getFirstName())
+                    .birthDate(consentDataList.get(0).getBirthDate())
+                    .gender(consentDataList.get(0).getGender())
+                    .gradeName(consentDataList.get(0).getGradeName())
                     .build();
             List<ConsentDiseaseRes> diseaseRes = consentDataList.stream()
                     .map(data -> ConsentDiseaseRes.builder()
@@ -72,9 +72,9 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
 
             HealthCheckConsentRes consentRes = HealthCheckConsentRes.builder()
                     .consentFormId(consentId)
-                    .schoolYear(consentDataList.getFirst().getSchoolYear())
+                    .schoolYear(consentDataList.get(0).getSchoolYear())
                     .pupilRes(pupil)
-                    .active(consentDataList.getFirst().isActive())
+                    .active(consentDataList.get(0).isActive())
                     .disease(diseaseRes)
                     .build();
             res.add(consentRes);
@@ -114,18 +114,18 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
             List<HealthCheckConsentForm> form = checkConsentMap.get(consentId);
             HealthCheckHistoryRes healthCheckHistoryRes = null;
             if( form !=null){
-                healthCheckHistoryRes = healthCheckHistoryMapper.toHealthCheckHistoryRes(form.getFirst().getHealthCheckHistory());
+                healthCheckHistoryRes = healthCheckHistoryMapper.toHealthCheckHistoryRes(form.get(0).getHealthCheckHistory());
             }
 
             List<HealthCheckConsentFlatData> consentDataList = entry.getValue();
 
             PupilRes pupil = PupilRes.builder()
-                    .pupilId(consentDataList.getFirst().getPupilId())
-                    .lastName(consentDataList.getFirst().getLastName())
-                    .firstName(consentDataList.getFirst().getFirstName())
-                    .birthDate(consentDataList.getFirst().getBirthDate())
-                    .gender(consentDataList.getFirst().getGender())
-                    .gradeName(consentDataList.getFirst().getGradeName())
+                    .pupilId(consentDataList.get(0).getPupilId())
+                    .lastName(consentDataList.get(0).getLastName())
+                    .firstName(consentDataList.get(0).getFirstName())
+                    .birthDate(consentDataList.get(0).getBirthDate())
+                    .gender(consentDataList.get(0).getGender())
+                    .gradeName(consentDataList.get(0).getGradeName())
                     .build();
             List<ConsentDiseaseRes> diseaseRes = consentDataList.stream()
                     .map(data -> ConsentDiseaseRes.builder()
@@ -138,9 +138,9 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
 
             HealthCheckConsentRes consentRes = HealthCheckConsentRes.builder()
                     .consentFormId(consentId)
-                    .schoolYear(consentDataList.getFirst().getSchoolYear())
+                    .schoolYear(consentDataList.get(0).getSchoolYear())
                     .pupilRes(pupil)
-                    .active(consentDataList.getFirst().isActive())
+                    .active(consentDataList.get(0).isActive())
                     .healthCheckHistoryRes(healthCheckHistoryRes)
                     .disease(diseaseRes)
                     .build();

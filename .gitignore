@@ -24,6 +24,7 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
+
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 
@@ -242,3 +243,5 @@ nbdist/
 # End of https://www.toptal.com/developers/gitignore/api/intellij,visualstudiocode,netbeans,eclipse,java,dotenv
 #
 target/
+
+src/main/resources/school-f0938-firebase-adminsdk-fbsvc-7b24c3f867.json
