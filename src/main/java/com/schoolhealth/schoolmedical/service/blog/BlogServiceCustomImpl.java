@@ -1,0 +1,167 @@
+package com.schoolhealth.schoolmedical.service.blog;
+
+import com.schoolhealth.schoolmedical.entity.Blog;
+import com.schoolhealth.schoolmedical.entity.User;
+import com.schoolhealth.schoolmedical.entity.enums.BlogStatus;
+import com.schoolhealth.schoolmedical.exception.BlogAccessDeniedException;
+import com.schoolhealth.schoolmedical.exception.BlogNotFoundException;
+import com.schoolhealth.schoolmedical.exception.InvalidBlogStatusException;
+import com.schoolhealth.schoolmedical.model.dto.request.BlogRequestDTO;
+import com.schoolhealth.schoolmedical.model.dto.request.BlogStatusUpdateDTO;
+import com.schoolhealth.schoolmedical.model.dto.response.BlogResponseDTO;
+import com.schoolhealth.schoolmedical.model.mapper.BlogMapper;
+import com.schoolhealth.schoolmedical.repository.BlogRepository;
+import com.schoolhealth.schoolmedical.service.user.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * Implementation of {@link BlogServiceCustom} containing blog workflow logic.
+ */
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class BlogServiceCustomImpl implements BlogServiceCustom {
+
+    private final BlogRepository blogRepository;
+    private final BlogMapper blogMapper;
+    private final UserService userService;
+
+    @Override
+    public BlogResponseDTO createBlog(BlogRequestDTO dto, String nurseUserId) {
+        User author = userService.findById(nurseUserId);
+        Blog blog = blogMapper.toEntity(dto);
+        blog.setAuthorId(author);
+        blog.setVerifierId(author); // temporary until approved
+        blog.setStatus(BlogStatus.DRAFT.name());
+        Blog saved = blogRepository.save(blog);
+        return blogMapper.toResponse(saved);
+    }
+
+    @Override
+    public BlogResponseDTO updateBlog(Long blogId, BlogRequestDTO dto, String nurseUserId) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with id: " + blogId));
+
+        validateAuthor(blog, nurseUserId);
+        validateEditableStatus(blog);
+
+        blog.setTitle(dto.getTitle());
+        blog.setContent(dto.getContent());
+        blog.setImageUrl(dto.getImageUrl());
+        Blog updated = blogRepository.save(blog);
+        return blogMapper.toResponse(updated);
+    }
+
+    @Override
+    public void deleteBlog(Long blogId, String nurseUserId) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with id: " + blogId));
+
+        validateAuthor(blog, nurseUserId);
+        validateEditableStatus(blog);
+
+        blog.setActive(false);
+        blog.setStatus(BlogStatus.DELETED.name());
+        blogRepository.save(blog);
+    }
+
+    @Override
+    public BlogResponseDTO submitBlog(Long blogId, String nurseUserId) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with id: " + blogId));
+
+        validateAuthor(blog, nurseUserId);
+        if (!BlogStatus.DRAFT.name().equals(blog.getStatus()) &&
+                !BlogStatus.REJECTED.name().equals(blog.getStatus())) {
+            throw new InvalidBlogStatusException("Only draft or rejected blogs can be submitted");
+        }
+
+        blog.setStatus(BlogStatus.PENDING.name());
+        Blog saved = blogRepository.save(blog);
+        return blogMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BlogResponseDTO> getBlogsByStatus(BlogStatus status) {
+        List<Blog> blogs = blogRepository.findByStatus(status.name());
+        return blogMapper.toResponseList(blogs);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BlogResponseDTO> getMyBlogs(String nurseUserId) {
+        List<Blog> blogs = blogRepository.findByAuthorIdAndIsActiveTrue(nurseUserId);
+        return blogMapper.toResponseList(blogs);
+    }
+
+    @Override
+    public BlogResponseDTO approveBlog(Long blogId, String managerUserId, BlogStatusUpdateDTO dto) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with id: " + blogId));
+
+        if (!BlogStatus.PENDING.name().equals(blog.getStatus())) {
+            throw new InvalidBlogStatusException("Only pending blogs can be approved");
+        }
+        if (dto != null && dto.getStatus() != null && !"PUBLISHED".equals(dto.getStatus())) {
+            throw new InvalidBlogStatusException("Status must be PUBLISHED when approving");
+        }
+        User manager = userService.findById(managerUserId);
+        blog.setVerifierId(manager);
+        blog.setStatus(BlogStatus.PUBLISHED.name());
+        Blog saved = blogRepository.save(blog);
+        return blogMapper.toResponse(saved);
+    }
+
+    @Override
+    public BlogResponseDTO rejectBlog(Long blogId, String managerUserId, BlogStatusUpdateDTO dto) {
+        Blog blog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new BlogNotFoundException("Blog not found with id: " + blogId));
+
+        if (!BlogStatus.PENDING.name().equals(blog.getStatus())) {
+            throw new InvalidBlogStatusException("Only pending blogs can be rejected");
+        }
+        if (dto != null && dto.getStatus() != null && !"REJECTED".equals(dto.getStatus())) {
+            throw new InvalidBlogStatusException("Status must be REJECTED when rejecting");
+        }
+        User manager = userService.findById(managerUserId);
+        blog.setVerifierId(manager);
+        blog.setStatus(BlogStatus.REJECTED.name());
+        Blog saved = blogRepository.save(blog);
+        return blogMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BlogResponseDTO> getPublishedBlogs() {
+        List<Blog> blogs = blogRepository.findByStatusAndIsActiveTrue(BlogStatus.PUBLISHED.name());
+        return blogMapper.toResponseList(blogs);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BlogResponseDTO getPublishedBlog(Long blogId) {
+        Blog blog = blogRepository
+                .findByBlogIdAndStatusAndIsActiveTrue(blogId, BlogStatus.PUBLISHED.name())
+                .orElseThrow(() -> new BlogNotFoundException("Published blog not found with id: " + blogId));
+        return blogMapper.toResponse(blog);
+    }
+
+    private void validateAuthor(Blog blog, String nurseUserId) {
+        if (!blog.getAuthorId().getUserId().equals(nurseUserId)) {
+            throw new BlogAccessDeniedException("You are not the author of this blog");
+        }
+    }
+
+    private void validateEditableStatus(Blog blog) {
+        if (!BlogStatus.DRAFT.name().equals(blog.getStatus()) &&
+                !BlogStatus.PENDING.name().equals(blog.getStatus()) &&
+                !BlogStatus.REJECTED.name().equals(blog.getStatus())) {
+            throw new InvalidBlogStatusException("Blog cannot be modified in status: " + blog.getStatus());
+        }
+    }
+}

@@ -21,10 +21,10 @@ public interface PupilMapper {
 
 
 
-    @Mapping(target = "gradeId", expression = "java(pupil.getPupilGrade().getFirst().getPupilGradeId().getGradeId())")
-    @Mapping(target = "startYear", expression = "java(pupil.getPupilGrade().getFirst().getStartYear())")
-    @Mapping(target = "gradeLevel", expression = "java(pupil.getPupilGrade().getFirst().getGrade().getGradeLevel())")
-    @Mapping(target = "gradeName", expression = "java(pupil.getPupilGrade().getFirst().getGradeName())")
+    @Mapping(target = "gradeId", expression = "java(pupil.getPupilGrade().get(0).getPupilGradeId().getGradeId())")
+    @Mapping(target = "startYear", expression = "java(pupil.getPupilGrade().get(0).getStartYear())")
+    @Mapping(target = "gradeLevel", expression = "java(pupil.getPupilGrade().get(0).getGrade().getGradeLevel())")
+    @Mapping(target = "gradeName", expression = "java(pupil.getPupilGrade().get(0).getGradeName())")
     PupilRes toDto(Pupil pupil);
 
     List<PupilRes> toPupilGradeDtoList(List<Pupil> pupils);
