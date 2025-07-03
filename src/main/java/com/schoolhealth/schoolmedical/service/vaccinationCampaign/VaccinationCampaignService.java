@@ -16,5 +16,6 @@ public interface VaccinationCampaignService {
     List<VaccinationCampaignResponse> getAllCampaigns();
     VaccinationCampaignResponse getCampaignById(Long campaignId);
     NewestCampaignResponse getNewestCampaign();
+    void deleteCampaign(Long campaignId, String deletedBy);
     AllCampaignsResponse getAllCampaignsEnhanced();
 }

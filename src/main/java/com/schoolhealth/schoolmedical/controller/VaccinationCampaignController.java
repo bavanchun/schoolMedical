@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -95,5 +96,15 @@ public class VaccinationCampaignController {
     public ResponseEntity<AllCampaignsResponse> getAllCampaignsEnhanced() {
         AllCampaignsResponse response = vaccinationCampaignService.getAllCampaignsEnhanced();
         return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/{campaignId}")
+    @Operation(summary = "Delete vaccination campaign", description = "Soft delete vaccination campaign (Manager only, PENDING status only)")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    public ResponseEntity<String> deleteCampaign(
+            @PathVariable Long campaignId,
+            Authentication authentication) {
+        String deletedBy = authentication.getName();
+        vaccinationCampaignService.deleteCampaign(campaignId, deletedBy);
+        return ResponseEntity.ok("Vaccination campaign deleted successfully");
     }
 }

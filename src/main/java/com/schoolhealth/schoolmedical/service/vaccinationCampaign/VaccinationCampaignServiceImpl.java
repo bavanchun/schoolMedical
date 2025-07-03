@@ -29,6 +29,7 @@ import com.schoolhealth.schoolmedical.repository.VaccinationConsentFormRepo;
 import com.schoolhealth.schoolmedical.repository.VaccinationHistoryRepo;
 import com.schoolhealth.schoolmedical.repository.VaccineRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VaccinationCampaignServiceImpl implements  VaccinationCampaignService {
     private final VaccinationCampaignRepo vaccinationCampaignRepo;
     private final VaccineRepository vaccineRepository;
@@ -76,8 +78,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Override
     public VaccinationCampaignResponse updateCampaign(Long campaignId, VaccinationCampaignRequest request) {
         // Find the campaign by id
-        VaccinationCampagin campaign = vaccinationCampaignRepo.findById(campaignId)
-                .orElseThrow(() -> new NotFoundException("Campaign not found with id: " + campaignId));
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findByIdAndIsActiveTrue(campaignId)
+                .orElseThrow(() -> new NotFoundException("Active campaign not found with id: " + campaignId));
 
         // Check if the campaign is in PENDING status
         if (campaign.getStatus() != VaccinationCampaignStatus.PENDING) {
@@ -107,8 +109,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Transactional
     public void publishCampaign(Long campaignId) {
         // 1. Find the campaign and validate its status
-        VaccinationCampagin campaign = vaccinationCampaignRepo.findById(campaignId)
-                .orElseThrow(() -> new NotFoundException("Campaign not found with id: " + campaignId));
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findByIdAndIsActiveTrue(campaignId)
+                .orElseThrow(() -> new NotFoundException("Active campaign not found with id: " + campaignId));
 
         if (campaign.getStatus() != VaccinationCampaignStatus.PENDING) {
             throw new IllegalStateException("Campaign can only be published when in PENDING status.");
@@ -174,8 +176,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     @Transactional
     public void updateStatus(Long campaignId, VaccinationCampaignStatus newStatus) {
         // 1. Find the campaign
-        VaccinationCampagin campaign = vaccinationCampaignRepo.findById(campaignId)
-                .orElseThrow(() -> new NotFoundException("Campaign not found with id: " + campaignId));
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findByIdAndIsActiveTrue(campaignId)
+                .orElseThrow(() -> new NotFoundException("Active campaign not found with id: " + campaignId));
 
         VaccinationCampaignStatus currentStatus = campaign.getStatus();
 
@@ -282,6 +284,27 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
         return NewestCampaignResponse.builder()
                 .newest_vaccination_campaign(List.of(wrapper))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void deleteCampaign(Long campaignId, String deletedBy) {
+        log.info("Soft deleting vaccination campaign {} by user {}", campaignId, deletedBy);
+
+        // Find the active campaign by id (this automatically filters out deleted campaigns)
+        VaccinationCampagin campaign = vaccinationCampaignRepo.findByIdAndIsActiveTrue(campaignId)
+                .orElseThrow(() -> new NotFoundException("Active campaign not found with id: " + campaignId));
+
+        // Check if the campaign is in PENDING status (only PENDING campaigns can be deleted)
+        if (campaign.getStatus() != VaccinationCampaignStatus.PENDING) {
+            throw new IllegalStateException("Campaign can only be deleted when in PENDING status. Current status: " + campaign.getStatus());
+        }
+
+        // Soft delete the campaign
+        campaign.setActive(false);
+        vaccinationCampaignRepo.save(campaign);
+
+        log.info("Soft deleted vaccination campaign with ID: {}", campaignId);
     }
 
     @Override
