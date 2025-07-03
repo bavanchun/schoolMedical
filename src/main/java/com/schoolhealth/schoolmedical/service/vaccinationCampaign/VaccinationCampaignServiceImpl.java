@@ -64,6 +64,7 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
 
         // Set initial status and entities
         campaign.setStatus(VaccinationCampaignStatus.PENDING);
+        campaign.setActive(true);
         campaign.setVaccine(vaccine);
         campaign.setDisease(disease);
 
