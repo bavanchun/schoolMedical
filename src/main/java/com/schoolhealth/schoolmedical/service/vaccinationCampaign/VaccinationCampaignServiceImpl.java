@@ -286,6 +286,53 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
                 .build();
     }
 
+    private void sendCancellationNotificationToParents(VaccinationCampagin campaign) {
+        try {
+            // Get all consent forms for this campaign to find affected pupils
+            List<VaccinationConsentForm> allConsentForms = consentFormRepo.findByCampaign(campaign);
+            List<UserNotification> cancellationNotifications = new ArrayList<>();
+
+            String baseMessage = String.format(
+                    "THÔNG BÁO HỦY CHIẾN DỊCH: Chiến dịch tiêm chủng '%s' đã bị hủy bỏ. " +
+                            "Xin lỗi vì sự bất tiện này. Để biết thêm chi tiết, vui lòng liên hệ nhà trường.",
+                    campaign.getTitleCampaign()
+            );
+
+            for (VaccinationConsentForm consentForm : allConsentForms) {
+                Pupil pupil = consentForm.getPupil();
+
+                String personalizedMessage = String.format(
+                        "%s\n\nHọc sinh: %s %s",
+                        baseMessage,
+                        pupil.getLastName(),
+                        pupil.getFirstName()
+                );
+
+                // Create notifications for all parents of this pupil
+                for (User parent : pupil.getParents()) {
+                    UserNotification notification = UserNotification.builder()
+                            .user(parent)
+                            .message(personalizedMessage)
+                            .typeNotification(TypeNotification.VACCINATION_CAMPAIGN)
+                            .sourceId(campaign.getCampaignId())
+                            .active(false) // Unread by default
+                            .build();
+                    cancellationNotifications.add(notification);
+                }
+            }
+
+            // Save all cancellation notifications
+            notificationRepo.saveAll(cancellationNotifications);
+
+            log.info("Successfully sent cancellation notifications to {} parents for campaign: {}",
+                    cancellationNotifications.size(), campaign.getCampaignId());
+
+        } catch (Exception e) {
+            log.error("Failed to send cancellation notifications for campaign: {}",
+                    campaign.getCampaignId(), e);
+            // Don't fail the entire deletion if notification fails
+        }
+    }
     @Override
     @Transactional
     public void deleteCampaign(Long campaignId, String deletedBy) {
@@ -295,16 +342,23 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
         VaccinationCampagin campaign = vaccinationCampaignRepo.findByIdAndIsActiveTrue(campaignId)
                 .orElseThrow(() -> new NotFoundException("Active campaign not found with id: " + campaignId));
 
-        // Check if the campaign is in PENDING status (only PENDING campaigns can be deleted)
-        if (campaign.getStatus() != VaccinationCampaignStatus.PENDING) {
-            throw new IllegalStateException("Campaign can only be deleted when in PENDING status. Current status: " + campaign.getStatus());
+        // Check if the campaign is in PENDING or PUBLISHED status (only these statuses can be deleted)
+        if (campaign.getStatus() != VaccinationCampaignStatus.PENDING &&
+                campaign.getStatus() != VaccinationCampaignStatus.PUBLISHED) {
+            throw new IllegalStateException("Campaign can only be deleted when in PENDING or PUBLISHED status. Current status: " + campaign.getStatus());
+        }
+
+        // If campaign is PUBLISHED, send cancellation notifications to parents before deleting
+        if (campaign.getStatus() == VaccinationCampaignStatus.PUBLISHED) {
+            sendCancellationNotificationToParents(campaign);
+            log.info("Sent cancellation notifications to parents for published campaign: {}", campaignId);
         }
 
         // Soft delete the campaign
         campaign.setActive(false);
         vaccinationCampaignRepo.save(campaign);
 
-        log.info("Soft deleted vaccination campaign with ID: {}", campaignId);
+        log.info("Soft deleted vaccination campaign with ID: {} (previous status: {})", campaignId, campaign.getStatus());
     }
 
     @Override
