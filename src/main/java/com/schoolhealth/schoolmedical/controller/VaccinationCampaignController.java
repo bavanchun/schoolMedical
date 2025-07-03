@@ -98,7 +98,7 @@ public class VaccinationCampaignController {
         return ResponseEntity.ok(response);
     }
     @DeleteMapping("/{campaignId}")
-    @Operation(summary = "Delete vaccination campaign", description = "Soft delete vaccination campaign (Manager only, PENDING status only)")
+    @Operation(summary = "Delete vaccination campaign", description = "Soft delete vaccination campaign (Manager only, PENDING or PUBLISHED status only. PUBLISHED campaigns will notify parents)")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteCampaign(
             @PathVariable Long campaignId,
