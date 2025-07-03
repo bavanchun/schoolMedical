@@ -82,6 +82,9 @@ public class SendMedicalImpl implements SendMedicalService{
     public void updateStatus(Long sendMedicationId, StatusSendMedication statusSendMedication) {
         SendMedication sendMedication = sendMedicationRepo.findById(sendMedicationId)
                 .orElseThrow(() -> new NotFoundException("Prescription not found with id:" + sendMedicationId));
+        if(statusSendMedication == StatusSendMedication.REJECTED && sendMedication.getStatus() != StatusSendMedication.PENDING) {
+                throw new UpdateNotAllowedException("Prescription can't be cancelled. Cancelled when prescription is PENDING.");
+        }
         sendMedication.setStatus(statusSendMedication);
         sendMedicationRepo.save(sendMedication);
     }
