@@ -1,6 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,visualstudiocode,netbeans,eclipse,java,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,visualstudiocode,netbeans,eclipse,java,dotenv
 
+.DS_Store
 ### dotenv ###
 .env
 # Firebase credentials
