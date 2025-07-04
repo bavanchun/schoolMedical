@@ -181,5 +181,10 @@ public class SendMedicalImpl implements SendMedicalService{
                 .orElseThrow(() -> new NotFoundException("SendMedication not found"));
     }
 
+    @Override
+    public SendMedication findByMedicationLogId(Long medicationLogId) {
+        return sendMedicationRepo.findByMedicationLogs(medicationLogId);
+    }
+
 
 }

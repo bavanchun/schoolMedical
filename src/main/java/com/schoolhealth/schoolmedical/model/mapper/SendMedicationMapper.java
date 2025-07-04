@@ -7,12 +7,10 @@ import com.schoolhealth.schoolmedical.model.dto.request.MedicationItemReq;
 import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.MedicationItemRes;
+import com.schoolhealth.schoolmedical.model.dto.response.MedicationLogNotifcationRes;
 import com.schoolhealth.schoolmedical.model.dto.response.MedicationLogsRes;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -76,4 +74,5 @@ public interface SendMedicationMapper {
     SendMedicationRes toDtoWithAfterLunch(SendMedication sendMedication);
     @IterableMapping(qualifiedByName = "toDtoWithAfterLunch")
     List<SendMedicationRes> toDtoWithAfterLunch(List<SendMedication> sendMedications);
+
 }

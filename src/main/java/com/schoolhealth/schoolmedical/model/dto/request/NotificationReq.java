@@ -13,7 +13,6 @@ import lombok.*;
 public class NotificationReq {
     @NotNull
     private Long sourceId;
-    @NotBlank
     private String pupilId;
     @NotNull
     private TypeNotification typeNotification;

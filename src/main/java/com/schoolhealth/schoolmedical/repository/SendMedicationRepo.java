@@ -71,4 +71,12 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
     where sm.status = :status and sm.pupil_id = :pupilId and sm.is_active = true
 """, nativeQuery = true)
     List<SendMedication> findByPupilIdAndStatus(@Param("pupilId") String pupilId, @Param("status") StatusSendMedication status);
+
+    @Query("""
+    SELECT sm FROM SendMedication sm
+    JOIN FETCH sm.medicationLogs ml
+    JOIN FETCH sm.pupil p 
+    WHERE ml.logId = :medicationLogId 
+""")
+    SendMedication findByMedicationLogs(Long medicationLogId);
 }

@@ -17,6 +17,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SendMedicationRes {
     private String pupilId;
+    private String pupilFirstName;
+    private String pupilLastName;
     private String senderName;
     private Long sendMedicationId;
     private String diseaseName;
