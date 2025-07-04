@@ -207,7 +207,8 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
     // Helper Methods
     private Pupil findPupilById(String pupilId) {
-        return pupilRepository.findPupilById(pupilId)
+        log.debug("Finding pupil with ID: {}", pupilId);
+        return pupilRepository.findByPupilId(pupilId)
                 .orElseThrow(() -> new NotFoundException("Pupil not found with ID: " + pupilId));
     }
 
