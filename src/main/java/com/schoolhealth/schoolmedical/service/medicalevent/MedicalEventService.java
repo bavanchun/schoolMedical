@@ -53,6 +53,8 @@ public interface MedicalEventService {
      */
     MedicalEventStatistics getMedicalEventStatistics();
 
+    List<MedicalEventResponse> getMedicalEventsForParent(String parentId);
+
     // Inner class for statistics
     class MedicalEventStatistics {
         private long totalEvents;

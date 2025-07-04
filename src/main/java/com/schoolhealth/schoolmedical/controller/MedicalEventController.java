@@ -92,13 +92,12 @@ public class MedicalEventController {
 
     @GetMapping("/parent/my-children")
     @PreAuthorize("hasRole('PARENT')")
-    @Operation(summary = "Get medical events for parent's children", description = "Parents can only view their own children's medical events")
+    @Operation(summary = "Get all medical events for parent's children", description = "Parents can view all their children's medical events - filter by year on frontend")
     public ResponseEntity<List<MedicalEventResponse>> getMedicalEventsForMyChildren(
-            @RequestParam(required = false, defaultValue = "2024") @Parameter(description = "Year filter") int year,
             HttpServletRequest httpRequest) {
 
         String parentId = userService.getCurrentUserId(httpRequest);
-        List<MedicalEventResponse> response = medicalEventService.getMedicalEventsForParentByYear(parentId, year);
+        List<MedicalEventResponse> response = medicalEventService.getMedicalEventsForParent(parentId);
         return ResponseEntity.ok(response);
     }
 

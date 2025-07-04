@@ -407,4 +407,25 @@ public class MedicalEventServiceImpl implements MedicalEventService {
             case HIGH -> "High";
         };
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<MedicalEventResponse> getMedicalEventsForParent(String parentId) {
+        log.info("Getting all medical events for parent {}", parentId);
+
+        List<MedicalEvent> medicalEvents = medicalEventRepository.findByParentIdWithRelationships(parentId);
+
+        // For each medical event, explicitly load equipment and medication to avoid N+1
+        for (MedicalEvent event : medicalEvents) {
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size(); // Trigger lazy loading
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size(); // Trigger lazy loading
+            }
+        }
+
+        return medicalEvents.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
 }
