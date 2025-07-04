@@ -127,9 +127,9 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     public void updateStatusHealthCheckCampaign(Long campaignId, StatusHealthCampaign statusHealthCampaign) {
         HealthCheckCampaign campaign1 = healthCheckCampaignRepo.findById(campaignId).orElseThrow(() -> new NotFoundException("campaign not found to update status"));
 
-        if(statusHealthCampaign == StatusHealthCampaign.PUBLISHED){
-            Optional<HealthCheckCampaign> currentCampaign = healthCheckCampaignRepo.findCurrentCampaignByPushlished(Year.now().getValue());
-            if(currentCampaign.isPresent()){
+        if (statusHealthCampaign == StatusHealthCampaign.PUBLISHED) {
+            Optional<HealthCheckCampaign> currentCampaign = healthCheckCampaignRepo.findCurrentCampaignByStatus(Year.now().getValue(), StatusHealthCampaign.PUBLISHED);
+            if (currentCampaign.isPresent()) {
                 throw new UpdateNotAllowedException("a health campaign in system already published");
             }
             campaign1.setStatusHealthCampaign(statusHealthCampaign);
@@ -151,7 +151,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             List<User> parents = userService.findAllWithPupilByParent();
             //save notification for parents
             List<UserNotification> listNotification = new ArrayList<>();
-            for( User parent : parents) {
+            for (User parent : parents) {
                 UserNotification notification = UserNotification.builder()
                         .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
                         .sourceId(campaign.getCampaignId())
@@ -172,17 +172,40 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                     .toList();
 
             if (!pupilsByParent.isEmpty()) {
-                String title = "Chiến dịch kiểm tra sức khỏe hằng năm";
-                fcmService.sendNotification(pupilsByParent, campaignId, TypeNotification.HEALTH_CHECK_CAMPAIGN.name(),title );
+                String title = "Annual health check campaign";
+                fcmService.sendNotification(pupilsByParent, campaignId, TypeNotification.HEALTH_CHECK_CAMPAIGN.name(), title);
             }
-        }
-        else if(statusHealthCampaign == StatusHealthCampaign.IN_PROGRESS){
-            Optional<HealthCheckCampaign> currentCampaign = healthCheckCampaignRepo.findCurrentCampaignByInprogress(Year.now().getValue());
-            if(currentCampaign.isPresent()){
+        } else if (statusHealthCampaign == StatusHealthCampaign.IN_PROGRESS) {
+            Optional<HealthCheckCampaign> currentCampaign = healthCheckCampaignRepo.findCurrentCampaignByStatus(Year.now().getValue(), StatusHealthCampaign.IN_PROGRESS);
+            if (currentCampaign.isPresent()) {
                 throw new UpdateNotAllowedException("a health campaign in system already in progress");
             }
             campaign1.setStatusHealthCampaign(statusHealthCampaign);
+            healthCheckCampaignRepo.save(campaign1);
+        } else if (statusHealthCampaign == StatusHealthCampaign.CANCELLED) {
+            StatusHealthCampaign originalStatus = campaign1.getStatusHealthCampaign();
+            if (originalStatus != StatusHealthCampaign.PENDING && originalStatus != StatusHealthCampaign.PUBLISHED) {
+                throw new UpdateNotAllowedException("Campaign can only be cancelled if its status is PENDING or PUBLISHED.");
+            }
+
+            campaign1.setStatusHealthCampaign(StatusHealthCampaign.CANCELLED);
             HealthCheckCampaign campaign = healthCheckCampaignRepo.save(campaign1);
+
+            if (originalStatus == StatusHealthCampaign.PUBLISHED) {
+                List<User> parents = userService.findAllWithPupilByParent();
+                //save notification for parents
+                List<UserNotification> listNotification = new ArrayList<>();
+                for (User parent : parents) {
+                    UserNotification notification = UserNotification.builder()
+                            .message("The health check campaign has been cancelled")
+                            .sourceId(campaign.getCampaignId())
+                            .typeNotification(TypeNotification.HEALTH_CHECK_CAMPAIGN)
+                            .user(parent)
+                            .build();
+                    listNotification.add(notification);
+                }
+                userNotificationService.saveAllUserNotifications(listNotification);
+            }
         }
     }
 

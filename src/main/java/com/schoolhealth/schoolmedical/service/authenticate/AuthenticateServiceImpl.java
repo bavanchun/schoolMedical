@@ -54,7 +54,7 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
                 .password(passwordEncoder.encode(request.getPassword())) // Mã hóa password
                 .birthDate(request.getBirthDate())
                 .role(userRole) // Sử dụng role đã xác định
-                .isActive(true)
+                .active(true)
                 .build();
 
         // Lưu người dùng mới

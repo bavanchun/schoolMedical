@@ -2,18 +2,17 @@ package com.schoolhealth.schoolmedical.service.Notification;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
+import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.UserNotification;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
-import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
-import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
-import com.schoolhealth.schoolmedical.model.mapper.NotificationMapper;
-import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
+import com.schoolhealth.schoolmedical.model.mapper.*;
 import com.schoolhealth.schoolmedical.repository.NotificationRepo;
 import com.schoolhealth.schoolmedical.service.DiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckCampaignService;
 import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
+import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -43,6 +42,12 @@ public class UserNotificationImpl implements UserNotificationService {
     @Autowired
     private DiseaseMapper diseaseMapper;
 
+    @Autowired
+    @Lazy
+    private SendMedicalService sendMedicalService;
+    @Autowired
+    private SendMedicationMapper sendMedicationMapper;
+
     @Override
     public List<UserNotification> saveAllUserNotifications(List<UserNotification> userNotification) {
         return notificationRepo.saveAll(userNotification);
@@ -63,6 +68,8 @@ public class UserNotificationImpl implements UserNotificationService {
         switch (typeNotification) {
             case HEALTH_CHECK_CAMPAIGN:
                 return getHealthCheckCampaignResponse(sourceId, pupilId);
+            case SEND_MEDICAL:
+                return getSendMedicationResponse(sourceId);
             default:
                 throw new IllegalArgumentException("Invalid type of notification");
         }
@@ -79,6 +86,20 @@ public class UserNotificationImpl implements UserNotificationService {
         return NotificationHealthCampaignRes.builder()
                 .healthCheckCampaign(healthCheckCampaignMapper.toDto(healthCheckCampaign))
                 .pupil(pupilService.getPupilById(pupilId))
+                .build();
+    }
+    public MedicationLogNotifcationRes getSendMedicationResponse(Long medicationLogId) {
+        SendMedication sendMedication = sendMedicalService.findByMedicationLogId(medicationLogId);
+        return MedicationLogNotifcationRes.builder()
+                .pupilId(sendMedication.getPupil().getPupilId())
+                .pupilFirstName(sendMedication.getPupil().getFirstName())
+                .pupilLastName(sendMedication.getPupil().getLastName())
+                .sendMedicationId(sendMedication.getSendMedicationId())
+                .senderName(sendMedication.getSenderName())
+                .diseaseName(sendMedication.getDiseaseName())
+                .startDate(sendMedication.getStartDate())
+                .endDate(sendMedication.getEndDate())
+                .medicationLog(sendMedicationMapper.toMedicationLogsDto(sendMedication.getMedicationLogs().getFirst()))
                 .build();
     }
 }

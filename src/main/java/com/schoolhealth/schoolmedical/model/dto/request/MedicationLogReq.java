@@ -1,6 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
-import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
+import com.schoolhealth.schoolmedical.entity.enums.StatusMedLogs;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -10,10 +10,11 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class NotificationReq {
+public class MedicationLogReq {
     @NotNull
-    private Long sourceId;
-    private String pupilId;
-    @NotNull
-    private TypeNotification typeNotification;
+    private Long sendMedicationId;
+
+    private StatusMedLogs status;
+    @NotBlank
+    private String note;
 }

@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
+import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckPupilListRes;
 import com.schoolhealth.schoolmedical.model.dto.response.LatestHealthCheckCampaignRes;
@@ -22,12 +23,8 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     HealthCheckCampaign findStatusCampaignPublishedInProgressOrderByCreatedAtDesc();
 
     @Query("SELECT h FROM HealthCheckCampaign h " +
-            "WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.PUBLISHED AND YEAR(h.createdAt) = :year " )
-    Optional<HealthCheckCampaign> findCurrentCampaignByPushlished(@Param("year") int year);
-
-    @Query("SELECT h FROM HealthCheckCampaign h " +
-            "WHERE h.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.IN_PROGRESS AND YEAR(h.createdAt) = :year " )
-    Optional<HealthCheckCampaign> findCurrentCampaignByInprogress(@Param("year") int year);
+            "WHERE h.statusHealthCampaign = :status AND YEAR(h.createdAt) = :year " )
+    Optional<HealthCheckCampaign> findCurrentCampaignByStatus(@Param("year") int year, @Param("status") StatusHealthCampaign status);
 
     List<HealthCheckCampaign> findAllByActiveTrue();
 }

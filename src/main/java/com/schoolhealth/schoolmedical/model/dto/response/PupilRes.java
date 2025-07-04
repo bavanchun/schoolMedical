@@ -6,6 +6,7 @@ import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,10 +23,10 @@ public class PupilRes {
     private char gender;
     private String avatar;
     private Long gradeId;
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int startYear;
     private GradeLevel gradeLevel;
     private String gradeName;
+    private List<UserResponse> parents;
 }
 
 

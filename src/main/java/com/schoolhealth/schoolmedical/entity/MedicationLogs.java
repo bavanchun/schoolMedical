@@ -24,8 +24,11 @@ public class MedicationLogs {
     @CreationTimestamp
     private LocalDateTime givenTime;
 
+    @Column(name = "note", columnDefinition = "TEXT")
+    private String note;
+
     @Enumerated(EnumType.STRING)
-    private StatusMedLogs status;
+    private StatusMedLogs status ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "send_medication_id", nullable = false)

@@ -70,5 +70,6 @@ public class Pupil {
     private List<HealthCheckConsentForm> healthCheckConsentForms;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pupil", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = false)
+    @OrderBy("startYear DESC")
     private List<PupilGrade> pupilGrade;
 }
