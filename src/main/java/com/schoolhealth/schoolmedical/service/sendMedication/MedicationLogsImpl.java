@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.MedicationLogs;
 import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.UserNotification;
+import com.schoolhealth.schoolmedical.entity.enums.StatusMedLogs;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
@@ -34,8 +35,10 @@ public class MedicationLogsImpl implements MedicationLogsService {
     public MedicationLogsRes saveMedicationLogForPrescription(MedicationLogReq medicationLogReq) {
         SendMedication sendMedication = sendMedicalService.findById(medicationLogReq.getSendMedicationId());
         MedicationLogs  medicationLogs = sendMedicationMapper.toMedicationLogsEntity(medicationLogReq);
+        StatusMedLogs status = medicationLogs.getStatus();
+        if(status==null) status = StatusMedLogs.NOTGIVEN;
         medicationLogs.setSendMedication(sendMedication);
-        medicationLogs.setStatus(medicationLogReq.getStatus());
+        medicationLogs.setStatus(status);
         MedicationLogs medicationLogs1 = medicationLogsRepo.save(medicationLogs);
         List<User> parents = userService.findAllWithPupilByParent();
         //save notification for parents

@@ -13,7 +13,7 @@ import lombok.*;
 public class MedicationLogReq {
     @NotNull
     private Long sendMedicationId;
-    @NotNull
+
     private StatusMedLogs status;
     @NotBlank
     private String note;
