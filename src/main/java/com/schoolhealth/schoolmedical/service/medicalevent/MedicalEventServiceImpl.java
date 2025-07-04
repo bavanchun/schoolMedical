@@ -85,8 +85,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
                 .orElseThrow(() -> new NotFoundException("Medical event not found with ID: " + medicalEventId));
 
         // Force lazy loading of equipment and medication collections
-        medicalEvent.getEquipmentUsed().size();
-        medicalEvent.getMedicationUsed().size();
+//        medicalEvent.getEquipmentUsed().size();
+//        medicalEvent.getMedicationUsed().size();
+        if (medicalEvent.getEquipmentUsed() != null) {
+            medicalEvent.getEquipmentUsed().size();
+        }
+        if (medicalEvent.getMedicationUsed() != null) {
+            medicalEvent.getMedicationUsed().size();
+        }
 
         // Check access permissions
         validateUserAccessToMedicalEvent(userId, medicalEvent);
@@ -111,8 +117,15 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
         // Force lazy loading of collections to avoid N+1 issues
         for (MedicalEvent event : medicalEvents) {
-            event.getEquipmentUsed().size();
-            event.getMedicationUsed().size();
+//            event.getEquipmentUsed().size();
+//            event.getMedicationUsed().size();
+//        }
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size();
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size();
+            }
         }
 
         return medicalEvents.stream()
@@ -138,8 +151,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
         // For each medical event, explicitly load equipment and medication to avoid N+1
         for (MedicalEvent event : medicalEvents) {
             // Force lazy loading of collections
-            event.getEquipmentUsed().size(); // Trigger lazy loading
-            event.getMedicationUsed().size(); // Trigger lazy loading
+//            event.getEquipmentUsed().size(); // Trigger lazy loading
+//            event.getMedicationUsed().size(); // Trigger lazy loading
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size(); // Trigger lazy loading
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size(); // Trigger lazy loading
+            }
         }
 
         return medicalEvents.stream()
@@ -171,8 +190,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
         // For each medical event, explicitly load equipment and medication to avoid N+1
         for (MedicalEvent event : medicalEvents) {
-            event.getEquipmentUsed().size(); // Trigger lazy loading
-            event.getMedicationUsed().size(); // Trigger lazy loading
+//            event.getEquipmentUsed().size(); // Trigger lazy loading
+//            event.getMedicationUsed().size(); // Trigger lazy loading
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size(); // Trigger lazy loading
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size(); // Trigger lazy loading
+            }
         }
 
         return medicalEvents.stream()
