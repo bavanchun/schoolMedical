@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface MedicationItemService {
     List<MedicationItem> saveAllMedicationItem(List<MedicationItem> medicationItems);
-
 }

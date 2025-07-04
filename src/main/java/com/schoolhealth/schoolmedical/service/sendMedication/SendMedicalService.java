@@ -13,7 +13,6 @@ public interface SendMedicalService {
     List<SendMedicationRes> getAllSendMedication(String pupilId);
     void updateStatus(Long sendMedicationId, StatusSendMedication statusSendMedication);
     void deleteSendMedication(Long sendMedicationId);
-
     List<QuantityPupilForSessionRes> getQuantityPupilForSession();
     List<SendMedicationRes> getSendMedicationByPending();
     List<PupilRes> getAllPupilBySessionAndGrade(int session, Long gradeId);
