@@ -96,13 +96,28 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<MedicalEventResponse> getAllMedicalEvents(Pageable pageable, String search) {
+    public List<MedicalEventResponse> getAllMedicalEvents(String search) {
         log.info("Getting all medical events with search: {}", search);
 
-        // Use existing repository methods
-        Page<MedicalEvent> medicalEvents = medicalEventRepository.findAllWithBasicRelationships(pageable);
+        List<MedicalEvent> medicalEvents;
 
-        return medicalEvents.map(this::mapToResponse);
+        if (StringUtils.hasText(search)) {
+            // Search by pupil name, symptoms, treatment, or other relevant fields
+            medicalEvents = medicalEventRepository.findBySearchCriteria(search);
+        } else {
+            // Get all active medical events
+            medicalEvents = medicalEventRepository.findAllActiveWithRelationships();
+        }
+
+        // Force lazy loading of collections to avoid N+1 issues
+        for (MedicalEvent event : medicalEvents) {
+            event.getEquipmentUsed().size();
+            event.getMedicationUsed().size();
+        }
+
+        return medicalEvents.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

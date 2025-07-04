@@ -183,4 +183,33 @@ public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long
         )
     """)
     long countByGradeLevel(@Param("gradeLevel") GradeLevel gradeLevel);
+
+    // Find all active medical events with relationships (for getting all without pagination)
+    @EntityGraph(attributePaths = {
+            "pupil",
+            "pupil.pupilGrade",
+            "pupil.pupilGrade.grade",
+            "schoolNurse"
+    })
+    @Query("SELECT me FROM MedicalEvent me WHERE me.isActive = true ORDER BY me.dateTime DESC")
+    List<MedicalEvent> findAllActiveWithRelationships();
+
+    // Search medical events by pupil name or pupil ID
+    @EntityGraph(attributePaths = {
+            "pupil",
+            "pupil.pupilGrade",
+            "pupil.pupilGrade.grade",
+            "schoolNurse"
+    })
+    @Query("""
+        SELECT me FROM MedicalEvent me
+        JOIN me.pupil p
+        WHERE me.isActive = true
+        AND (
+            LOWER(CONCAT(p.lastName, ' ', p.firstName)) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(p.pupilId) LIKE LOWER(CONCAT('%', :search, '%'))
+        )
+        ORDER BY me.dateTime DESC
+    """)
+    List<MedicalEvent> findBySearchCriteria(@Param("search") String search);
 }
