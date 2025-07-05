@@ -238,6 +238,15 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
         return null;
     }
+
+    @Override
+    public List<HealthCheckCampaignRes> getHealthCheckCampaignsByPupilId(String pupilId) {
+        List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getHealthCheckConsentByPupilId(pupilId);
+        List<HealthCheckCampaign> campaignIds = consentForms.stream()
+                .map(HealthCheckConsentForm::getHealthCheckCampaign)
+                .toList();
+        return List.of();
+    }
 }
 
 

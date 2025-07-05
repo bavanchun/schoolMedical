@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service.consentDisease;
 
 import com.schoolhealth.schoolmedical.entity.ConsentDisease;
+import com.schoolhealth.schoolmedical.entity.ConsentDiseaseId;
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
@@ -32,10 +33,17 @@ public class ConsentDiseaseImpl implements ConsentDiseaseService{
         List<Disease> diseases = diseaseService.getAllDiseasesById(survey.getDiseaseId());
         if(existingDisease == null || existingDisease.isEmpty()) {
             existingDisease = diseases.stream()
-                    .map(disease -> ConsentDisease.builder()
-                            .disease(disease)
-                            .healthCheckConsentForm(consentForm)
-                            .build())
+                    .map(disease -> {
+                        ConsentDiseaseId id = new ConsentDiseaseId();
+                        id.setConsentFormId(consentForm.getConsentFormId());
+                        id.setDiseaseId(disease.getDiseaseId());
+
+                        return ConsentDisease.builder()
+                                .id(id)
+                                .disease(disease)
+                                .healthCheckConsentForm(consentForm)
+                                .build();
+                    })
                     .toList();
             consentDiseaseRepo.saveAll(existingDisease);
         }else{

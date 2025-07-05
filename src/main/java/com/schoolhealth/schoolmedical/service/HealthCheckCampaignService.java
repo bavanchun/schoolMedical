@@ -20,4 +20,5 @@ public interface HealthCheckCampaignService {
     HealthCheckCampaignRes getHealthCheckCampaignById(Long campaignId);
     HealthCheckCampaign getHealthCheckCampaignEntityById(Long campaignId);
     HealthCheckCampaignRes updateHealthCheckCampaignAndDiseases(HealthCheckCampaginReq healthCheckCampaign);
+    List<HealthCheckCampaignRes> getHealthCheckCampaignsByPupilId(String pupilId);
 }
