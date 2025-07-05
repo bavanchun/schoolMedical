@@ -57,9 +57,6 @@ public class HealthCheckHistory {
     @Column(name = "hear_anuscultaion", length = 100, nullable = true)
     private String hearAnuscultaion;
 
-    @Column(name = "chest_shape", length = 100, nullable = true)
-    private String chestShape;
-
     @Column(name = "lungs", length = 100, nullable = true)
     private String lungs;
 

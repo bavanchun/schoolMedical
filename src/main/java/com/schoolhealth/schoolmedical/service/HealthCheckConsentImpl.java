@@ -162,7 +162,7 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
 
     @Override
     public List<HealthCheckConsentForm> getHealthCheckConsentByPupilId(String pupilId) {
-    List<HealthCheckConsentForm> consentForms = healthCheckConsentRepo.findAllByPupilID(pupilId);
+    List<HealthCheckConsentForm> consentForms = healthCheckConsentRepo.findAllByPupilPupilIdIn(pupilId);
         return consentForms;
     }
 

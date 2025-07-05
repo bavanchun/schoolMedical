@@ -10,6 +10,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
+import com.schoolhealth.schoolmedical.model.mapper.HealthCheckConsentMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.Notification.FCMService;
@@ -62,6 +63,8 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
     @Autowired
     private DiseaseMapper diseaseMapper;
+    @Autowired
+    private HealthCheckConsentMapper healthCheckConsentMapper;
 
 
     @Override
@@ -240,12 +243,31 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     }
 
     @Override
-    public List<HealthCheckCampaignRes> getHealthCheckCampaignsByPupilId(String pupilId) {
+    public List<HealthCheckCampaginByIdRes> getHealthCheckCampaignsByPupilId(String pupilId) {
+//        List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getHealthCheckConsentByPupilId(pupilId);
+//        List<HealthCheckCampaign> campaignIds = consentForms.stream()
+//                .map(HealthCheckConsentForm::getHealthCheckCampaign)
+//                .toList();
         List<HealthCheckConsentForm> consentForms = healthCheckConsentService.getHealthCheckConsentByPupilId(pupilId);
-        List<HealthCheckCampaign> campaignIds = consentForms.stream()
-                .map(HealthCheckConsentForm::getHealthCheckCampaign)
-                .toList();
-        return List.of();
+        List<HealthCheckCampaginByIdRes> healthCheckCampaignRes = new ArrayList<>();
+        for( HealthCheckConsentForm consentForm : consentForms) {
+            HealthCheckCampaign campaign = consentForm.getHealthCheckCampaign();
+            HealthCheckCampaginByIdRes campaignRes = HealthCheckCampaginByIdRes.builder()
+                    .campaignId(campaign.getCampaignId())
+                    .title(campaign.getTitle())
+                    .address(campaign.getAddress())
+                    .description(campaign.getDescription())
+                    .deadlineDate(campaign.getDeadlineDate())
+                    .startExaminationDate(campaign.getStartExaminationDate())
+                    .endExaminationDate(campaign.getEndExaminationDate())
+                    .createdAt(campaign.getCreatedAt())
+                    .statusHealthCampaign(campaign.getStatusHealthCampaign())
+                    .diseases(diseaseMapper.toHealthCheckDiseaseDtoList(campaign.getHealthCheckDiseases()))
+                    .consentForms(healthCheckConsentMapper.toConsentDtoByPupil(consentForm))
+                    .build();
+            healthCheckCampaignRes.add(campaignRes);
+        }
+        return healthCheckCampaignRes;
     }
 }
 

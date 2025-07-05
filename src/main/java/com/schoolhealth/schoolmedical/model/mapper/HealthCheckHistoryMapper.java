@@ -2,9 +2,12 @@ package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckHistory;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
+import com.schoolhealth.schoolmedical.model.dto.request.UpdateHealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
+import org.hibernate.sql.Update;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring", uses = {HealthCheckConsentMapper.class, DiseaseMapper.class})
@@ -18,5 +21,13 @@ public interface HealthCheckHistoryMapper {
     })
     HealthCheckHistory toHealthCheckHistory(HealthCheckHistoryReq historyReq);
 
+    @Mapping(target = "healthId", source = "healthId")
     HealthCheckHistoryRes toHealthCheckHistoryRes(HealthCheckHistory history);
+
+
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "healthCheckConsentForm", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    void updateEntityFromDto(UpdateHealthCheckHistoryReq dto, @MappingTarget HealthCheckHistory entity);
+
 }

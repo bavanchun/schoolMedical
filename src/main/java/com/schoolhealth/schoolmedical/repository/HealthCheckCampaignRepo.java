@@ -27,5 +27,4 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     Optional<HealthCheckCampaign> findCurrentCampaignByStatus(@Param("year") int year, @Param("status") StatusHealthCampaign status);
 
     List<HealthCheckCampaign> findAllByActiveTrue();
-
 }

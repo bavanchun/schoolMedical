@@ -70,11 +70,20 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
 
     @Query("""
     SELECT hccf FROM HealthCheckConsentForm hccf
-    JOIN FETCH hccf.healthCheckHistory hch
+    LEFT JOIN FETCH hccf.healthCheckHistory hch
     LEFT JOIN FETCH hccf.consentDiseases cd
     LEFT JOIN FETCH cd.disease d
     WHERE hccf.pupil.pupilId = :pupilId
 """)
     List<HealthCheckConsentForm> findAllByPupilID(@Param("pupilId") String pupilId);
 
+    @Query("""
+    SELECT hccf FROM HealthCheckConsentForm hccf
+    LEFT JOIN FETCH hccf.healthCheckHistory hch
+    LEFT JOIN FETCH hccf.consentDiseases cd
+    LEFT JOIN FETCH cd.disease d
+    join fetch hccf.healthCheckCampaign 
+    WHERE hccf.pupil.pupilId = :pupilId
+""")
+    List<HealthCheckConsentForm> findAllByPupilPupilIdIn(@Param("pupilId") String pupilId );
 }

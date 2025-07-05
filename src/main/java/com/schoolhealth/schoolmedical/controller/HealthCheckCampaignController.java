@@ -43,4 +43,5 @@
         public ResponseEntity<?> getAllHealthCheckCampaignsByPupilId(@PathVariable String pupilId) {
             return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignsByPupilId(pupilId));
         }
+
     }
