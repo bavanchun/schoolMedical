@@ -54,4 +54,8 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
     WHERE p.pupilId = :pupilId AND pg.startYear = Year(CURRENT_DATE)
     """)
     Optional<Pupil> findPupilById(@Param("pupilId") String pupilId);
+
+    // Method đơn giản để tìm pupil theo ID (không cần PupilGrade)
+    @Query("SELECT p FROM Pupil p WHERE p.pupilId = :pupilId AND p.isActive = true")
+    Optional<Pupil> findByPupilId(@Param("pupilId") String pupilId);
 }

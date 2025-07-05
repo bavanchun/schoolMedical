@@ -21,9 +21,6 @@ public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long
     // Find medical event by ID with all relationships (prevent N+1) - FIXED
     @EntityGraph(attributePaths = {
             "pupil",
-            "pupil.pupilGrade",
-            "pupil.pupilGrade.grade",
-            "pupil.parents",
             "schoolNurse"
     })
     @Query("SELECT me FROM MedicalEvent me WHERE me.medicalEventId = :eventId AND me.isActive = true")
@@ -183,4 +180,29 @@ public interface MedicalEventRepository extends JpaRepository<MedicalEvent, Long
         )
     """)
     long countByGradeLevel(@Param("gradeLevel") GradeLevel gradeLevel);
+
+    // Find all active medical events with relationships (for getting all without pagination)
+    @EntityGraph(attributePaths = {
+            "pupil",
+            "schoolNurse"
+    })
+    @Query("SELECT me FROM MedicalEvent me WHERE me.isActive = true ORDER BY me.dateTime DESC")
+    List<MedicalEvent> findAllActiveWithRelationships();
+
+    // Search medical events by pupil name or pupil ID
+    @EntityGraph(attributePaths = {
+            "pupil",
+            "schoolNurse"
+    })
+    @Query("""
+        SELECT me FROM MedicalEvent me
+        JOIN me.pupil p
+        WHERE me.isActive = true
+        AND (
+            LOWER(CONCAT(p.lastName, ' ', p.firstName)) LIKE LOWER(CONCAT('%', :search, '%'))
+            OR LOWER(p.pupilId) LIKE LOWER(CONCAT('%', :search, '%'))
+        )
+        ORDER BY me.dateTime DESC
+    """)
+    List<MedicalEvent> findBySearchCriteria(@Param("search") String search);
 }

@@ -2,8 +2,6 @@ package com.schoolhealth.schoolmedical.service.medicalevent;
 
 import com.schoolhealth.schoolmedical.model.dto.request.CreateMedicalEventRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.MedicalEventResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,9 +23,9 @@ public interface MedicalEventService {
 
     /**
      * Get all medical events (MANAGER/ADMIN only)
-     * With pagination and optional filtering
+     * With optional filtering
      */
-    Page<MedicalEventResponse> getAllMedicalEvents(Pageable pageable, String search);
+    List<MedicalEventResponse> getAllMedicalEvents(String search);
 
     /**
      * Get medical events by pupil ID (MANAGER/ADMIN/PARENT access)
@@ -54,6 +52,8 @@ public interface MedicalEventService {
      * Get medical event statistics (MANAGER/ADMIN only)
      */
     MedicalEventStatistics getMedicalEventStatistics();
+
+    List<MedicalEventResponse> getMedicalEventsForParent(String parentId);
 
     // Inner class for statistics
     class MedicalEventStatistics {

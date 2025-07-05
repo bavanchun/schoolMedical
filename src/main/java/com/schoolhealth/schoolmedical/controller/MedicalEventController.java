@@ -11,9 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,11 +59,10 @@ public class MedicalEventController {
     @GetMapping
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN', 'SCHOOL_NURSE')")
     @Operation(summary = "Get all medical events", description = "Only managers and admins can view all medical events")
-    public ResponseEntity<Page<MedicalEventResponse>> getAllMedicalEvents(
-            @PageableDefault(size = 20) Pageable pageable,
+    public ResponseEntity<List<MedicalEventResponse>> getAllMedicalEvents(
             @RequestParam(required = false) @Parameter(description = "Search term for filtering") String search) {
 
-        Page<MedicalEventResponse> response = medicalEventService.getAllMedicalEvents(pageable, search);
+        List<MedicalEventResponse> response = medicalEventService.getAllMedicalEvents(search);
         return ResponseEntity.ok(response);
     }
 
@@ -95,13 +92,12 @@ public class MedicalEventController {
 
     @GetMapping("/parent/my-children")
     @PreAuthorize("hasRole('PARENT')")
-    @Operation(summary = "Get medical events for parent's children", description = "Parents can only view their own children's medical events")
+    @Operation(summary = "Get all medical events for parent's children", description = "Parents can view all their children's medical events - filter by year on frontend")
     public ResponseEntity<List<MedicalEventResponse>> getMedicalEventsForMyChildren(
-            @RequestParam(required = false, defaultValue = "2024") @Parameter(description = "Year filter") int year,
             HttpServletRequest httpRequest) {
 
         String parentId = userService.getCurrentUserId(httpRequest);
-        List<MedicalEventResponse> response = medicalEventService.getMedicalEventsForParentByYear(parentId, year);
+        List<MedicalEventResponse> response = medicalEventService.getMedicalEventsForParent(parentId);
         return ResponseEntity.ok(response);
     }
 

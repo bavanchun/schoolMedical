@@ -85,8 +85,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
                 .orElseThrow(() -> new NotFoundException("Medical event not found with ID: " + medicalEventId));
 
         // Force lazy loading of equipment and medication collections
-        medicalEvent.getEquipmentUsed().size();
-        medicalEvent.getMedicationUsed().size();
+//        medicalEvent.getEquipmentUsed().size();
+//        medicalEvent.getMedicationUsed().size();
+        if (medicalEvent.getEquipmentUsed() != null) {
+            medicalEvent.getEquipmentUsed().size();
+        }
+        if (medicalEvent.getMedicationUsed() != null) {
+            medicalEvent.getMedicationUsed().size();
+        }
 
         // Check access permissions
         validateUserAccessToMedicalEvent(userId, medicalEvent);
@@ -96,13 +102,35 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<MedicalEventResponse> getAllMedicalEvents(Pageable pageable, String search) {
+    public List<MedicalEventResponse> getAllMedicalEvents(String search) {
         log.info("Getting all medical events with search: {}", search);
 
-        // Use existing repository methods
-        Page<MedicalEvent> medicalEvents = medicalEventRepository.findAllWithBasicRelationships(pageable);
+        List<MedicalEvent> medicalEvents;
 
-        return medicalEvents.map(this::mapToResponse);
+        if (StringUtils.hasText(search)) {
+            // Search by pupil name, symptoms, treatment, or other relevant fields
+            medicalEvents = medicalEventRepository.findBySearchCriteria(search);
+        } else {
+            // Get all active medical events
+            medicalEvents = medicalEventRepository.findAllActiveWithRelationships();
+        }
+
+        // Force lazy loading of collections to avoid N+1 issues
+        for (MedicalEvent event : medicalEvents) {
+//            event.getEquipmentUsed().size();
+//            event.getMedicationUsed().size();
+//        }
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size();
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size();
+            }
+        }
+
+        return medicalEvents.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -123,8 +151,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
         // For each medical event, explicitly load equipment and medication to avoid N+1
         for (MedicalEvent event : medicalEvents) {
             // Force lazy loading of collections
-            event.getEquipmentUsed().size(); // Trigger lazy loading
-            event.getMedicationUsed().size(); // Trigger lazy loading
+//            event.getEquipmentUsed().size(); // Trigger lazy loading
+//            event.getMedicationUsed().size(); // Trigger lazy loading
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size(); // Trigger lazy loading
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size(); // Trigger lazy loading
+            }
         }
 
         return medicalEvents.stream()
@@ -156,8 +190,14 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
         // For each medical event, explicitly load equipment and medication to avoid N+1
         for (MedicalEvent event : medicalEvents) {
-            event.getEquipmentUsed().size(); // Trigger lazy loading
-            event.getMedicationUsed().size(); // Trigger lazy loading
+//            event.getEquipmentUsed().size(); // Trigger lazy loading
+//            event.getMedicationUsed().size(); // Trigger lazy loading
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size(); // Trigger lazy loading
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size(); // Trigger lazy loading
+            }
         }
 
         return medicalEvents.stream()
@@ -192,7 +232,8 @@ public class MedicalEventServiceImpl implements MedicalEventService {
 
     // Helper Methods
     private Pupil findPupilById(String pupilId) {
-        return pupilRepository.findPupilById(pupilId)
+        log.debug("Finding pupil with ID: {}", pupilId);
+        return pupilRepository.findByPupilId(pupilId)
                 .orElseThrow(() -> new NotFoundException("Pupil not found with ID: " + pupilId));
     }
 
@@ -365,5 +406,26 @@ public class MedicalEventServiceImpl implements MedicalEventService {
             case MEDIUM -> "Medium";
             case HIGH -> "High";
         };
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<MedicalEventResponse> getMedicalEventsForParent(String parentId) {
+        log.info("Getting all medical events for parent {}", parentId);
+
+        List<MedicalEvent> medicalEvents = medicalEventRepository.findByParentIdWithRelationships(parentId);
+
+        // For each medical event, explicitly load equipment and medication to avoid N+1
+        for (MedicalEvent event : medicalEvents) {
+            if (event.getEquipmentUsed() != null) {
+                event.getEquipmentUsed().size(); // Trigger lazy loading
+            }
+            if (event.getMedicationUsed() != null) {
+                event.getMedicationUsed().size(); // Trigger lazy loading
+            }
+        }
+
+        return medicalEvents.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 }
