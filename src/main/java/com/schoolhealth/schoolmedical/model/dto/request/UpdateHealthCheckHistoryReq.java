@@ -1,11 +1,8 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,7 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class HealthCheckHistoryReq {
+public class UpdateHealthCheckHistoryReq {
+    private Long healthId;
     private BigDecimal height;
     private BigDecimal weight;
     private String rightEyeVision;

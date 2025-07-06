@@ -39,4 +39,9 @@
         public ResponseEntity<?> getAllHealthCheckCampaigns() {
             return ResponseEntity.ok(healthCheckCampaignService.getAllHealthCheckCampaigns());
         }
+        @GetMapping("/allHealthCheckCampaignsByPupilId/{pupilId}")
+        public ResponseEntity<?> getAllHealthCheckCampaignsByPupilId(@PathVariable String pupilId) {
+            return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignsByPupilId(pupilId));
+        }
+
     }

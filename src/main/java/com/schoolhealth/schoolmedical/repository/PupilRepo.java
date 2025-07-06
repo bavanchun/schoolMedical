@@ -32,7 +32,7 @@ SELECT p FROM Pupil p
 left join fetch p.pupilGrade pg
 JOIN FETCH pg.grade
 JOIN p.parents parent
-WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
+WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)  
 """)
     List<Pupil> getAllPupilsByParent(@Param("parentId") String parentId);
 

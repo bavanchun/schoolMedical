@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.controller;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SurveyHealthCheckReq;
+import com.schoolhealth.schoolmedical.model.dto.request.UpdateHealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import com.schoolhealth.schoolmedical.service.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
@@ -48,5 +49,9 @@ public class HealthCheckAnnualController {
     @GetMapping("/result/{consentId}")
     public ResponseEntity<?> getHealthCheckHistoryByConsentId(@PathVariable Long consentId) {
         return ResponseEntity.ok(healthCheckConsentService.getHealthCheckConsentById(consentId));
+    }
+    @PutMapping("/result/{consentId}")
+    public ResponseEntity<?> updateHealthCheckHistory(@RequestBody UpdateHealthCheckHistoryReq healthCheckHistoryReq, @PathVariable Long consentId) {
+        return ResponseEntity.ok(healthCheckHistoryService.updateHealthCheckHistory(healthCheckHistoryReq, consentId));
     }
 }
