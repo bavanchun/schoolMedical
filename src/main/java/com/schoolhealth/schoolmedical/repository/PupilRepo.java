@@ -29,7 +29,7 @@ public interface PupilRepo extends JpaRepository<Pupil, String> {
 
     @Query("""
 SELECT p FROM Pupil p
-JOIN FETCH p.pupilGrade pg
+left join fetch p.pupilGrade pg
 JOIN FETCH pg.grade
 JOIN p.parents parent
 WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
