@@ -79,8 +79,13 @@ public class SendMedicationController {
     public ResponseEntity<?> getAllSendMedicationWithGivenTime() {
         return ResponseEntity.ok(sendMedicalService.getAllSendMedication());
     }
-    @GetMapping("/medicationLogs/{ }")
+    @GetMapping("/medicationLogs/{sendMedicationId}")
     public ResponseEntity<?> getMedicationLogsBySendMedicationId(@PathVariable Long sendMedicationId, @RequestParam(required = false) Optional<LocalDate> givenTime) {
         return ResponseEntity.ok(medicationLogsService.getMedicationLogsBySendMedicationId(sendMedicationId, givenTime));
+    }
+    @GetMapping("/allByComplete")
+    public ResponseEntity<?> getAllByComplete() {
+        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getAllByComplete();
+        return ResponseEntity.ok(sendMedicationRes);
     }
 }

@@ -22,6 +22,6 @@ public interface SendMedicalService {
     List<SendMedicationRes> getSendMedicationByPupil(String pupilId, int session);
     SendMedication findById(Long sendMedicationId);
     SendMedication findByMedicationLogId(Long medicationLogId);
-     List<SendMedicationRes> getAllSendMedication();
-
+    List<SendMedicationRes> getAllSendMedication();
+    List<SendMedicationRes> getAllByComplete();
 }

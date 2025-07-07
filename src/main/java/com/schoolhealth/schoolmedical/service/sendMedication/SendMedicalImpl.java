@@ -196,5 +196,11 @@ public class SendMedicalImpl implements SendMedicalService{
         return sendMedicationMapper.toDto(sendMedications);
     }
 
+    @Override
+    public List<SendMedicationRes> getAllByComplete() {
+        List<SendMedication> sendMedications = sendMedicationRepo.findAllByStatus(StatusSendMedication.COMPLETED);
+        return sendMedicationMapper.toDto(sendMedications);
+    }
+
 
 }
