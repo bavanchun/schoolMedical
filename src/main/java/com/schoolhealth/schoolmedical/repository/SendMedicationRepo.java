@@ -83,4 +83,12 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
     SendMedication findByMedicationLogs(Long medicationLogId);
 
     List<SendMedication> findAllByActiveTrue();
+
+    @Query("""
+        SELECT sm FROM SendMedication sm
+        WHERE sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED 
+        AND sm.active = true
+        AND :date BETWEEN sm.startDate AND sm.endDate
+""")
+    List<SendMedication> findAllByInProgress(@Param("date") LocalDate date);
 }

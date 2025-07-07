@@ -202,5 +202,11 @@ public class SendMedicalImpl implements SendMedicalService{
         return sendMedicationMapper.toDto(sendMedications);
     }
 
+    @Override
+    public List<SendMedicationRes> getAllByInProgress() {
+        List<SendMedication> sendMedications = sendMedicationRepo.findAllByInProgress(LocalDate.now());
+        return sendMedicationMapper.toDto(sendMedications);
+    }
+
 
 }

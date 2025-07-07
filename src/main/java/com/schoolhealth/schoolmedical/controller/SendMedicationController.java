@@ -88,4 +88,9 @@ public class SendMedicationController {
         List<SendMedicationRes> sendMedicationRes = sendMedicalService.getAllByComplete();
         return ResponseEntity.ok(sendMedicationRes);
     }
+    @GetMapping("/allByInProgress")
+    public ResponseEntity<?> getAllByInProgress() {
+        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getAllByInProgress();
+        return ResponseEntity.ok(sendMedicationRes);
+    }
 }

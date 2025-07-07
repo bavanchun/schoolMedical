@@ -24,4 +24,5 @@ public interface SendMedicalService {
     SendMedication findByMedicationLogId(Long medicationLogId);
     List<SendMedicationRes> getAllSendMedication();
     List<SendMedicationRes> getAllByComplete();
+    List<SendMedicationRes> getAllByInProgress();
 }
