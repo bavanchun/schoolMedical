@@ -16,8 +16,11 @@ import com.schoolhealth.schoolmedical.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MedicationLogsImpl implements MedicationLogsService {
@@ -53,6 +56,15 @@ public class MedicationLogsImpl implements MedicationLogsService {
             listNotification.add(notification);
         }
         userNotificationService.saveAllUserNotifications(listNotification);
+        return sendMedicationMapper.toMedicationLogsDto(medicationLogs);
+    }
+
+    @Override
+    public List<MedicationLogsRes> getMedicationLogsBySendMedicationId(Long sendMedicationId, Optional<LocalDate> givenTime) {
+        LocalDate targetDate = givenTime.orElse(LocalDate.now());
+        LocalDateTime startOfDay = targetDate.atStartOfDay();
+        LocalDateTime startOfNextDay = targetDate.plusDays(1).atStartOfDay();
+        List<MedicationLogs> medicationLogs = medicationLogsRepo.findMedicationLogsBySendMedicationIdAndDate(sendMedicationId, startOfDay, startOfNextDay);
         return sendMedicationMapper.toMedicationLogsDto(medicationLogs);
     }
 }

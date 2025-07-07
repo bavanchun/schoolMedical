@@ -47,4 +47,5 @@ public interface MedicationRepository extends JpaRepository<Medication, Long> {
     // Find medication by IDs (for medical event creation)
     @Query("SELECT m FROM Medication m WHERE m.medicationId IN :medicationIds AND m.isActive = true")
     List<Medication> findByMedicationIdInAndIsActiveTrue(@Param("medicationIds") List<Long> medicationIds);
+
 }

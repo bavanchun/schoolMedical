@@ -32,7 +32,7 @@ public class SendMedicationRes {
     private LocalDate confirmedDate;
     private String prescriptionImage;
     private String note;
-    private String medicationSchedule;
+   // private String medicationSchedule;
     private StatusSendMedication status;
     private List<MedicationItemRes> medicationItems;
     private List<MedicationLogsRes> medicationLogs;

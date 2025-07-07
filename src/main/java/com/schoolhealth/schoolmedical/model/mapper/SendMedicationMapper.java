@@ -32,9 +32,16 @@ public interface SendMedicationMapper {
 
     //TO DTO
 
+    @Named("toDto")
+    //@BeanMapping(ignoreByDefault = true)
     @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "pupilFirstName", source = "pupil.firstName")
+    @Mapping(target = "pupilLastName", source = "pupil.lastName")
     @Mapping(target = "medicationItems", source = "medicationItems")
+    @Mapping(target = "medicationLogs", ignore = true)
     SendMedicationRes toDto(SendMedication sendMedication);
+    @IterableMapping(qualifiedByName = "toDto")
+    List<SendMedicationRes> toDto(List<SendMedication> sendMedications);
 
     MedicationItemRes toMedicationItemDto(MedicationItem medicationItem);
     List<MedicationItemRes> toMedicationItemDtoList(List<MedicationItem> medicationItems);
@@ -44,6 +51,8 @@ public interface SendMedicationMapper {
 
     @Named("toDtoSendMedication")
     @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "pupilFirstName", source = "pupil.firstName")
+    @Mapping(target = "pupilLastName", source = "pupil.lastName")
     @Mapping(target = "medicationLogs", source = "medicationLogs")
     @Mapping(target = "medicationItems", source = "medicationItems")
     SendMedicationRes toDtoSendMedication(SendMedication sendMedication);
@@ -53,6 +62,8 @@ public interface SendMedicationMapper {
 
     @Named("toDtoWithAfterBreakfast")
     @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "pupilFirstName", source = "pupil.firstName")
+    @Mapping(target = "pupilLastName", source = "pupil.lastName")
     @Mapping(target = "medicationLogs", source = "medicationLogs")
     @Mapping(target = "medicationItems", expression = "java(sendMedication.getMedicationItems().stream().filter(item -> \"After breakfast: 9h00-9h30\".equals(item.getMedicationSchedule())).map(this::toMedicationItemDto).toList())")
     SendMedicationRes toDtoWithAfterBreakfast(SendMedication sendMedication);
@@ -61,6 +72,8 @@ public interface SendMedicationMapper {
 
     @Named("toDtoWithBeforeLunch")
     @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "pupilFirstName", source = "pupil.firstName")
+    @Mapping(target = "pupilLastName", source = "pupil.lastName")
     @Mapping(target = "medicationLogs", source = "medicationLogs")
     @Mapping(target = "medicationItems", expression = "java(sendMedication.getMedicationItems().stream().filter(item -> \"Before lunch: 10h30-11h00\".equals(item.getMedicationSchedule())).map(this::toMedicationItemDto).toList())")
     SendMedicationRes toDtoWithBeforeLunch(SendMedication sendMedication);
@@ -69,6 +82,8 @@ public interface SendMedicationMapper {
 
     @Named("toDtoWithAfterLunch")
     @Mapping(target = "pupilId", source = "pupil.pupilId")
+    @Mapping(target = "pupilFirstName", source = "pupil.firstName")
+    @Mapping(target = "pupilLastName", source = "pupil.lastName")
     @Mapping(target = "medicationLogs", source = "medicationLogs")
     @Mapping(target = "medicationItems", expression = "java(sendMedication.getMedicationItems().stream().filter(item -> \"After lunch: 11h30-12h00\".equals(item.getMedicationSchedule())).map(this::toMedicationItemDto).toList())")
     SendMedicationRes toDtoWithAfterLunch(SendMedication sendMedication);

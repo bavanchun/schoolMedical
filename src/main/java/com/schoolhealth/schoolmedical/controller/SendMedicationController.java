@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/send-medication")
@@ -72,5 +74,13 @@ public class SendMedicationController {
     @PostMapping("/medicationLog")
     public ResponseEntity<?> saveMedicationLogForPrescription(@RequestBody @Valid MedicationLogReq medicationLogReq){
         return ResponseEntity.ok(medicationLogsService.saveMedicationLogForPrescription(medicationLogReq));
+    }
+    @GetMapping("/allSendMedication")
+    public ResponseEntity<?> getAllSendMedicationWithGivenTime() {
+        return ResponseEntity.ok(sendMedicalService.getAllSendMedication());
+    }
+    @GetMapping("/medicationLogs/{ }")
+    public ResponseEntity<?> getMedicationLogsBySendMedicationId(@PathVariable Long sendMedicationId, @RequestParam(required = false) Optional<LocalDate> givenTime) {
+        return ResponseEntity.ok(medicationLogsService.getMedicationLogsBySendMedicationId(sendMedicationId, givenTime));
     }
 }

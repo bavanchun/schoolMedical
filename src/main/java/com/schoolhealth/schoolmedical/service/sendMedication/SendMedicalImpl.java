@@ -7,6 +7,7 @@ import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
 import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
+import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationPageReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
@@ -18,8 +19,11 @@ import com.schoolhealth.schoolmedical.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SendMedicalImpl implements SendMedicalService{
@@ -184,6 +188,12 @@ public class SendMedicalImpl implements SendMedicalService{
     @Override
     public SendMedication findByMedicationLogId(Long medicationLogId) {
         return sendMedicationRepo.findByMedicationLogs(medicationLogId);
+    }
+
+    @Override
+    public List<SendMedicationRes> getAllSendMedication() {
+        List<SendMedication> sendMedications = sendMedicationRepo.findAllByActiveTrue();
+        return sendMedicationMapper.toDto(sendMedications);
     }
 
 
