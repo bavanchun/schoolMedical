@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.service.user;
 
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
+import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
@@ -21,5 +22,7 @@ public interface UserService {
 
     List<User> findAllWithPupilByParent();
     User findById(String userId);
+
+    boolean changePassword(String userId, ChangePasswordRequest request);
 
 }

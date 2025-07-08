@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.controller;
 
+import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -46,6 +48,28 @@ public class UserController {
         UserResponse userResponse = userService.getUserById(currentUserId);
         return ResponseEntity.ok(userResponse);
     }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request, HttpServletRequest httpRequest) {
+        try {
+            String currentUserId = userService.getCurrentUserId(httpRequest);
+            if (currentUserId == null) {
+                return ResponseEntity.status(401).body("Unauthorized");
+            }
+
+            boolean success = userService.changePassword(currentUserId, request);
+            if (success) {
+                return ResponseEntity.ok("Password changed successfully");
+            } else {
+                return ResponseEntity.status(500).body("Failed to change password");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("An error occurred while changing password");
+        }
+    }
+
     @PatchMapping("/token/{userId}")
     public ResponseEntity<?> saveDeviceToken(@PathVariable String userId, @RequestBody Map<String, String> deviceToken) {
         // Logic to save device token
