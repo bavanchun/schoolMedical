@@ -1,6 +1,6 @@
     package com.schoolhealth.schoolmedical.controller;
 
-    import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
+    import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaignReq;
     import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusHealthCampaignReq;
     import com.schoolhealth.schoolmedical.service.HealthCheckCampaignService;
     import jakarta.validation.Valid;
@@ -16,7 +16,7 @@
         private HealthCheckCampaignService healthCheckCampaignService;
 
         @PostMapping()
-        public ResponseEntity<?> createHealthCheckCampaign(@RequestBody @Valid HealthCheckCampaginReq campaign) {
+        public ResponseEntity<?> createHealthCheckCampaign(@RequestBody @Valid HealthCheckCampaignReq campaign) {
             // Logic to create a health check campaign
             return ResponseEntity.ok(healthCheckCampaignService.saveHealthCheckCampaign(campaign));
         }
@@ -43,5 +43,8 @@
         public ResponseEntity<?> getAllHealthCheckCampaignsByPupilId(@PathVariable String pupilId) {
             return ResponseEntity.ok(healthCheckCampaignService.getHealthCheckCampaignsByPupilId(pupilId));
         }
-
+        @PutMapping("/{campaignId}")
+        public ResponseEntity<?> updateHealthCheckCampaign(@PathVariable Long campaignId, @RequestBody HealthCheckCampaignReq healthCheckCampaign) {
+            return ResponseEntity.ok(healthCheckCampaignService.updateHealthCheckCampaignAndDiseases(campaignId,healthCheckCampaign));
+        }
     }

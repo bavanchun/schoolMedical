@@ -3,10 +3,9 @@ package com.schoolhealth.schoolmedical.service;
 import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
-import com.schoolhealth.schoolmedical.exception.CampaignAlreadyExistsForYearException;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.exception.UpdateNotAllowedException;
-import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaginReq;
+import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaignReq;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
@@ -68,7 +67,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
 
 
     @Override
-    public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaginReq healthCheckCampaignReq){
+    public HealthCheckCampaignRes saveHealthCheckCampaign(HealthCheckCampaignReq healthCheckCampaignReq){
         //HealthCheckCampaign currentCampaign = healthCheckCampaignRepo.findCurrentCampaign();
 //        if(currentCampaign != null && currentCampaign.getCreatedAt().getYear() == Year.now().getValue() && currentCampaign.getStatusHealthCampaign() != StatusHealthCampaign.CANCELLED) {
 //            throw new CampaignAlreadyExistsForYearException("A health check campaign already exists for the year:"  + Year.now().getValue() + ". Please cancel the existing campaign before creating a new one.");
@@ -237,9 +236,25 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
     }
 
     @Override
-    public HealthCheckCampaignRes updateHealthCheckCampaignAndDiseases(HealthCheckCampaginReq healthCheckCampaign) {
-
-        return null;
+    public HealthCheckCampaignRes updateHealthCheckCampaignAndDiseases(Long campaignId, HealthCheckCampaignReq healthCheckCampaign) {
+        HealthCheckCampaign existingCampaign = healthCheckCampaignRepo.findById(campaignId)
+                .orElseThrow(() -> new NotFoundException("Health check campaign not found with id: " + campaignId));
+        if (existingCampaign.getStatusHealthCampaign() != StatusHealthCampaign.PENDING) {
+            throw new UpdateNotAllowedException("Health check campaign can only be updated if its status is PENDING.");
+        }
+        healthCheckCampaignMapper.updateEntityFromDto(healthCheckCampaign, existingCampaign);
+        existingCampaign.getHealthCheckDiseases().clear();
+        List<Disease> diseases = diseaseService.getAllDiseasesById(healthCheckCampaign.getDiseaseIds());
+        List<HealthCheckDisease> healthCheckDiseases = new ArrayList<>();
+        for (Disease disease : diseases) {
+            HealthCheckDisease healthCheckDisease = HealthCheckDisease.builder()
+                    .healthCheckCampaign(existingCampaign)
+                    .disease(disease)
+                    .build();
+            healthCheckDiseases.add(healthCheckDisease);
+        }
+        existingCampaign.getHealthCheckDiseases().addAll(healthCheckDiseases);
+        return healthCheckCampaignMapper.toDto(healthCheckCampaignRepo.save(existingCampaign));
     }
 
     @Override

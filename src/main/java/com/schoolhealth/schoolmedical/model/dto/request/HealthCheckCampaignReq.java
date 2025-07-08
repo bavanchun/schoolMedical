@@ -1,7 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.request;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -15,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class HealthCheckCampaginReq {
+public class HealthCheckCampaignReq {
     @NotBlank
     private String address;
     private String title;
@@ -28,5 +27,4 @@ public class HealthCheckCampaginReq {
     @NotNull
     private LocalDateTime endExaminationDate;
     private List<Long> diseaseIds;
-
 }
