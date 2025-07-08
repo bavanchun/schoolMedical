@@ -208,6 +208,9 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 }
                 userNotificationService.saveAllUserNotifications(listNotification);
             }
+        }else{
+            campaign1.setStatusHealthCampaign(statusHealthCampaign);
+            healthCheckCampaignRepo.save(campaign1);
         }
     }
 
