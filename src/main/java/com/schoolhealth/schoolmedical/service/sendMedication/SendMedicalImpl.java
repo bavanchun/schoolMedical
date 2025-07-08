@@ -89,6 +89,20 @@ public class SendMedicalImpl implements SendMedicalService{
         }
         sendMedication.setStatus(statusSendMedication);
         sendMedicationRepo.save(sendMedication);
+        if(statusSendMedication == StatusSendMedication.REJECTED || statusSendMedication == StatusSendMedication.APPROVED) {
+            List<User> schoolNurses = userService.findAllByRole(Role.PARENT);
+            List<UserNotification> listNotification = new ArrayList<>();
+            for( User schoolNurse : schoolNurses) {
+                UserNotification notification = UserNotification.builder()
+                        .message("Prescription with id: " + sendMedication.getSendMedicationId() + " has been " + statusSendMedication.name().toLowerCase() + ".")
+                        .sourceId(sendMedication.getSendMedicationId())
+                        .typeNotification(TypeNotification.SEND_MEDICAL)
+                        .user(schoolNurse)
+                        .build();
+                listNotification.add(notification);
+            }
+            userNotificationService.saveAllUserNotifications(listNotification);
+        }
     }
 
     @Override
