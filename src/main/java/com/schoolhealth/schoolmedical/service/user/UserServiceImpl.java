@@ -6,6 +6,7 @@ import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
+import com.schoolhealth.schoolmedical.model.mapper.UserMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final UserMapper userMapper;
 
     @Override
     public UserResponse getUserById(String userId) {
-        return null;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        return userMapper.toUserResponse(user);
     }
 
     @Override

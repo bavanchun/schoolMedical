@@ -24,7 +24,7 @@ public class UserResponse {
     private LocalDate birthDate;
 
     private String email;
-    private int phoneNumber;
+    private String phoneNumber;
     private String avatar;
 
     @JsonFormat(pattern = "dd-MM-yyyy")

@@ -96,6 +96,9 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
                 .token(jwtToken)
                 .role(savedUser.getRole().name())
                 .fullName(fullName)
+                .email(savedUser.getEmail())
+                .phoneNumber(savedUser.getPhoneNumber())
+                .birthDate(savedUser.getBirthDate())
                 .build();
     }
 
@@ -120,6 +123,9 @@ public class AuthenticateServiceImpl implements  AuthenticateService {
                 .token(jwtToken)
                 .role(user.getRole().name())
                 .fullName(fullName)
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .birthDate(user.getBirthDate())
                 .build();
     }
 }
