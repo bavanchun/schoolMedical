@@ -368,7 +368,7 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
                 .pupilId(pupil.getPupilId())
                 .classId(classId)
                 .dateOfBirth(pupil.getBirthDate())
-                .gender(String.valueOf(pupil.getGender()))
+                .gender(pupil.getGender())
                 .lastName(pupil.getLastName())
                 .firstName(pupil.getFirstName())
                 .avatar(pupil.getAvatar())

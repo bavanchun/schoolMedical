@@ -18,7 +18,7 @@ public class HealthCheckConsentFlatData {
     private String lastName;
     private String firstName;
     private LocalDate birthDate;
-    private char gender;
+    private String gender;
     private String avatar;
     private String gradeName;
     private Long diseaseId;

@@ -51,7 +51,24 @@ WHERE parent.userId = :parentId AND pg.startYear = (
 
     @Query("SELECT p FROM Pupil p JOIN p.parents parent WHERE parent = :parent")
     List<Pupil> findByParent(@Param("parent") User parent);
-        @Query("""
+
+    @Query("SELECT COUNT(p) > 0 FROM Pupil p JOIN p.parents parent WHERE parent.userId = :parentId")
+    boolean existsByParents_UserId(@Param("parentId") String parentId);
+
+    boolean existsByPupilIdAndParents_UserIdAndIsActiveTrue(String pupilId, String parentId);
+
+    @Query("""
+        SELECT p FROM Pupil p
+        JOIN FETCH p.parents parent
+        WHERE p.pupilId = :pupilId
+          AND parent.userId = :parentId
+          AND p.isActive = true
+    """)
+    Optional<Pupil> findActiveByIdAndParentId(
+            @Param("pupilId") String pupilId,
+            @Param("parentId") String parentId);
+
+    @Query("""
     SELECT p FROM Pupil p
     JOIN FETCH p.pupilGrade pg
     JOIN FETCH pg.grade

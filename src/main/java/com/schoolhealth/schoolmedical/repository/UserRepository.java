@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByPhoneNumber(String phoneNumber);
 
+    Optional<User> findByPhoneNumberAndRole(String phoneNumber, Role role);
+
     /**
      * Tìm User theo số điện thoại và tải đầy đủ danh sách học sinh (pupils)
      * Sử dụng fetch join để tải toàn bộ học sinh liên quan

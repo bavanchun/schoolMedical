@@ -15,6 +15,18 @@ public class CustomExceptionHandler {
         return new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), req.getDescription(false));
     }
 
+    @ExceptionHandler(PupilNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlePupilNotFoundException(PupilNotFoundException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), req.getDescription(false));
+    }
+
+    @ExceptionHandler(ParentAlreadyLinkedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleParentAlreadyLinkedException(ParentAlreadyLinkedException ex, WebRequest req) {
+        return new ErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), req.getDescription(false));
+    }
+
     @ExceptionHandler(UpdateNotAllowedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleUpdateNotAllowedException(UpdateNotAllowedException ex, WebRequest req) {

@@ -30,8 +30,8 @@ public class Pupil {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
-    private char gender;
+    @Column(name = "gender", nullable = false, length = 1)
+    private String gender;
     @Column(name = "avatar", length = 255)
     private String avatar;
     /**

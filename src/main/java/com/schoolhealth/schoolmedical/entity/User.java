@@ -68,9 +68,6 @@ public class User implements UserDetails{
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authorId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
-    private List<Blog> blogs;
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "parents")
     private List<Pupil> pupils;
 
@@ -132,3 +129,4 @@ public class User implements UserDetails{
         return UserDetails.super.isEnabled();
     }
 }
+

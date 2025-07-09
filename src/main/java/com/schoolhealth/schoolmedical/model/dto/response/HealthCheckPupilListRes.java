@@ -25,7 +25,7 @@ public class HealthCheckPupilListRes {
     private String lastName;
     private String firstName;
     private LocalDate birthDate;
-    private char gender;
+    private String gender;
     private GradeLevel gradeLevel;
     private String gradeName;
     private Long healthCheckDiseaseId;

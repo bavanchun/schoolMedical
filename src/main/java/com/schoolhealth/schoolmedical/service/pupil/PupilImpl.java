@@ -2,17 +2,24 @@ package com.schoolhealth.schoolmedical.service.pupil;
 
 import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.User;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
+import com.schoolhealth.schoolmedical.exception.ParentAlreadyLinkedException;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.repository.GradeRepository;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
+import com.schoolhealth.schoolmedical.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
+import com.schoolhealth.schoolmedical.entity.User;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
+import com.schoolhealth.schoolmedical.exception.ParentAlreadyLinkedException;
+import com.schoolhealth.schoolmedical.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +35,28 @@ public class PupilImpl implements PupilService {
     @Autowired
     private PupilMapper pupilMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     public PupilRes createPupil(PupilRes dto) {
-//        Pupil entity = pupilMapper.toEntity(dto);
-//
-//        // Đảm bảo học sinh mới luôn được đánh dấu là active
-//        entity.setActive(true);
-//        Pupil saved  = pupilRepo.save(entity);
-//        return pupilMapper.toDto(saved);
-        return new PupilRes();
+        // Find parent by phone number and role
+        User parent = userRepository
+                .findByPhoneNumberAndRole(dto.getParentPhoneNumber(), Role.PARENT)
+                .orElseThrow(() -> new NotFoundException("Parent with phone number " + dto.getParentPhoneNumber() + " not found"));
+
+        // ensure parent is not already linked to a pupil
+        if (pupilRepo.existsByParents_UserId(parent.getUserId())) {
+            throw new ParentAlreadyLinkedException("Parent with phone number " + dto.getParentPhoneNumber() + " already linked to a pupil");
+        }
+
+        Pupil entity = pupilMapper.toEntity(dto);
+        entity.setActive(true);
+        entity.setParents(List.of(parent));
+
+        Pupil saved = pupilRepo.save(entity);
+        return pupilMapper.toDto(saved);
     }
 
     @Override
