@@ -53,7 +53,7 @@ public class PupilImpl implements PupilService {
 //    public Optional<List<Pupil>> getAll() {
 //        return Optional.ofNullable(pupilRepo.findAll());
     public PupilRes getPupilById(String id) {
-        Optional<Pupil> pupilOptional = pupilRepo.findById(id);
+        Optional<Pupil> pupilOptional = pupilRepo.findPupilById(id);
         if (pupilOptional.isEmpty() || !pupilOptional.get().isActive()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pupil not found");
         }
