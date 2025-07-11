@@ -2,7 +2,6 @@ package com.schoolhealth.schoolmedical.service.blog;
 
 import com.schoolhealth.schoolmedical.entity.Blog;
 import com.schoolhealth.schoolmedical.entity.User;
-import com.schoolhealth.schoolmedical.entity.enums.BlogStatus;
 import com.schoolhealth.schoolmedical.exception.BlogNotFoundException;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.BlogRequestDTO;
@@ -37,7 +36,6 @@ public class BlogServiceCustomImpl implements BlogServiceCustom {
         Blog blog = blogMapper.toEntity(dto);
         blog.setAuthorId(author);
         blog.setVerifierId(author);
-        blog.setStatus(BlogStatus.PUBLISHED.name());
 
         Blog saved = blogRepository.save(blog);
         return blogMapper.toResponse(saved);
@@ -61,14 +59,13 @@ public class BlogServiceCustomImpl implements BlogServiceCustom {
                 .orElseThrow(() -> new BlogNotFoundException("Blog not found with id: " + blogId));
 
         blog.setActive(false);
-        blog.setStatus(BlogStatus.DELETED.name());
         blogRepository.save(blog);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BlogResponseDTO> getPublishedBlogs() {
-        List<Blog> blogs = blogRepository.findByStatusAndIsActiveTrue(BlogStatus.PUBLISHED.name());
+        List<Blog> blogs = blogRepository.findByIsActiveTrue();
         return blogMapper.toResponseList(blogs);
     }
 
@@ -76,7 +73,7 @@ public class BlogServiceCustomImpl implements BlogServiceCustom {
     @Transactional(readOnly = true)
     public BlogResponseDTO getPublishedBlog(Long blogId) {
         Blog blog = blogRepository
-                .findByBlogIdAndStatusAndIsActiveTrue(blogId, BlogStatus.PUBLISHED.name())
+                .findByBlogIdAndIsActiveTrue(blogId)
                 .orElseThrow(() -> new BlogNotFoundException("Published blog not found with id: " + blogId));
         return blogMapper.toResponse(blog);
     }

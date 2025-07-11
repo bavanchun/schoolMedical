@@ -1,7 +1,6 @@
 package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Blog;
-import com.schoolhealth.schoolmedical.entity.enums.BlogStatus;
 import com.schoolhealth.schoolmedical.model.dto.request.BlogRequestDTO;
 import com.schoolhealth.schoolmedical.model.dto.response.BlogResponseDTO;
 import org.mapstruct.AfterMapping;
@@ -20,13 +19,11 @@ public interface BlogMapper {
     @Mapping(target = "blogId", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "lastUpdatedAt", ignore = true)
-    @Mapping(target = "status", ignore = true)
     @Mapping(target = "authorId", ignore = true)
     @Mapping(target = "verifierId", ignore = true)
     @Mapping(target = "isActive", constant = "true")
     Blog toEntity(BlogRequestDTO dto);
 
-    @Mapping(target = "status", expression = "java(mapStatus(blog.getStatus()))")
     @Mapping(target = "authorName", expression = "java(extractUserName(blog.getAuthorId()))")
     @Mapping(target = "verifierName", expression = "java(extractUserName(blog.getVerifierId()))")
     @Mapping(target = "createdAt", expression = "java(blog.getCreatedAt() != null ? blog.getCreatedAt().atStartOfDay() : null)")
@@ -34,13 +31,6 @@ public interface BlogMapper {
     BlogResponseDTO toResponse(Blog blog);
 
     List<BlogResponseDTO> toResponseList(List<Blog> blogs);
-
-    /**
-     * Convert the stored status string to the enum.
-     */
-    default BlogStatus mapStatus(String status) {
-        return status != null ? BlogStatus.valueOf(status) : null;
-    }
 
     /**
      * Helper method to extract user's full name.

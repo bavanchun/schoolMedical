@@ -46,9 +46,6 @@ public class Blog {
     @UpdateTimestamp
     private LocalDate lastUpdatedAt;
 
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
-
     @Column(name = "image_url", nullable = true, length = 255)
     private String imageUrl;
 

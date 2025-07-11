@@ -17,27 +17,6 @@ import java.util.Optional;
 public interface BlogRepository extends JpaRepository<Blog, Long> {
 
     /**
-     * Find blogs by status regardless of active flag.
-     *
-     * @param status status string
-     * @return list of blogs
-     */
-    @Query("SELECT b FROM Blog b WHERE b.status = :status")
-    List<Blog> findByStatus(@Param("status") String status);
-
-    /**
-     * Find blogs by status that are active.
-     */
-    @Query("SELECT b FROM Blog b WHERE b.status = :status AND b.isActive = true")
-    List<Blog> findByStatusAndIsActiveTrue(@Param("status") String status);
-
-    /**
-     * Find blogs by author and status.
-     */
-    @Query("SELECT b FROM Blog b WHERE b.authorId.userId = :authorId AND b.status = :status")
-    List<Blog> findByAuthorIdAndStatus(@Param("authorId") String authorId, @Param("status") String status);
-
-    /**
      * Find active blogs belonging to an author.
      */
     @Query("SELECT b FROM Blog b WHERE b.authorId.userId = :authorId AND b.isActive = true")
@@ -50,15 +29,8 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     List<Blog> findByIsActiveTrue();
 
     /**
-     * Find pending blogs awaiting manager review.
+     * Find a blog by id that is active.
      */
-    @Query("SELECT b FROM Blog b WHERE b.status = 'PENDING' AND b.isActive = true")
-    List<Blog> findPendingBlogs();
-
-    /**
-     * Find a published blog by id.
-     */
-    @Query("SELECT b FROM Blog b WHERE b.blogId = :blogId AND b.status = :status AND b.isActive = true")
-    Optional<Blog> findByBlogIdAndStatusAndIsActiveTrue(@Param("blogId") Long blogId,
-                                                        @Param("status") String status);
+    @Query("SELECT b FROM Blog b WHERE b.blogId = :blogId AND b.isActive = true")
+    Optional<Blog> findByBlogIdAndIsActiveTrue(@Param("blogId") Long blogId);
 }

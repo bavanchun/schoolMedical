@@ -48,6 +48,7 @@ public class BlogController {
     })
     public ResponseEntity<BlogResponseDTO> createBlog(@Valid @RequestBody BlogRequestDTO dto,
                                                       HttpServletRequest request) {
+
         String userId = userService.getCurrentUserId(request);
         BlogResponseDTO response = blogService.createBlog(dto, userId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -64,50 +65,50 @@ public class BlogController {
             @ApiResponse(responseCode = "200", description = "Blog updated",
                     content = @Content(schema = @Schema(implementation = BlogResponseDTO.class)))
     })
-    public ResponseEntity<BlogResponseDTO> updateBlog(@PathVariable("id") Long blogId,
-                                                      @Valid @RequestBody BlogRequestDTO dto,
-                                                      HttpServletRequest request) {
-        String userId = userService.getCurrentUserId(request);
-        BlogResponseDTO response = blogService.updateBlog(blogId, dto, userId);
-        return ResponseEntity.ok(response);
-    }
+        public ResponseEntity<BlogResponseDTO> updateBlog(@PathVariable("id") Long blogId,
+                @Valid @RequestBody BlogRequestDTO dto,
+                HttpServletRequest request) {
+            String userId = userService.getCurrentUserId(request);
+            BlogResponseDTO response = blogService.updateBlog(blogId, dto, userId);
+            return ResponseEntity.ok(response);
+        }
 
-    /**
-     * Soft delete a blog post.
-     */
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
-    @SecurityRequirement(name = "bearerAuth")
-    @Operation(summary = "Delete blog", description = "Soft delete a blog")
-    @ApiResponse(responseCode = "204", description = "Blog deleted")
-    public ResponseEntity<Void> deleteBlog(@PathVariable("id") Long blogId,
-                                           HttpServletRequest request) {
-        String userId = userService.getCurrentUserId(request);
-        blogService.deleteBlog(blogId, userId);
-        return ResponseEntity.noContent().build();
-    }
+        /**
+         * Soft delete a blog post.
+         */
+        @DeleteMapping("/{id}")
+        @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
+        @SecurityRequirement(name = "bearerAuth")
+        @Operation(summary = "Delete blog", description = "Soft delete a blog")
+        @ApiResponse(responseCode = "204", description = "Blog deleted")
+            public ResponseEntity<Void> deleteBlog(@PathVariable("id") Long blogId,
+                    HttpServletRequest request) {
+                String userId = userService.getCurrentUserId(request);
+                blogService.deleteBlog(blogId, userId);
+                return ResponseEntity.noContent().build();
+            }
 
-    /**
-     * List all published blogs for public view.
-     */
-    @GetMapping("/public")
-    @Operation(summary = "Published blogs", description = "List all published blogs")
-    public ResponseEntity<List<BlogResponseDTO>> getPublishedBlogs() {
-        List<BlogResponseDTO> response = blogService.getPublishedBlogs();
-        return ResponseEntity.ok(response);
-    }
+            /**
+             * List all published blogs for public view.
+             */
+            @GetMapping("/public")
+            @Operation(summary = "Published blogs", description = "List all published blogs")
+            public ResponseEntity<List<BlogResponseDTO>> getPublishedBlogs() {
+                List<BlogResponseDTO> response = blogService.getPublishedBlogs();
+                return ResponseEntity.ok(response);
+            }
 
-    /**
-     * Get a single published blog by its ID.
-     */
-    @GetMapping("/public/{id}")
-    @Operation(summary = "Get published blog", description = "Get details of a published blog")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Found",
-                    content = @Content(schema = @Schema(implementation = BlogResponseDTO.class)))
-    })
-    public ResponseEntity<BlogResponseDTO> getPublishedBlog(@PathVariable("id") Long blogId) {
-        BlogResponseDTO response = blogService.getPublishedBlog(blogId);
-        return ResponseEntity.ok(response);
-    }
-}
+            /**
+             * Get a single published blog by its ID.
+             */
+            @GetMapping("/public/{id}")
+            @Operation(summary = "Get published blog", description = "Get details of a published blog")
+            @ApiResponses({
+                    @ApiResponse(responseCode = "200", description = "Found",
+                            content = @Content(schema = @Schema(implementation = BlogResponseDTO.class)))
+            })
+            public ResponseEntity<BlogResponseDTO> getPublishedBlog(@PathVariable("id") Long blogId) {
+                BlogResponseDTO response = blogService.getPublishedBlog(blogId);
+                return ResponseEntity.ok(response);
+            }
+        }

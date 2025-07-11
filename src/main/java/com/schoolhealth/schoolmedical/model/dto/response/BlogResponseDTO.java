@@ -1,7 +1,6 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.schoolhealth.schoolmedical.entity.enums.BlogStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +22,6 @@ public class BlogResponseDTO {
     private String title;
     private String content;
     private String imageUrl;
-    private BlogStatus status;
     private String authorName;
     private String verifierName;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
