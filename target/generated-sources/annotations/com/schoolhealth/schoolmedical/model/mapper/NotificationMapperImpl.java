@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-07-05T12:51:22+0700",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.7 (Amazon.com Inc.)"
+    date = "2025-07-10T00:39:51+0700",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 24.0.1 (Homebrew)"
 )
 @Component
 public class NotificationMapperImpl implements NotificationMapper {
