@@ -222,7 +222,18 @@ public class SendMedicalImpl implements SendMedicalService{
         return sendMedicationMapper.toDto(sendMedications);
     }
 
-
-
-
+    @Override
+    public List<SendMedicationSimpleRes> getSendMedicationByGradeAndSession(Long gradeId, int session, LocalDate date) {
+        String sessionName = null;
+        if(session == 1){
+            sessionName = "After breakfast: 9h00-9h30";
+        }else if(session == 2) {
+            sessionName = "Before lunch: 10h30-11h00";
+        } else if(session == 3) {
+            sessionName = "After lunch: 11h30-12h00";
+        } else {
+            throw new NotFoundException("Session not found");
+        }
+        return sendMedicationRepo.findSendMedicationByGradeAndSession(gradeId, sessionName, date);
+    }
 }

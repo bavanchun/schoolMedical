@@ -26,5 +26,4 @@ public interface PupilService {
     List<PupilRes> getAllPupilsByParent(String parentId);
     PupilRes getPupilGradeById(String pupilId);
     Pupil findPupilById(String pupilId);
-    List<SendMedicationRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session);
 }

@@ -6,6 +6,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusSendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationSimpleRes;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import com.schoolhealth.schoolmedical.service.sendMedication.MedicationLogsService;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
@@ -98,7 +99,7 @@ public class SendMedicationController {
     }
     @GetMapping("/prescription-prepare")
     public ResponseEntity<?> getAllPrescriptionPrepare(@RequestParam Long grade, @RequestParam int session) {
-        List<SendMedicationRes> prescriptionOfPupil = pupilService.getSendMedicationByGradeIdAndSession(grade, session);
+        List<SendMedicationSimpleRes> prescriptionOfPupil = sendMedicalService.getSendMedicationByGradeAndSession(grade, session, LocalDate.now());
         return ResponseEntity.ok(prescriptionOfPupil);
     }
 }

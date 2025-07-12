@@ -63,20 +63,5 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
     Optional<Pupil> findByPupilId(@Param("pupilId") String pupilId);
 
 
-    @Query("""
-    SELECT DISTINCT p FROM Pupil p
-    JOIN FETCH p.pupilGrade pg
-    WHERE pg.startYear = Year(CURRENT_DATE)
-    AND pg.pupilGradeId.gradeId = :gradeId
-    AND EXISTS (
-        SELECT 1 FROM p.sendMedications sm
-        JOIN sm.medicationItems mi
-        WHERE mi.medicationSchedule = :session and sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
-        and :date BETWEEN sm.startDate AND sm.endDate
-    )
-""")
-    List<Pupil> findSendMedicationForPupilByGradeAndSession(@Param("gradeId") Long gradeId, @Param("session")String session,@Param("date") LocalDate date);
-
-
 
 }
