@@ -91,4 +91,13 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
         AND :date BETWEEN sm.startDate AND sm.endDate
 """)
     List<SendMedication> findAllByInProgress(@Param("date") LocalDate date);
+
+    @Query("""
+    SELECT DISTINCT sm FROM SendMedication sm
+    JOIN FETCH sm.pupil p
+    JOIN FETCH sm.medicationItems mi
+    WHERE sm.pupil.pupilId IN :pupilIds
+    AND mi.medicationSchedule = :session
+""")
+    List<SendMedication> findSendMedicationsByPupilIds(@Param("pupilIds") List<String> pupilIds, @Param("session") String session);
 }

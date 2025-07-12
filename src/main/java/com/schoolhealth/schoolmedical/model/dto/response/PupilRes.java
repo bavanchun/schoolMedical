@@ -20,13 +20,14 @@ public class PupilRes {
     private String firstName;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
-    private char gender;
+    private Character gender;
     private String avatar;
     private Long gradeId;
-    private int startYear;
+    private Integer startYear;
     private GradeLevel gradeLevel;
     private String gradeName;
     private List<UserResponse> parents;
+    private List<SendMedicationRes> sendMedications;
 }
 
 

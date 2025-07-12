@@ -1,20 +1,26 @@
 package com.schoolhealth.schoolmedical.service.pupil;
 
-import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
+import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
 import com.schoolhealth.schoolmedical.repository.GradeRepository;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
+import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Year;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PupilImpl implements PupilService {
@@ -28,6 +34,11 @@ public class PupilImpl implements PupilService {
     @Autowired
     private PupilMapper pupilMapper;
 
+    @Autowired
+    private SendMedicationMapper sendMedicationMapper;
+
+    @Autowired
+    private SendMedicationRepo sendMedicationRepo;
 
     @Override
     public PupilRes createPupil(PupilRes dto) {
@@ -87,6 +98,42 @@ public class PupilImpl implements PupilService {
     public Pupil findPupilById(String pupilId) {
         return pupilRepo.findPupilById(pupilId)
                 .orElseThrow(() -> new NotFoundException("Pupil not found with id: " + pupilId));
+    }
+
+    @Override
+    public List<PupilRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session) {
+        String sessionName = null;
+        if(session == 1){
+            sessionName = "After breakfast: 9h00-9h30";
+        }else if(session == 2) {
+            sessionName = "Before lunch: 10h30-11h00";
+        } else if(session == 3) {
+            sessionName = "After lunch: 11h30-12h00";
+        } else {
+            throw new NotFoundException("Session not found");
+        }
+        List<Pupil> pupils = pupilRepo.findSendMedicationForPupilByGradeAndSession(gradeId, sessionName);
+
+        if (pupils.isEmpty()) {
+            throw new NotFoundException("No pupils found for the given grade and session");
+        }
+        List<String> pupilIds = pupils.stream()
+                .map(Pupil::getPupilId)
+                .toList();
+
+        List<SendMedication> medications = sendMedicationRepo.findSendMedicationsByPupilIds(pupilIds, sessionName);
+        Map<String, List<SendMedication>> medicationsByPupil = medications.stream()
+                .collect(Collectors.groupingBy(sm -> sm.getPupil().getPupilId()));
+
+        return pupils.stream()
+                .map(p -> PupilRes.builder()
+                        .pupilId(p.getPupilId())
+                        .gradeName(p.getPupilGrade() != null ? p.getPupilGrade().getFirst().getGradeName() : "Unknown")
+                        .sendMedications(sendMedicationMapper.toDtoWithPupil(
+                                medicationsByPupil.getOrDefault(p.getPupilId(), Collections.emptyList())
+                        ))
+                        .build())
+                .toList();
     }
 
 

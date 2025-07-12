@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.PupilGrade;
 import com.schoolhealth.schoolmedical.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -58,4 +59,21 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
     // Method đơn giản để tìm pupil theo ID (không cần PupilGrade)
     @Query("SELECT p FROM Pupil p WHERE p.pupilId = :pupilId AND p.isActive = true")
     Optional<Pupil> findByPupilId(@Param("pupilId") String pupilId);
+
+
+    @Query("""
+    SELECT DISTINCT p FROM Pupil p
+    JOIN FETCH p.pupilGrade pg
+    WHERE pg.startYear = Year(CURRENT_DATE)
+    AND pg.pupilGradeId.gradeId = :gradeId
+    AND EXISTS (
+        SELECT 1 FROM p.sendMedications sm
+        JOIN sm.medicationItems mi
+        WHERE mi.medicationSchedule = :session and sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
+    )
+""")
+    List<Pupil> findSendMedicationForPupilByGradeAndSession(Long gradeId, String session);
+
+
+
 }
