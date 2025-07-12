@@ -100,53 +100,6 @@ public class PupilImpl implements PupilService {
     }
 
     @Override
-    public List<SendMedicationRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session) {
-        String sessionName = null;
-        if(session == 1){
-            sessionName = "After breakfast: 9h00-9h30";
-        }else if(session == 2) {
-            sessionName = "Before lunch: 10h30-11h00";
-        } else if(session == 3) {
-            sessionName = "After lunch: 11h30-12h00";
-        } else {
-            throw new NotFoundException("Session not found");
-        }
-        List<Pupil> pupils = pupilRepo.findSendMedicationForPupilByGradeAndSession(gradeId, sessionName, LocalDate.now());
-
-        if (pupils.isEmpty()) {
-            throw new NotFoundException("No pupils found for the given grade and session");
-        }
-        List<String> pupilIds = pupils.stream()
-                .map(Pupil::getPupilId)
-                .toList();
-
-        List<SendMedication> medications = sendMedicationRepo.findSendMedicationsByPupilIds(pupilIds, sessionName, LocalDate.now());
-        Map<String, Pupil> pupilMap = pupils.stream()
-                .collect(Collectors.toMap(Pupil::getPupilId, p -> p));
-
-        return medications.stream()
-                .map(medication -> {
-                    Pupil pupil = pupilMap.get(medication.getPupil().getPupilId());
-                    String gradeName = "Unknown";
-                    if (pupil != null && pupil.getPupilGrade() != null && !pupil.getPupilGrade().isEmpty()) {
-                        gradeName = pupil.getPupilGrade().getFirst().getGradeName();
-                    }
-
-                    return SendMedicationRes.builder()
-                            .pupilId(pupil.getPupilId())
-                            .pupilFirstName(pupil.getFirstName())
-                            .pupilLastName(pupil.getLastName())
-                            .gradeName(gradeName)
-                            .sendMedicationId(medication.getSendMedicationId()) // Use the ID from the medication object
-                            .diseaseName(medication.getDiseaseName())
-                            .medicationItems(sendMedicationMapper.toMedicationItemDtoList(medication.getMedicationItems()))
-                            .build();
-                })
-                .toList();
-    }
-
-
-    @Override
     public PupilRes updatePupil(String id, PupilRes dto) {
         Optional<Pupil> existingOptional = pupilRepo.findById(id);
         if (existingOptional.isEmpty() || !existingOptional.get().isActive()) {
