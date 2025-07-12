@@ -17,7 +17,7 @@ public interface ParentHealthRecordService {
     /**
      * Retrieve all health records for a specific pupil id.
      */
-    List<ParentHealthRecordResponse> getAllParentHealthRecordsByPupil(String parentId, String pupilId);
+    List<ParentHealthRecordResponse> getAllParentHealthRecordsByPupil(String pupilId);
 
     /**
      * Update an existing record by id.
