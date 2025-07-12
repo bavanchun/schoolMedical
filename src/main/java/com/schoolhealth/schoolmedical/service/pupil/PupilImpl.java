@@ -5,6 +5,7 @@ import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
 import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
 import com.schoolhealth.schoolmedical.repository.GradeRepository;
@@ -15,11 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.Year;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,7 +100,7 @@ public class PupilImpl implements PupilService {
     }
 
     @Override
-    public List<PupilRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session) {
+    public List<SendMedicationRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session) {
         String sessionName = null;
         if(session == 1){
             sessionName = "After breakfast: 9h00-9h30";
@@ -112,7 +111,7 @@ public class PupilImpl implements PupilService {
         } else {
             throw new NotFoundException("Session not found");
         }
-        List<Pupil> pupils = pupilRepo.findSendMedicationForPupilByGradeAndSession(gradeId, sessionName);
+        List<Pupil> pupils = pupilRepo.findSendMedicationForPupilByGradeAndSession(gradeId, sessionName, LocalDate.now());
 
         if (pupils.isEmpty()) {
             throw new NotFoundException("No pupils found for the given grade and session");
@@ -121,18 +120,28 @@ public class PupilImpl implements PupilService {
                 .map(Pupil::getPupilId)
                 .toList();
 
-        List<SendMedication> medications = sendMedicationRepo.findSendMedicationsByPupilIds(pupilIds, sessionName);
-        Map<String, List<SendMedication>> medicationsByPupil = medications.stream()
-                .collect(Collectors.groupingBy(sm -> sm.getPupil().getPupilId()));
+        List<SendMedication> medications = sendMedicationRepo.findSendMedicationsByPupilIds(pupilIds, sessionName, LocalDate.now());
+        Map<String, Pupil> pupilMap = pupils.stream()
+                .collect(Collectors.toMap(Pupil::getPupilId, p -> p));
 
-        return pupils.stream()
-                .map(p -> PupilRes.builder()
-                        .pupilId(p.getPupilId())
-                        .gradeName(p.getPupilGrade() != null ? p.getPupilGrade().getFirst().getGradeName() : "Unknown")
-                        .sendMedications(sendMedicationMapper.toDtoWithPupil(
-                                medicationsByPupil.getOrDefault(p.getPupilId(), Collections.emptyList())
-                        ))
-                        .build())
+        return medications.stream()
+                .map(medication -> {
+                    Pupil pupil = pupilMap.get(medication.getPupil().getPupilId());
+                    String gradeName = "Unknown";
+                    if (pupil != null && pupil.getPupilGrade() != null && !pupil.getPupilGrade().isEmpty()) {
+                        gradeName = pupil.getPupilGrade().getFirst().getGradeName();
+                    }
+
+                    return SendMedicationRes.builder()
+                            .pupilId(pupil.getPupilId())
+                            .pupilFirstName(pupil.getFirstName())
+                            .pupilLastName(pupil.getLastName())
+                            .gradeName(gradeName)
+                            .sendMedicationId(medication.getSendMedicationId()) // Use the ID from the medication object
+                            .diseaseName(medication.getDiseaseName())
+                            .medicationItems(sendMedicationMapper.toMedicationItemDtoList(medication.getMedicationItems()))
+                            .build();
+                })
                 .toList();
     }
 

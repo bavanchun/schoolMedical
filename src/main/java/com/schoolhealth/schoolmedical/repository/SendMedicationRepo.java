@@ -98,6 +98,7 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
     JOIN FETCH sm.medicationItems mi
     WHERE sm.pupil.pupilId IN :pupilIds
     AND mi.medicationSchedule = :session
+    AND :date BETWEEN sm.startDate AND sm.endDate
 """)
-    List<SendMedication> findSendMedicationsByPupilIds(@Param("pupilIds") List<String> pupilIds, @Param("session") String session);
+    List<SendMedication> findSendMedicationsByPupilIds(@Param("pupilIds") List<String> pupilIds, @Param("session") String session, @Param("date") LocalDate date);
 }

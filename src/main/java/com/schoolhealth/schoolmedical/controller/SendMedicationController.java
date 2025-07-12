@@ -98,7 +98,7 @@ public class SendMedicationController {
     }
     @GetMapping("/prescription-prepare")
     public ResponseEntity<?> getAllPrescriptionPrepare(@RequestParam Long grade, @RequestParam int session) {
-        List<PupilRes> prescriptionOfPupil = pupilService.getSendMedicationByGradeIdAndSession(grade, session);
+        List<SendMedicationRes> prescriptionOfPupil = pupilService.getSendMedicationByGradeIdAndSession(grade, session);
         return ResponseEntity.ok(prescriptionOfPupil);
     }
 }

@@ -6,8 +6,10 @@ import com.schoolhealth.schoolmedical.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,9 +72,10 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
         SELECT 1 FROM p.sendMedications sm
         JOIN sm.medicationItems mi
         WHERE mi.medicationSchedule = :session and sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
+        and :date BETWEEN sm.startDate AND sm.endDate
     )
 """)
-    List<Pupil> findSendMedicationForPupilByGradeAndSession(Long gradeId, String session);
+    List<Pupil> findSendMedicationForPupilByGradeAndSession(@Param("gradeId") Long gradeId, @Param("session")String session,@Param("date") LocalDate date);
 
 
 

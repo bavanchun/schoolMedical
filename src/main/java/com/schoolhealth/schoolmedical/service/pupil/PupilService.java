@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.service.pupil;
 import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 
 import java.util.List;
 
@@ -25,5 +26,5 @@ public interface PupilService {
     List<PupilRes> getAllPupilsByParent(String parentId);
     PupilRes getPupilGradeById(String pupilId);
     Pupil findPupilById(String pupilId);
-    List<PupilRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session);
+    List<SendMedicationRes> getSendMedicationByGradeIdAndSession(Long gradeId, int session);
 }
