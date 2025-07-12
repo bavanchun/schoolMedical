@@ -25,4 +25,5 @@ public interface SendMedicalService {
     List<SendMedicationRes> getAllSendMedication();
     List<SendMedicationRes> getAllByComplete();
     List<SendMedicationRes> getAllByInProgress();
+
 }

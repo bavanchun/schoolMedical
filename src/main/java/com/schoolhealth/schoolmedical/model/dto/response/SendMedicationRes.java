@@ -19,6 +19,7 @@ public class SendMedicationRes {
     private String pupilId;
     private String pupilFirstName;
     private String pupilLastName;
+    private String gradeName;
     private String senderName;
     private Long sendMedicationId;
     private String diseaseName;
