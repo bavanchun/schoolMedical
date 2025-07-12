@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.schoolhealth.schoolmedical.entity.enums.HealthTypeHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,10 @@ public class ParentHealthRecordResponse {
     private String name;
     private String reactionOrNote;
     private String imageUrl;
-    private boolean isActive;
+
+    @JsonProperty("isActive")
+    private Boolean active;
+
     private HealthTypeHistory typeHistory;
     private String pupilId;
 }

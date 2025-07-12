@@ -19,6 +19,7 @@ public interface ParentHealthRecordMapper {
     HealthConditionHistory toEntity(ParentHealthRecordRequest request);
 
     @Mapping(source = "pupil.pupilId", target = "pupilId")
+    @Mapping(source = "active", target = "active")
     ParentHealthRecordResponse toDto(HealthConditionHistory entity);
 
     List<ParentHealthRecordResponse> toDtoList(List<HealthConditionHistory> entities);
