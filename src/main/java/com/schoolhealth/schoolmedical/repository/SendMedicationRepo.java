@@ -114,6 +114,7 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
         and sm.active = true
         and :date BETWEEN sm.startDate AND sm.endDate
         and sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
+        and pg.startYear = Year(CURRENT_DATE)
 """)
     List<SendMedicationSimpleRes> findSendMedicationByGradeAndSession(
             @Param("gradeId") Long gradeId,
