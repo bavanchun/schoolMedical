@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 /**
  * Request DTO used by parents to create or update a medical/health record for their child.
  */
