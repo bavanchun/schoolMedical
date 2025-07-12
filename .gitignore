@@ -6,6 +6,10 @@
 .env
 # Firebase credentials
 **/firebase/*.json
+
+### idea ###
+.idea/
+
 ### Eclipse ###
 .metadata
 bin/
