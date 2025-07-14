@@ -155,6 +155,7 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService{
         return HealthCheckConsentRes.builder()
                 .consentFormId(consentForm.getConsentFormId())
                 .schoolYear(consentForm.getSchoolYear())
+                .active(consentForm.isActive())
                 .healthCheckHistoryRes(healthCheckHistoryMapper.toHealthCheckHistoryRes(consentForm.getHealthCheckHistory()))
                 .disease(diseaseMapper.toConsentDiseasesDtoList(consentForm.getConsentDiseases()))
                 .build();
