@@ -63,7 +63,7 @@ public class ParentHealthRecordController {
     }
 
     @GetMapping("/pupil/{pupilId}")
-    @PreAuthorize("hasRole('PARENT')")
+    @PreAuthorize("hasAnyRole('PARENT' , 'ADMIN', 'SCHOOL_NURSE', 'MANAGER')")
     @Operation(
             summary = "List health records by pupil",
             description = "Retrieve all health records associated with a pupil",
@@ -80,8 +80,7 @@ public class ParentHealthRecordController {
     public ResponseEntity<List<ParentHealthRecordResponse>> getParentHealthRecordsByPupil(
             @PathVariable String pupilId,
             HttpServletRequest httpRequest) {
-        String parentId = userService.getCurrentUserId(httpRequest);
-        List<ParentHealthRecordResponse> responses = parentHealthRecordService.getAllParentHealthRecordsByPupil(parentId, pupilId);
+        List<ParentHealthRecordResponse> responses = parentHealthRecordService.getAllParentHealthRecordsByPupil(pupilId);
         return ResponseEntity.ok(responses);
     }
 

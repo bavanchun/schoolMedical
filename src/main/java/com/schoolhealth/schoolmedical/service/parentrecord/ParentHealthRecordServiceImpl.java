@@ -40,9 +40,8 @@ public class ParentHealthRecordServiceImpl implements ParentHealthRecordService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<ParentHealthRecordResponse> getAllParentHealthRecordsByPupil(String parentId, String pupilId) {
-        validatePupilOwnership(parentId, pupilId);
-        List<HealthConditionHistory> entities = parentHealthRecordRepository.findByPupilIdAndParentId(pupilId, parentId);
+    public List<ParentHealthRecordResponse> getAllParentHealthRecordsByPupil(String pupilId) {
+        List<HealthConditionHistory> entities = parentHealthRecordRepository.findByPupil_PupilId(pupilId);
         return parentHealthRecordMapper.toDtoList(entities);
     }
 
@@ -81,8 +80,7 @@ public class ParentHealthRecordServiceImpl implements ParentHealthRecordService 
     }
 
     private Pupil validatePupilOwnership(String parentId, String pupilId) {
-        Pupil pupil = parentPupilRepo.findActiveByIdAndParentId(pupilId, parentId)
+        return parentPupilRepo.findActiveByIdAndParentId(pupilId, parentId)
                 .orElseThrow(() -> new UpdateNotAllowedException("Pupil not found or not your child"));
-        return pupil;
     }
 }
