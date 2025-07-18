@@ -49,7 +49,7 @@ public class User implements UserDetails{
 
     @Pattern(regexp = ValidationConstants.PHONE_NUMBER_REGEX,
             message = "Số điện thoại không hợp lệ")
-    @Column(name = "phone_number", nullable = false, length = 12)
+    @Column(name = "phone_number", nullable = false, length = 12, unique = true)
     private String phoneNumber;
 
     @Column(nullable = true)
