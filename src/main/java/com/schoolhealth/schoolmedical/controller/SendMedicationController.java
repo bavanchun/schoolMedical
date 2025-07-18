@@ -1,11 +1,13 @@
 package com.schoolhealth.schoolmedical.controller;
 
-import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
+
 import com.schoolhealth.schoolmedical.model.dto.request.MedicationLogReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SendMedicationReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusSendMedicationReq;
+import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
-import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationSimpleRes;
+import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import com.schoolhealth.schoolmedical.service.sendMedication.MedicationLogsService;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import com.schoolhealth.schoolmedical.service.user.UserService;
@@ -29,6 +31,8 @@ public class SendMedicationController {
     private UserService userService;
     @Autowired
     private MedicationLogsService  medicationLogsService;
+    @Autowired
+    PupilService pupilService;
     @PostMapping()
     public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq, HttpServletRequest request) {
         // Logic to create send medication will go here
@@ -91,6 +95,17 @@ public class SendMedicationController {
     @GetMapping("/allByInProgress")
     public ResponseEntity<?> getAllByInProgress() {
         List<SendMedicationRes> sendMedicationRes = sendMedicalService.getAllByInProgress();
+        return ResponseEntity.ok(sendMedicationRes);
+    }
+    @GetMapping("/prescription-prepare")
+    public ResponseEntity<?> getAllPrescriptionPrepare(@RequestParam Long grade, @RequestParam int session) {
+        List<SendMedicationSimpleRes> prescriptionOfPupil = sendMedicalService.getSendMedicationByGradeAndSession(grade, session, LocalDate.now());
+        return ResponseEntity.ok(prescriptionOfPupil);
+    }
+    @GetMapping("/approved")
+    @PreAuthorize("hasAnyRole('SCHOOL_NURSE', 'MANAGER','ADMIN')")
+    public ResponseEntity<?> getAllApprovedSendMedication() {
+        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getSendMedicationByApproved();
         return ResponseEntity.ok(sendMedicationRes);
     }
 }

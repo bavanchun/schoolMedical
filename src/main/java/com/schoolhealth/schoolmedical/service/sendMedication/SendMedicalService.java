@@ -25,4 +25,7 @@ public interface SendMedicalService {
     List<SendMedicationRes> getAllSendMedication();
     List<SendMedicationRes> getAllByComplete();
     List<SendMedicationRes> getAllByInProgress();
+    List<SendMedicationSimpleRes> getSendMedicationByGradeAndSession(Long gradeId, int session, LocalDate date);
+    List<SendMedicationRes> getSendMedicationByApproved();
+
 }

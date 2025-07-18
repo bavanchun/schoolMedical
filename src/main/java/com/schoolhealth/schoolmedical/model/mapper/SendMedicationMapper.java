@@ -21,6 +21,7 @@ public interface SendMedicationMapper {
     @Mapping(target = "requestedDate", ignore = true)
     @Mapping(target = "active", constant = "true")
     @Mapping(target = "status", constant = "PENDING")
+    @Mapping(target = "diseaseName", expression = "java(sendMedication.getDiseaseName() != null ? sendMedication.getDiseaseName().trim() : null)")
     SendMedication toEntity(SendMedicationReq sendMedication);
 
     @Mapping(target = "medicationId", ignore = true)
@@ -42,6 +43,15 @@ public interface SendMedicationMapper {
     SendMedicationRes toDto(SendMedication sendMedication);
     @IterableMapping(qualifiedByName = "toDto")
     List<SendMedicationRes> toDto(List<SendMedication> sendMedications);
+
+    @Named("toDtoWithPupil")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "sendMedicationId", source = "sendMedicationId")
+    @Mapping(target = "diseaseName", source = "diseaseName")
+    @Mapping(target = "medicationItems", source = "medicationItems")
+    SendMedicationRes toDtoWithPupil(SendMedication sendMedication);
+    @IterableMapping(qualifiedByName = "toDtoWithPupil")
+    List<SendMedicationRes> toDtoWithPupil(List<SendMedication> sendMedications);
 
     MedicationItemRes toMedicationItemDto(MedicationItem medicationItem);
     List<MedicationItemRes> toMedicationItemDtoList(List<MedicationItem> medicationItems);

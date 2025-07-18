@@ -1,12 +1,15 @@
 package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.PupilGrade;
 import com.schoolhealth.schoolmedical.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,4 +61,7 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
     // Method đơn giản để tìm pupil theo ID (không cần PupilGrade)
     @Query("SELECT p FROM Pupil p WHERE p.pupilId = :pupilId AND p.isActive = true")
     Optional<Pupil> findByPupilId(@Param("pupilId") String pupilId);
+
+
+
 }

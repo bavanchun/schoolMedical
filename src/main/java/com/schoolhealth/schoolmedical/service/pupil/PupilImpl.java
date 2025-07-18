@@ -1,20 +1,25 @@
 package com.schoolhealth.schoolmedical.service.pupil;
 
-import com.schoolhealth.schoolmedical.entity.Grade;
 import com.schoolhealth.schoolmedical.entity.Pupil;
+import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.PupilRes;
 import com.schoolhealth.schoolmedical.model.dto.request.AssignClassRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationRes;
 import com.schoolhealth.schoolmedical.model.mapper.PupilMapper;
+import com.schoolhealth.schoolmedical.model.mapper.SendMedicationMapper;
 import com.schoolhealth.schoolmedical.repository.GradeRepository;
 import com.schoolhealth.schoolmedical.repository.PupilRepo;
+import com.schoolhealth.schoolmedical.repository.SendMedicationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.Year;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PupilImpl implements PupilService {
@@ -28,6 +33,11 @@ public class PupilImpl implements PupilService {
     @Autowired
     private PupilMapper pupilMapper;
 
+    @Autowired
+    private SendMedicationMapper sendMedicationMapper;
+
+    @Autowired
+    private SendMedicationRepo sendMedicationRepo;
 
     @Override
     public PupilRes createPupil(PupilRes dto) {
@@ -53,7 +63,7 @@ public class PupilImpl implements PupilService {
 //    public Optional<List<Pupil>> getAll() {
 //        return Optional.ofNullable(pupilRepo.findAll());
     public PupilRes getPupilById(String id) {
-        Optional<Pupil> pupilOptional = pupilRepo.findById(id);
+        Optional<Pupil> pupilOptional = pupilRepo.findPupilById(id);
         if (pupilOptional.isEmpty() || !pupilOptional.get().isActive()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pupil not found");
         }
@@ -88,7 +98,6 @@ public class PupilImpl implements PupilService {
         return pupilRepo.findPupilById(pupilId)
                 .orElseThrow(() -> new NotFoundException("Pupil not found with id: " + pupilId));
     }
-
 
     @Override
     public PupilRes updatePupil(String id, PupilRes dto) {

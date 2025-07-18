@@ -4,6 +4,7 @@ import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication;
 import com.schoolhealth.schoolmedical.model.dto.response.QuantityPupilByGradeRes;
+import com.schoolhealth.schoolmedical.model.dto.response.SendMedicationSimpleRes;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -91,4 +92,33 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
         AND :date BETWEEN sm.startDate AND sm.endDate
 """)
     List<SendMedication> findAllByInProgress(@Param("date") LocalDate date);
+
+
+    @Query("""
+        SELECT new com.schoolhealth.schoolmedical.model.dto.response.SendMedicationSimpleRes(
+            sm.pupil.pupilId, 
+            sm.pupil.firstName, 
+            sm.pupil.lastName, 
+            pg.gradeName, 
+            sm.sendMedicationId, 
+            sm.diseaseName, 
+            mi.medicationName,
+            mi.unitAndUsage
+        )
+        FROM SendMedication sm
+        JOIN sm.medicationItems mi
+        join sm.pupil p 
+        join p.pupilGrade pg
+        WHERE pg.pupilGradeId.gradeId = :gradeId
+        and mi.medicationSchedule = :session 
+        and sm.active = true
+        and :date BETWEEN sm.startDate AND sm.endDate
+        and sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
+        and pg.startYear = Year(CURRENT_DATE)
+""")
+    List<SendMedicationSimpleRes> findSendMedicationByGradeAndSession(
+            @Param("gradeId") Long gradeId,
+            @Param("session") String session,
+            @Param("date") LocalDate date
+    );
 }
