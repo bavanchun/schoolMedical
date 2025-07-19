@@ -236,4 +236,10 @@ public class SendMedicalImpl implements SendMedicalService{
         }
         return sendMedicationRepo.findSendMedicationByGradeAndSession(gradeId, sessionName, date);
     }
+
+    @Override
+    public List<SendMedicationRes> getSendMedicationByApproved() {
+        List<SendMedication> sendMedications = sendMedicationRepo.findAllByStatus(StatusSendMedication.APPROVED);
+        return sendMedicationMapper.toDto(sendMedications);
+    }
 }

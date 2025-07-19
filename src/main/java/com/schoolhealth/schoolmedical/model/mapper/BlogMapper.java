@@ -1,7 +1,9 @@
 package com.schoolhealth.schoolmedical.model.mapper;
 
 import com.schoolhealth.schoolmedical.entity.Blog;
+import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.model.dto.request.BlogRequestDTO;
+import com.schoolhealth.schoolmedical.model.dto.response.AuthorDTO;
 import com.schoolhealth.schoolmedical.model.dto.response.BlogResponseDTO;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -24,7 +26,7 @@ public interface BlogMapper {
     @Mapping(target = "isActive", constant = "true")
     Blog toEntity(BlogRequestDTO dto);
 
-    @Mapping(target = "authorName", expression = "java(extractUserName(blog.getAuthorId()))")
+    @Mapping(target = "author", expression = "java(createAuthorDTO(blog.getAuthorId()))")
     @Mapping(target = "verifierName", expression = "java(extractUserName(blog.getVerifierId()))")
     @Mapping(target = "createdAt", expression = "java(blog.getCreatedAt() != null ? blog.getCreatedAt().atStartOfDay() : null)")
     @Mapping(target = "lastUpdatedAt", expression = "java(blog.getLastUpdatedAt() != null ? blog.getLastUpdatedAt().atStartOfDay() : null)")
@@ -35,14 +37,31 @@ public interface BlogMapper {
     /**
      * Helper method to extract user's full name.
      */
-    default String extractUserName(com.schoolhealth.schoolmedical.entity.User user) {
+    default String extractUserName(User user) {
         if (user == null) {
             return null;
         }
-        String first = user.getFirstName() != null ? user.getFirstName() : "";
         String last = user.getLastName() != null ? user.getLastName() : "";
-        String fullName = (first + " " + last).trim();
+        String first = user.getFirstName() != null ? user.getFirstName() : "";
+        String fullName = (last + " " + first).trim();
         return fullName.isEmpty() ? null : fullName;
+    }
+
+    /**
+     * Helper method to create author information DTO.
+     */
+    default AuthorDTO createAuthorDTO(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        String name = extractUserName(user);
+
+        return AuthorDTO.builder()
+                .name(name)
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .build();
     }
 
     @AfterMapping

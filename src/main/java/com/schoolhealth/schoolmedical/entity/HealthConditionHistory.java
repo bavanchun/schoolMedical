@@ -3,6 +3,9 @@ package com.schoolhealth.schoolmedical.entity;
 import com.schoolhealth.schoolmedical.entity.enums.HealthTypeHistory;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +29,10 @@ public class HealthConditionHistory {
 
     @Column(name = "image_url", nullable = true, length = 255)
     private String imageUrl;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean isActive;

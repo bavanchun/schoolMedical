@@ -22,7 +22,7 @@ public class BlogResponseDTO {
     private String title;
     private String content;
     private String imageUrl;
-    private String authorName;
+    private AuthorDTO author;
     private String verifierName;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;

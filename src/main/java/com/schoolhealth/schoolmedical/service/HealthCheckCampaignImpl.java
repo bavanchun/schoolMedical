@@ -155,7 +155,7 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             List<UserNotification> listNotification = new ArrayList<>();
             for (User parent : parents) {
                 UserNotification notification = UserNotification.builder()
-                        .message("Chiến dịch kiểm tra sức khỏe đã được công bố")
+                        .message("A new health check campaign has started.")
                         .sourceId(campaign.getCampaignId())
                         .typeNotification(TypeNotification.HEALTH_CHECK_CAMPAIGN)
                         .user(parent)
@@ -209,9 +209,26 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 userNotificationService.saveAllUserNotifications(listNotification);
             }
         }else{
+            String message = "Health check campaign completed!";
+            addToNotification(message,campaign1.getCampaignId(), TypeNotification.HEALTH_CHECK_CAMPAIGN);
             campaign1.setStatusHealthCampaign(statusHealthCampaign);
             healthCheckCampaignRepo.save(campaign1);
         }
+    }
+    public void addToNotification (String message, Long sourceId, TypeNotification typeNotification) {
+        List<User> parents = userService.findAllWithPupilByParent();
+        //save notification for parents
+        List<UserNotification> listNotification = new ArrayList<>();
+        for (User parent : parents) {
+            UserNotification notification = UserNotification.builder()
+                    .message(message)
+                    .sourceId(sourceId)
+                    .typeNotification(typeNotification)
+                    .user(parent)
+                    .build();
+            listNotification.add(notification);
+        }
+        userNotificationService.saveAllUserNotifications(listNotification);
     }
 
     @Override

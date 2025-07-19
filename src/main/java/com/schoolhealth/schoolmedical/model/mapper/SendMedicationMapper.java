@@ -21,6 +21,7 @@ public interface SendMedicationMapper {
     @Mapping(target = "requestedDate", ignore = true)
     @Mapping(target = "active", constant = "true")
     @Mapping(target = "status", constant = "PENDING")
+    @Mapping(target = "diseaseName", expression = "java(sendMedication.getDiseaseName() != null ? sendMedication.getDiseaseName().trim() : null)")
     SendMedication toEntity(SendMedicationReq sendMedication);
 
     @Mapping(target = "medicationId", ignore = true)

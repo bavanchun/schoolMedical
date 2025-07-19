@@ -102,4 +102,10 @@ public class SendMedicationController {
         List<SendMedicationSimpleRes> prescriptionOfPupil = sendMedicalService.getSendMedicationByGradeAndSession(grade, session, LocalDate.now());
         return ResponseEntity.ok(prescriptionOfPupil);
     }
+    @GetMapping("/approved")
+    @PreAuthorize("hasAnyRole('SCHOOL_NURSE', 'MANAGER','ADMIN')")
+    public ResponseEntity<?> getAllApprovedSendMedication() {
+        List<SendMedicationRes> sendMedicationRes = sendMedicalService.getSendMedicationByApproved();
+        return ResponseEntity.ok(sendMedicationRes);
+    }
 }
