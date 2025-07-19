@@ -146,7 +146,7 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
             // Create Notifications for parents
             for (User parent : pupil.getParents()) {
                 String message = String.format(
-                        "Thông báo về chiến dịch tiêm chủng '%s' cho học sinh %s %s.",
+                        "Notification regarding the vaccination campaign '%s' for student %s %s.",
                         campaign.getTitleCampaign(),
                         pupil.getLastName(),
                         pupil.getFirstName()
@@ -294,8 +294,8 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
             List<UserNotification> cancellationNotifications = new ArrayList<>();
 
             String baseMessage = String.format(
-                    "THÔNG BÁO HỦY CHIẾN DỊCH: Chiến dịch tiêm chủng '%s' đã bị hủy bỏ. " +
-                            "Xin lỗi vì sự bất tiện này. Để biết thêm chi tiết, vui lòng liên hệ nhà trường.",
+                    "NOTICE OF CANCELLATION: The vaccination campaign '%s' has been canceled." +
+                            "We apologize for any inconvenience caused. For further information, please contact the school.",
                     campaign.getTitleCampaign()
             );
 
@@ -422,15 +422,15 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
             String statusMessage;
 
             switch (consentForm.getStatus()) {
-                case INJECTED -> statusMessage = "đã được tiêm chủng thành công";
-                case NO_SHOW -> statusMessage = "đã vắng mặt trong ngày tiêm chủng";
-                case APPROVED -> statusMessage = "đã được đồng ý nhưng chưa thực hiện tiêm";
-                case REJECTED -> statusMessage = "đã bị từ chối bởi phụ huynh";
-                default -> statusMessage = "chưa có phản hồi từ phụ huynh";
+                case INJECTED -> statusMessage = "Successfully vaccinated";
+                case NO_SHOW -> statusMessage = "Absent on the vaccination day";
+                case APPROVED -> statusMessage = "Approved by parent but not yet vaccinated";
+                case REJECTED -> statusMessage = "Declined by parent";
+                default -> statusMessage = "No response from parent";
             }
 
             String message = String.format(
-                    "Chiến dịch tiêm chủng '%s' đã hoàn thành. Học sinh %s %s %s.",
+                    "The vaccination campaign '%s' has been completed. Student %s %s %s.",
                     campaign.getTitleCampaign(),
                     pupil.getLastName(),
                     pupil.getFirstName(),
