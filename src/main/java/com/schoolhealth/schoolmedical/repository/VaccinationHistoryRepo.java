@@ -32,4 +32,28 @@ public interface VaccinationHistoryRepo extends CrudRepository<VaccinationHistor
 
     @Query("SELECT vh FROM VaccinationHistory vh WHERE vh.pupil = :pupil AND vh.source = :source AND vh.isActive = false ORDER BY vh.vaccinatedAt DESC")
     List<VaccinationHistory> findByPupilAndSourceAndIsActiveFalseOrderByVaccinatedAtDesc(@Param("pupil") Pupil pupil, @Param("source") VaccinationSource source);
+
+    @Query("""
+        SELECT COUNT(DISTINCT vh.pupil.pupilId)
+        FROM VaccinationHistory vh
+        JOIN vh.campaign c
+        WHERE vh.isActive = true AND YEAR(c.startDate) = :year
+    """)
+    Long countPupilsVaccinatedByYear(@Param("year") int year);
+
+    /**
+     * Get vaccination statistics by vaccine type for a year
+     * @param year School year
+     * @return List of Object arrays containing [vaccine_name, count]
+     */
+    @Query("""
+        SELECT v.name, COUNT(DISTINCT vh.pupil.pupilId)
+        FROM VaccinationHistory vh
+        JOIN vh.vaccine v
+        JOIN vh.campaign c
+        WHERE vh.isActive = true AND YEAR(c.startDate) = :year
+        GROUP BY v.name
+        ORDER BY COUNT(DISTINCT vh.pupil.pupilId) DESC
+    """)
+    List<Object[]> getVaccinationStatsByYear(@Param("year") int year);
 }
