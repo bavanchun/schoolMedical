@@ -130,7 +130,7 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                         if (dose.getDoseNumber() != null) {
                             doseNote = (doseNote != null ? doseNote : "") +
                                     (doseNote != null && !doseNote.isEmpty() ? " " : "") +
-                                    "[Mũi " + dose.getDoseNumber() + "]";
+                                    "[Dose " + dose.getDoseNumber() + "]";
                         }
 
                         VaccinationHistory history = VaccinationHistory.builder()
