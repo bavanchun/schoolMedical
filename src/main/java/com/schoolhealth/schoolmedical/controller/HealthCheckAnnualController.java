@@ -11,6 +11,7 @@ import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHist
 import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class HealthCheckAnnualController {
     @PostMapping("/result/{consentId}")
     @PreAuthorize("hasAnyRole('SCHOOL_NURSE', 'MANAGER','ADMIN')")
     public ResponseEntity<?> saveHealthCheckHistory(@RequestBody @Valid HealthCheckHistoryReq healthCheckHistoryReq, @PathVariable Long consentId) {
-        return ResponseEntity.ok(healthCheckHistoryService.saveHealthCheckHistory(healthCheckHistoryReq, consentId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(healthCheckHistoryService.saveHealthCheckHistory(healthCheckHistoryReq, consentId));
     }
     @GetMapping("/result")
     @PreAuthorize("hasAnyRole('PARENT','SCHOOL_NURSE', 'MANAGER','ADMIN')")

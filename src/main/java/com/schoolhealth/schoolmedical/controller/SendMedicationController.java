@@ -14,6 +14,7 @@ import com.schoolhealth.schoolmedical.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class SendMedicationController {
     public ResponseEntity<SendMedicationRes> createSendMedication(@RequestBody SendMedicationReq sendMedicationReq, HttpServletRequest request) {
         // Logic to create send medication will go here
         String parentId = userService.getCurrentUserId(request);
-        return ResponseEntity.ok(sendMedicalService.createSendMedication(sendMedicationReq, parentId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(sendMedicalService.createSendMedication(sendMedicationReq, parentId));
     }
     @GetMapping("/{pupilId}")
     public ResponseEntity<?> getSendMedicationByPupilId(@PathVariable String pupilId) {

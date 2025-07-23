@@ -20,11 +20,6 @@ import java.util.List;
 @Table(name = "health_check_campaign")
 public class HealthCheckCampaign {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "campaign_id", nullable = false, unique = true)
-//    private int campaignId;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "campaign_id", nullable = false, unique = true)
@@ -78,5 +73,4 @@ public class HealthCheckCampaign {
     )
     private List<HealthCheckDisease> healthCheckDiseases;
 
-    // Additional fields and methods can be added as needed
 }
