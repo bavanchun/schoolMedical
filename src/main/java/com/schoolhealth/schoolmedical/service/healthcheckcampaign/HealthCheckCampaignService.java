@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service.HealthCheckCampaign;
+package com.schoolhealth.schoolmedical.service.healthcheckcampaign;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;

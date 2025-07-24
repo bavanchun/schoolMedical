@@ -5,7 +5,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SurveyHealthCheckReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateHealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
-import com.schoolhealth.schoolmedical.service.HealthCheckConsent.HealthCheckConsentService;
+import com.schoolhealth.schoolmedical.service.healthcheckconsent.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service.HealthCheckConsent;
+package com.schoolhealth.schoolmedical.service.healthcheckconsent;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;

@@ -2,7 +2,7 @@ package com.schoolhealth.schoolmedical.service.HealthCheckDisease;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.repository.HealthCheckDiseaseRepo;
-import com.schoolhealth.schoolmedical.service.HealthCheckCampaign.HealthCheckCampaignService;
+import com.schoolhealth.schoolmedical.service.healthcheckcampaign.HealthCheckCampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;

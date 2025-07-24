@@ -8,7 +8,7 @@ import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.*;
 import com.schoolhealth.schoolmedical.repository.NotificationRepo;
 import com.schoolhealth.schoolmedical.service.Disease.DiseaseService;
-import com.schoolhealth.schoolmedical.service.HealthCheckCampaign.HealthCheckCampaignService;
+import com.schoolhealth.schoolmedical.service.healthcheckcampaign.HealthCheckCampaignService;
 import com.schoolhealth.schoolmedical.service.HealthCheckDisease.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;

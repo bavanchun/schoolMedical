@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service.HealthCheckCampaign;
+package com.schoolhealth.schoolmedical.service.healthcheckcampaign;
 
 import com.schoolhealth.schoolmedical.entity.*;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
@@ -12,7 +12,7 @@ import com.schoolhealth.schoolmedical.model.mapper.HealthCheckCampaignMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckConsentMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckCampaignRepo;
 import com.schoolhealth.schoolmedical.service.Disease.DiseaseService;
-import com.schoolhealth.schoolmedical.service.HealthCheckConsent.HealthCheckConsentService;
+import com.schoolhealth.schoolmedical.service.healthcheckconsent.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckDisease.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.Notification.FCMService;
