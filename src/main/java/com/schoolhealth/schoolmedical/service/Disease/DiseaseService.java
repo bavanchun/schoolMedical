@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.Disease;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
@@ -7,7 +7,6 @@ import com.schoolhealth.schoolmedical.model.dto.response.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DiseaseService {
     DiseaseResponse createDisease(DiseaseRequest request);

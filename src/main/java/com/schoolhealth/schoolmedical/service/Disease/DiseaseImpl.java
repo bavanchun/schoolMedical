@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.Disease;
 
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.exception.DiseaseAlreadyExistsException;
@@ -18,11 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class DiseaseImpl implements DiseaseService{
+public class DiseaseImpl implements DiseaseService {
 
     @Autowired
     private DiseaseRepo diseaseRepo;

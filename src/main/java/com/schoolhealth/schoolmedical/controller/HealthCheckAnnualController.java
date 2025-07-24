@@ -5,8 +5,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.request.SurveyHealthCheckReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateHealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
-import com.schoolhealth.schoolmedical.service.HealthCheckConsentService;
-import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
+import com.schoolhealth.schoolmedical.service.HealthCheckConsent.HealthCheckConsentService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryService;
 import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
 import jakarta.validation.Valid;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Year;
 import java.util.List;
 
 @RestController

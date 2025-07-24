@@ -1,6 +1,5 @@
 package com.schoolhealth.schoolmedical.service.HealthCheckHistory;
 
-import com.schoolhealth.schoolmedical.entity.ConsentDisease;
 import com.schoolhealth.schoolmedical.entity.Disease;
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.HealthCheckHistory;
@@ -10,7 +9,7 @@ import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckHistoryMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
 import com.schoolhealth.schoolmedical.repository.HealthCheckHistoryRepo;
-import com.schoolhealth.schoolmedical.service.DiseaseService;
+import com.schoolhealth.schoolmedical.service.Disease.DiseaseService;
 import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

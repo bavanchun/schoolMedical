@@ -5,7 +5,7 @@ import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
-import com.schoolhealth.schoolmedical.service.HealthCheckConsentImpl;
+import com.schoolhealth.schoolmedical.service.HealthCheckConsent.HealthCheckConsentImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

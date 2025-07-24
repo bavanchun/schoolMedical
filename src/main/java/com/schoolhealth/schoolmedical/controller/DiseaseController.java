@@ -3,7 +3,7 @@ package com.schoolhealth.schoolmedical.controller;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.DiseaseVaccineRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
-import com.schoolhealth.schoolmedical.service.DiseaseService;
+import com.schoolhealth.schoolmedical.service.Disease.DiseaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

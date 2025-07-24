@@ -1,21 +1,19 @@
 package com.schoolhealth.schoolmedical.service.Notification;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
-import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
 import com.schoolhealth.schoolmedical.entity.SendMedication;
 import com.schoolhealth.schoolmedical.entity.UserNotification;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.*;
 import com.schoolhealth.schoolmedical.repository.NotificationRepo;
-import com.schoolhealth.schoolmedical.service.DiseaseService;
-import com.schoolhealth.schoolmedical.service.HealthCheckCampaignService;
-import com.schoolhealth.schoolmedical.service.HealthCheckDiseaseService;
+import com.schoolhealth.schoolmedical.service.Disease.DiseaseService;
+import com.schoolhealth.schoolmedical.service.HealthCheckCampaign.HealthCheckCampaignService;
+import com.schoolhealth.schoolmedical.service.HealthCheckDisease.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

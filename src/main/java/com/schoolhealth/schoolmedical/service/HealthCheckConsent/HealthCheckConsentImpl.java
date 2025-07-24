@@ -1,4 +1,4 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.HealthCheckConsent;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class HealthCheckConsentImpl implements HealthCheckConsentService{
+public class HealthCheckConsentImpl implements HealthCheckConsentService {
 
     @Autowired
     private HealthCheckConsentRepo healthCheckConsentRepo;

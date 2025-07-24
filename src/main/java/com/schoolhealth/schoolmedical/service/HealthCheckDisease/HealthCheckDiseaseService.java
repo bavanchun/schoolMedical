@@ -1,7 +1,6 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.HealthCheckDisease;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckDisease;
-import com.schoolhealth.schoolmedical.model.dto.request.SurveyHealthCheckReq;
 
 import java.util.List;
 

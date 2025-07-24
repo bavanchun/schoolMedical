@@ -2,7 +2,7 @@
 
     import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckCampaignReq;
     import com.schoolhealth.schoolmedical.model.dto.request.UpdateStatusHealthCampaignReq;
-    import com.schoolhealth.schoolmedical.service.HealthCheckCampaignService;
+    import com.schoolhealth.schoolmedical.service.HealthCheckCampaign.HealthCheckCampaignService;
     import jakarta.validation.Valid;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.HttpStatus;

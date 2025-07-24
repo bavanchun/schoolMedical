@@ -11,7 +11,7 @@ import com.schoolhealth.schoolmedical.model.mapper.DiseaseMapper;
 import com.schoolhealth.schoolmedical.model.mapper.HealthCheckHistoryMapper;
 import com.schoolhealth.schoolmedical.repository.HealthCheckConsentRepo;
 import com.schoolhealth.schoolmedical.repository.HealthCheckHistoryRepo;
-import com.schoolhealth.schoolmedical.service.DiseaseService;
+import com.schoolhealth.schoolmedical.service.Disease.DiseaseService;
 import com.schoolhealth.schoolmedical.service.HealthCheckHistory.HealthCheckHistoryImpl;
 import com.schoolhealth.schoolmedical.service.consentDisease.ConsentDiseaseService;
 import org.junit.jupiter.api.BeforeEach;
@@ -101,11 +101,14 @@ public class HealthCheckHistoryServiceTest {
     @Test
     void testGetHealthCheckHistoryByPupilIdAndSchoolYear() {
         when(healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023)).thenReturn(List.of(healthCheckHistory));
-        when(healthCheckHistoryMapper.toHealthCheckHistoryRes(any(HealthCheckHistory.class))).thenReturn(new HealthCheckHistoryRes());
+        when(healthCheckHistoryMapper.toHealthCheckHistoryResWithStage(any(HealthCheckHistory.class), any(Integer.class))).thenReturn(new HealthCheckHistoryRes());
 
         List<HealthCheckHistoryRes> result = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023);
 
         assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(healthCheckHistoryRepo).findHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023);
+        verify(healthCheckHistoryMapper).toHealthCheckHistoryResWithStage(any(HealthCheckHistory.class), any(Integer.class));
     }
 
     @Test

@@ -1,8 +1,7 @@
-package com.schoolhealth.schoolmedical.service;
+package com.schoolhealth.schoolmedical.service.HealthCheckConsent;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
-import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
 
 import java.util.List;
