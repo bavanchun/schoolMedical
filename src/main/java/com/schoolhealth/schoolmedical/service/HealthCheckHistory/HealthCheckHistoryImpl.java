@@ -68,11 +68,18 @@ public class HealthCheckHistoryImpl implements HealthCheckHistoryService {
     }
 
     @Override
-    public HealthCheckHistoryRes getHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear) {
-        HealthCheckHistory healthCheckHistory =  healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear)
-                .orElseThrow(() -> new NotFoundException("Health Check History not found for pupil ID: " + pupilId + " and school year: " + schoolYear));
-
-        return healthCheckHistoryMapper.toHealthCheckHistoryRes(healthCheckHistory);
+    public List<HealthCheckHistoryRes> getHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear) {
+        List<HealthCheckHistory> healthCheckHistory =  healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
+        if(healthCheckHistory.isEmpty()) {
+            throw new NotFoundException("Health Check History not found for pupil ID: " + pupilId + " and school year: " + schoolYear);
+        }
+        List<HealthCheckHistoryRes> healthCheckHistoryRes = new ArrayList<>();
+        int state = 0;
+        for(HealthCheckHistory history : healthCheckHistory) {
+            state = state +1;
+            healthCheckHistoryRes.add(healthCheckHistoryMapper.toHealthCheckHistoryResWithStage(history,state));
+        }
+        return healthCheckHistoryRes;
     }
 
     @Override

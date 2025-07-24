@@ -6,8 +6,10 @@ import com.schoolhealth.schoolmedical.model.dto.request.UpdateHealthCheckHistory
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentRes;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 
+import java.util.List;
+
 public interface HealthCheckHistoryService {
     HealthCheckHistory saveHealthCheckHistory(HealthCheckHistoryReq healthCheckHistoryReq, Long healthCheckConsentId);
-    HealthCheckHistoryRes getHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);
+    List<HealthCheckHistoryRes> getHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);
     HealthCheckConsentRes updateHealthCheckHistory(UpdateHealthCheckHistoryReq healthCheckHistory, Long healthCheckConsentId);
 }

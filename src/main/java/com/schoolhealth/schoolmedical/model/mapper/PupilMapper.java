@@ -28,6 +28,7 @@ public interface PupilMapper {
     @Mapping(target = "gradeLevel", expression = "java(pupil.getPupilGrade().getFirst().getGrade().getGradeLevel())")
     @Mapping(target = "gradeName", expression = "java(pupil.getPupilGrade().getFirst().getGradeName())")
     @Mapping(target = "parents", source = "pupil.parents")
+    @Mapping(target = "sendMedications", ignore = true)
     PupilRes toDto(Pupil pupil);
 
 

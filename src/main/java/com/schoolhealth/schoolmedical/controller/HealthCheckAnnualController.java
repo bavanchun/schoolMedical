@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Year;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/management/health-check/annual")
@@ -43,7 +44,7 @@ public class HealthCheckAnnualController {
     @GetMapping("/result")
     @PreAuthorize("hasAnyRole('PARENT','SCHOOL_NURSE', 'MANAGER','ADMIN')")
     public ResponseEntity<?> getHealthCheckHistoryByPupilIdAndSchoolYear(@RequestParam String pupilId, @RequestParam int schoolYear) {
-        HealthCheckHistoryRes healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
+        List<HealthCheckHistoryRes> healthCheckHistory = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear(pupilId, schoolYear);
         return ResponseEntity.ok(healthCheckHistory);
     }
     @PatchMapping("/disease")

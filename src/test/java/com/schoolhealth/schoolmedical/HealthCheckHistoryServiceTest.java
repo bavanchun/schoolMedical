@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,17 +100,17 @@ public class HealthCheckHistoryServiceTest {
 
     @Test
     void testGetHealthCheckHistoryByPupilIdAndSchoolYear() {
-        when(healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023)).thenReturn(Optional.of(healthCheckHistory));
+        when(healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023)).thenReturn(List.of(healthCheckHistory));
         when(healthCheckHistoryMapper.toHealthCheckHistoryRes(any(HealthCheckHistory.class))).thenReturn(new HealthCheckHistoryRes());
 
-        HealthCheckHistoryRes result = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023);
+        List<HealthCheckHistoryRes> result = healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023);
 
         assertNotNull(result);
     }
 
     @Test
     void testGetHealthCheckHistoryByPupilIdAndSchoolYear_NotFound() {
-        when(healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023)).thenReturn(Optional.empty());
+        when(healthCheckHistoryRepo.findHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023)).thenReturn(Collections.emptyList());
 
         assertThrows(NotFoundException.class, () -> {
             healthCheckHistoryService.getHealthCheckHistoryByPupilIdAndSchoolYear("P1", 2023);

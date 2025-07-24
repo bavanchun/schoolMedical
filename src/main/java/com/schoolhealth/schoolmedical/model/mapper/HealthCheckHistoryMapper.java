@@ -5,10 +5,9 @@ import com.schoolhealth.schoolmedical.model.dto.request.HealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.request.UpdateHealthCheckHistoryReq;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckHistoryRes;
 import org.hibernate.sql.Update;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {HealthCheckConsentMapper.class, DiseaseMapper.class})
 public interface HealthCheckHistoryMapper {
@@ -21,8 +20,13 @@ public interface HealthCheckHistoryMapper {
     })
     HealthCheckHistory toHealthCheckHistory(HealthCheckHistoryReq historyReq);
 
+
     @Mapping(target = "healthId", source = "healthId")
     HealthCheckHistoryRes toHealthCheckHistoryRes(HealthCheckHistory history);
+
+    @Mapping(target = "stage", source = "stage")
+    HealthCheckHistoryRes toHealthCheckHistoryResWithStage(HealthCheckHistory history, int stage);
+
 
 
     @Mapping(target = "createdAt", ignore = true)
