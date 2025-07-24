@@ -121,6 +121,13 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>9.5.0</version>
 		</dependency>
+
+		<!-- http://mvnrepository.com/artifact/com.opencsv/opencsv -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.9</version>
+		</dependency>
 	</dependencies>
 
 	<build>
