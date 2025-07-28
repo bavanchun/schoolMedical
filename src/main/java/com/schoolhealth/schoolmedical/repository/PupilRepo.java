@@ -62,6 +62,11 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
     @Query("SELECT p FROM Pupil p WHERE p.pupilId = :pupilId AND p.isActive = true")
     Optional<Pupil> findByPupilId(@Param("pupilId") String pupilId);
 
-
+    @Query("""
+        SELECT COUNT(DISTINCT p.pupilId) FROM Pupil p
+        JOIN p.pupilGrade pg
+        WHERE p.isActive = true AND pg.startYear = :year
+    """)
+    Long countActivePupilsByYear(@Param("year") int year);
 
 }

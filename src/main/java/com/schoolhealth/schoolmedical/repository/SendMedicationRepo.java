@@ -121,4 +121,29 @@ public interface SendMedicationRepo extends JpaRepository<SendMedication, Long> 
             @Param("session") String session,
             @Param("date") LocalDate date
     );
+
+    @Query("""
+        SELECT COUNT(DISTINCT sm.pupil.pupilId)
+        FROM SendMedication sm
+        JOIN sm.pupil p
+        JOIN p.pupilGrade pg
+        WHERE sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
+        AND sm.active = true
+        AND pg.startYear = :year
+    """)
+    Long countPupilsWithPrescriptionsByYear(@Param("year") int year);
+
+
+    @Query("""
+        SELECT sm.diseaseName
+        FROM SendMedication sm
+        JOIN sm.pupil p
+        JOIN p.pupilGrade pg
+        WHERE sm.status = com.schoolhealth.schoolmedical.entity.enums.StatusSendMedication.APPROVED
+        AND sm.active = true
+        AND pg.startYear = :year
+        GROUP BY sm.diseaseName
+        ORDER BY COUNT(sm.diseaseName) DESC
+    """)
+    List<String> getCommonDiseaseTypesByYear(@Param("year") int year);
 }
