@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.service.healthcheckcampaign;
 
 import com.schoolhealth.schoolmedical.entity.*;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -151,21 +153,10 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                 healthCheckConsentForm.add(consentForm);
             }
             healthCheckConsentService.saveAll(healthCheckConsentForm);
+            String message = "A new health check campaign \"" + campaign.getTitle() + "\" has been published. Please check the details in the app.";
+            userNotificationService.addToNotification(message, campaign.getCampaignId(), TypeNotification.HEALTH_CHECK_CAMPAIGN, Role.PARENT);
 
-//            List<User> parents = userService.findAllByRole(Role.PARENT);
             List<User> parents = userService.findAllWithPupilByParent();
-            //save notification for parents
-            List<UserNotification> listNotification = new ArrayList<>();
-            for (User parent : parents) {
-                UserNotification notification = UserNotification.builder()
-                        .message("A new health check campaign has started.")
-                        .sourceId(campaign.getCampaignId())
-                        .typeNotification(TypeNotification.HEALTH_CHECK_CAMPAIGN)
-                        .user(parent)
-                        .build();
-                listNotification.add(notification);
-            }
-            userNotificationService.saveAllUserNotifications(listNotification);
             //notification to parents
             Map<String, List<Pupil>> pupilsByParent = parents.stream()
                     .filter(parent -> parent.getDeviceToken() != null && !parent.getDeviceToken().isEmpty())
@@ -197,41 +188,42 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
             HealthCheckCampaign campaign = healthCheckCampaignRepo.save(campaign1);
 
             if (originalStatus == StatusHealthCampaign.PUBLISHED) {
-                List<User> parents = userService.findAllWithPupilByParent();
-                //save notification for parents
-                List<UserNotification> listNotification = new ArrayList<>();
-                for (User parent : parents) {
-                    UserNotification notification = UserNotification.builder()
-                            .message("The health check campaign has been cancelled")
-                            .sourceId(campaign.getCampaignId())
-                            .typeNotification(TypeNotification.HEALTH_CHECK_CAMPAIGN)
-                            .user(parent)
-                            .build();
-                    listNotification.add(notification);
+                String message = "The health check campaign \"" + campaign.getTitle() + "\" has been removed and will no longer take place.";
+                userNotificationService.addToNotification(message, campaign.getCampaignId(), TypeNotification.HEALTH_CHECK_CAMPAIGN, Role.PARENT);
+            }
+        }else{
+            campaign1.setStatusHealthCampaign(statusHealthCampaign);
+            healthCheckCampaignRepo.save(campaign1);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            String formattedDate = campaign1.getStartExaminationDate().format(formatter);
+            String message = "The health check campaign \"" +
+                    campaign1.getTitle() +
+                    "\" held on " +
+                    formattedDate +
+                    " has been completed.";
+
+            userNotificationService.addToNotification(message,campaign1.getCampaignId(), TypeNotification.HEALTH_CHECK_CAMPAIGN, Role.PARENT);
+            List<HealthCheckConsentForm> healthCheckConsentForm = healthCheckConsentService.getHealthCheckConsentByNotYetAndCampaign(campaign1);
+            List<UserNotification> listNotification = new ArrayList<>();
+            if(!healthCheckConsentForm.isEmpty()){
+                for (HealthCheckConsentForm consentForm : healthCheckConsentForm) {
+                    Pupil pupil = consentForm.getPupil();
+                    // Send notification to parents
+                    String messageToParent = "Your child " + pupil.getLastName() + " " + pupil.getFirstName() +
+                            " has not yet participated in the health check campaign \"" + campaign1.getTitle() + "\".";
+                    for( User user : pupil.getParents()) {
+                        UserNotification notification = UserNotification.builder()
+                                .message(messageToParent)
+                                .sourceId(campaign1.getCampaignId())
+                                .typeNotification(TypeNotification.HEALTH_CHECK_CAMPAIGN)
+                                .user(user)
+                                .build();
+                        listNotification.add(notification);
+                    }
                 }
                 userNotificationService.saveAllUserNotifications(listNotification);
             }
-        }else{
-            String message = "Health check campaign completed!";
-            addToNotification(message,campaign1.getCampaignId(), TypeNotification.HEALTH_CHECK_CAMPAIGN);
-            campaign1.setStatusHealthCampaign(statusHealthCampaign);
-            healthCheckCampaignRepo.save(campaign1);
         }
-    }
-    public void addToNotification (String message, Long sourceId, TypeNotification typeNotification) {
-        List<User> parents = userService.findAllWithPupilByParent();
-        //save notification for parents
-        List<UserNotification> listNotification = new ArrayList<>();
-        for (User parent : parents) {
-            UserNotification notification = UserNotification.builder()
-                    .message(message)
-                    .sourceId(sourceId)
-                    .typeNotification(typeNotification)
-                    .user(parent)
-                    .build();
-            listNotification.add(notification);
-        }
-        userNotificationService.saveAllUserNotifications(listNotification);
     }
 
     @Override

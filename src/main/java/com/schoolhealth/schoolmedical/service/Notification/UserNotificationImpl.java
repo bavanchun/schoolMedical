@@ -2,7 +2,9 @@ package com.schoolhealth.schoolmedical.service.Notification;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.SendMedication;
+import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.UserNotification;
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.entity.enums.TypeNotification;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
 import com.schoolhealth.schoolmedical.model.mapper.*;
@@ -12,10 +14,12 @@ import com.schoolhealth.schoolmedical.service.healthcheckcampaign.HealthCheckCam
 import com.schoolhealth.schoolmedical.service.HealthCheckDisease.HealthCheckDiseaseService;
 import com.schoolhealth.schoolmedical.service.pupil.PupilService;
 import com.schoolhealth.schoolmedical.service.sendMedication.SendMedicalService;
+import com.schoolhealth.schoolmedical.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,6 +49,9 @@ public class UserNotificationImpl implements UserNotificationService {
     private SendMedicalService sendMedicalService;
     @Autowired
     private SendMedicationMapper sendMedicationMapper;
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public List<UserNotification> saveAllUserNotifications(List<UserNotification> userNotification) {
@@ -77,6 +84,22 @@ public class UserNotificationImpl implements UserNotificationService {
     public List<NotificationRes> getAllNotificationsByParentId(String parentId) {
         List<UserNotification> userNotification = notificationRepo.findAllByUserId(parentId);
         return notificationMapper.toDto(userNotification);
+    }
+
+    @Override
+    public void addToNotification(String message, Long sourceId, TypeNotification typeNotification, Role role) {
+        List<User> users = userService.findAllByRole(role);
+        List<UserNotification> listNotification = new ArrayList<>();
+        for( User user : users) {
+            UserNotification notification = UserNotification.builder()
+                    .message(message)
+                    .sourceId(sourceId)
+                    .typeNotification(typeNotification)
+                    .user(user)
+                    .build();
+            listNotification.add(notification);
+        }
+        saveAllUserNotifications(listNotification);
     }
 
     public NotificationHealthCampaignRes getHealthCheckCampaignResponse(Long id, String pupilId) {

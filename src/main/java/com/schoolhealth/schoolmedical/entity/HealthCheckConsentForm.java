@@ -26,7 +26,6 @@ public class HealthCheckConsentForm {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pupil_id", nullable = false)
-
     private Pupil pupil;
 
     @OneToOne(mappedBy = "healthCheckConsentForm", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)

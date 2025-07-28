@@ -53,4 +53,5 @@
         public ResponseEntity<?> updateHealthCheckCampaign(@PathVariable Long campaignId, @RequestBody HealthCheckCampaignReq healthCheckCampaign) {
             return ResponseEntity.ok(healthCheckCampaignService.updateHealthCheckCampaignAndDiseases(campaignId,healthCheckCampaign));
         }
+
     }
