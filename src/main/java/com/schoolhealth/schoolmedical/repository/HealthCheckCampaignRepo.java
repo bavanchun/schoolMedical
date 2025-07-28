@@ -29,13 +29,16 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     List<HealthCheckCampaign> findAllByActiveTrue();
 
     @Query("""
-        SELECT hc.title, COUNT(DISTINCT h.healthCheckConsentForm.pupil.pupilId)
+        SELECT
+            hc.title,
+            COUNT(DISTINCT hcf.consentFormId),
+            COUNT(DISTINCT hch.healthId)
         FROM HealthCheckCampaign hc
-        LEFT JOIN HealthCheckConsentForm hcf ON hc.campaignId = hcf.healthCheckCampaign.campaignId
-        LEFT JOIN HealthCheckHistory h ON hcf.consentFormId = h.healthCheckConsentForm.consentFormId
-        WHERE hc.active = true AND YEAR(hc.createdAt) = :year AND h.active = true
+        LEFT JOIN HealthCheckConsentForm hcf ON hc.campaignId = hcf.healthCheckCampaign.campaignId AND hcf.active = true
+        LEFT JOIN HealthCheckHistory hch ON hcf.consentFormId = hch.healthCheckConsentForm.consentFormId AND hch.active = true
+        WHERE hc.active = true AND YEAR(hc.createdAt) = :year
         GROUP BY hc.campaignId, hc.title
         ORDER BY hc.createdAt ASC
     """)
-    List<Object[]> getCampaignStatsByYear(@Param("year") int year);
+    List<Object[]> getHealthCheckCampaignStatsByYear(@Param("year") int year);
 }
