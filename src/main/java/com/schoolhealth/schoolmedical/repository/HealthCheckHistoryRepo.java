@@ -17,7 +17,7 @@ public interface HealthCheckHistoryRepo extends JpaRepository<HealthCheckHistory
             "left JOIN FETCH cd.disease " +
             "WHERE hc.pupil.pupilId = :pupilId " +
             "AND hc.schoolYear = :schoolYear")
-    Optional<HealthCheckHistory> findHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);
+    List<HealthCheckHistory> findHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);
 
     @Query("""
         SELECT COUNT(DISTINCT hc)
