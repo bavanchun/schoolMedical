@@ -30,17 +30,21 @@ public interface DashboardMapper {
                     Long totalConsentForms = ((Number) data[1]).longValue();
                     Long totalExaminations = ((Number) data[2]).longValue();
 
-                    // Business logic:
-                    // - Agreed: pupils who have consent forms
-                    // - Examined: pupils who have health check history
-                    // - Absent: pupils who agreed but not examined
-                    // - Disagreed: for now, set to 0 (can be calculated differently if needed)
+                    // Business logic for Health Check Campaigns:
+                    // - totalPupils: all pupils who received notifications (consent forms created)
+                    // - examinedCount: pupils who completed health check (have health history)
+                    // - absentCount: pupils who received notification but haven't been examined
+                    // - agreedCount: all pupils notified (implicit agreement when consent form created)
+                    // - disagreedCount: 0 (no explicit disagreement mechanism in health check)
 
-                    Long agreedCount = totalConsentForms;
-                    Long examinedCount = totalExaminations;
-                    Long absentCount = agreedCount - examinedCount;
-                    Long disagreedCount = 0L; // This would need additional logic to calculate properly
-                    Long totalPupils = agreedCount + disagreedCount;
+                    Long totalPupils = totalConsentForms;  // Total pupils notified
+                    Long examinedCount = totalExaminations;  // Pupils who completed health check
+                    Long absentCount = totalPupils - examinedCount;  // Notified but not examined
+
+                    // For health check campaigns, consent form creation implies agreement
+                    // There's no explicit disagree mechanism like in vaccination campaigns
+                    Long agreedCount = totalPupils;
+                    Long disagreedCount = 0L;
 
                     return HealthCheckCampaignStatisticsDto.builder()
                             .campaignTitle(campaignTitle)
@@ -113,13 +117,14 @@ public interface DashboardMapper {
                     Long waitingCount = statusCounts.getOrDefault(ConsentFormStatus.WAITING, 0L);
 
                     // Business logic for counts:
-                    // - Agreed: APPROVED + INJECTED + NO_SHOW (pupils who initially approved)
-                    // - Disagreed: REJECTED + WAITING
-                    // - Vaccinated: INJECTED only
-                    // - Absent: NO_SHOW only
+                    // - totalPupils: ALL consent forms created (all statuses)
+                    // - agreedCount: APPROVED + INJECTED + NO_SHOW (pupils who initially approved)
+                    // - disagreedCount: REJECTED + WAITING
+                    // - vaccinatedCount: INJECTED only
+                    // - absentCount: NO_SHOW only
+                    Long totalPupils = approvedCount + injectedCount + noShowCount + rejectedCount + waitingCount;
                     Long agreedCount = approvedCount + injectedCount + noShowCount;
                     Long disagreedCount = rejectedCount + waitingCount;
-                    Long totalPupils = agreedCount + disagreedCount;
 
                     return VaccinationCampaignStatisticsDto.builder()
                             .campaignTitle(campaignTitle)

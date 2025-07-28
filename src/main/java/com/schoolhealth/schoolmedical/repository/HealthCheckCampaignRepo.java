@@ -31,8 +31,8 @@ public interface HealthCheckCampaignRepo extends JpaRepository<HealthCheckCampai
     @Query("""
         SELECT
             hc.title,
-            COUNT(DISTINCT hcf.consentFormId),
-            COUNT(DISTINCT hch.healthId)
+            COUNT(hcf.consentFormId),
+            COUNT(hch.healthId)
         FROM HealthCheckCampaign hc
         LEFT JOIN HealthCheckConsentForm hcf ON hc.campaignId = hcf.healthCheckCampaign.campaignId AND hcf.active = true
         LEFT JOIN HealthCheckHistory hch ON hcf.consentFormId = hch.healthCheckConsentForm.consentFormId AND hch.active = true
