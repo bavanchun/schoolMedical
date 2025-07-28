@@ -50,7 +50,7 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
                 .campaign(consentForm.getCampaign())
                 .source(VaccinationSource.CAMPAIGN)
                 .vaccinatedAt(LocalDate.now().atTime(LocalTime.NOON))
-                .notes("Tiêm trong chiến dịch: " + consentForm.getCampaign().getTitleCampaign())
+                .notes("Injection in the campaign: " + consentForm.getCampaign().getTitleCampaign())
                 .isActive(true)
                 .build();
 
