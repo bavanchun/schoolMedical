@@ -19,11 +19,11 @@ public interface HealthCheckHistoryRepo extends JpaRepository<HealthCheckHistory
     Optional<HealthCheckHistory> findHealthCheckHistoryByPupilIdAndSchoolYear(String pupilId, int schoolYear);
 
     @Query("""
-        SELECT COUNT(DISTINCT hc.pupil.pupilId)
-        FROM HealthCheckHistory h
-        JOIN h.healthCheckConsentForm hc
-        WHERE h.active = true AND hc.schoolYear = :year
+        SELECT COUNT(DISTINCT hc)
+        FROM HealthCheckCampaign hc
+        WHERE hc.active = true AND YEAR(hc.createdAt) = :year
+        AND hc.statusHealthCampaign = com.schoolhealth.schoolmedical.entity.enums.StatusHealthCampaign.COMPLETED
     """)
-    Long countPupilsWithHealthCheckByYear(@Param("year") int year);
+    Long countCompletedHealthCheckCampaignsByYear(@Param("year") int year);
 }
 

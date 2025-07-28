@@ -34,12 +34,12 @@ public interface VaccinationHistoryRepo extends CrudRepository<VaccinationHistor
     List<VaccinationHistory> findByPupilAndSourceAndIsActiveFalseOrderByVaccinatedAtDesc(@Param("pupil") Pupil pupil, @Param("source") VaccinationSource source);
 
     @Query("""
-        SELECT COUNT(DISTINCT vh.pupil.pupilId)
-        FROM VaccinationHistory vh
-        JOIN vh.campaign c
-        WHERE vh.isActive = true AND YEAR(c.startDate) = :year
+        SELECT COUNT(DISTINCT c)
+        FROM VaccinationCampagin c
+        WHERE c.isActive = true AND YEAR(c.startDate) = :year
+        AND c.status = com.schoolhealth.schoolmedical.entity.enums.VaccinationCampaignStatus.COMPLETED
     """)
-    Long countPupilsVaccinatedByYear(@Param("year") int year);
+    Long countCompletedVaccinationCampaignsByYear(@Param("year") int year);
 
     /**
      * Get vaccination statistics by vaccine type for a year

@@ -31,11 +31,11 @@ public class DashboardServiceImpl implements DashboardService {
         try {
             // Get basic counts
             Long totalPupils = pupilRepo.countActivePupilsByYear(year);
-            Long totalHealthChecks = healthCheckHistoryRepo.countPupilsWithHealthCheckByYear(year);
-            Long totalVaccinations = vaccinationHistoryRepo.countPupilsVaccinatedByYear(year);
+            Long totalHealthChecks = healthCheckHistoryRepo.countCompletedHealthCheckCampaignsByYear(year);
+            Long totalVaccinations = vaccinationHistoryRepo.countCompletedVaccinationCampaignsByYear(year);
             Long totalMedicalEvents = medicalEventRepository.countMedicalEventsByYear(year);
 
-            log.debug("Basic counts - Pupils: {}, Health Checks: {}, Vaccinations: {}, Medical Events: {}",
+            log.debug("Basic counts - Pupils: {}, Health Check Campaigns: {}, Vaccination Campaigns: {}, Medical Events: {}",
                     totalPupils, totalHealthChecks, totalVaccinations, totalMedicalEvents);
 
             // Get prescription statistics
