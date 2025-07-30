@@ -134,10 +134,8 @@ public class VaccinationConsentFormServiceImpl implements VaccinationConsentForm
     public List<VaccinationConsentFormResponse> getMyConsentForms(String parentUserId) {
         log.info("Getting consent forms for parent {}", parentUserId);
 
-        User parent = userRepository.findById(parentUserId)
-                .orElseThrow(() -> new EntityNotFoundException("User", "id", parentUserId));
-
-        List<Pupil> children = pupilRepo.findByParent(parent);
+        // Use the method that filters by current year instead of all years
+        List<Pupil> children = pupilRepo.getAllPupilsByParent(parentUserId);
 
         return children.stream()
                 .flatMap(pupil -> {
