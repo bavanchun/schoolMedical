@@ -23,5 +23,7 @@ public interface DiseaseRepo extends JpaRepository<Disease, Long> {
     List<Disease> findAllByisActiveTrueAndIsInjectedVaccinationFalse();
     Page<Disease> findAllByisActiveTrueAndIsInjectedVaccinationFalse(Pageable pageable);
 
+    List<Disease> findAllByisActiveTrueAndIsInjectedVaccinationTrue();
+
     List<Disease> findAllByDiseaseIdInAndIsActiveTrue(List<Long> diseaseIds);
 }

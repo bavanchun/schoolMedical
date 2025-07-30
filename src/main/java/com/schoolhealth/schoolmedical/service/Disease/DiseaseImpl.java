@@ -213,7 +213,7 @@ public class DiseaseImpl implements DiseaseService {
     @Override
     @Transactional
     public DiseaseWithVaccinesWrapper getAllDiseasesWithVaccines() {
-        List<Disease> diseases = diseaseRepo.findAllByisActiveTrue();
+        List<Disease> diseases = diseaseRepo.findAllByisActiveTrueAndIsInjectedVaccinationTrue();
 
         List<DiseaseVaccineInfo> diseaseVaccineInfos = diseases.stream()
                 .map(disease -> {
