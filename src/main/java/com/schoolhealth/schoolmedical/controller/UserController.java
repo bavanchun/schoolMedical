@@ -100,7 +100,8 @@ public class UserController {
     public ResponseEntity<?> getUserCount() {
         return ResponseEntity.ok(userService.getTotalUsersGroupedByRole());
     }
-    @PatchMapping("/role")
+
+    @PatchMapping("/role/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Update user role",
@@ -111,7 +112,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Invalid request or role value"),
             @ApiResponse(responseCode = "404", description = "User not found with the provided ID")
     })
-    public ResponseEntity<?> updateUserRole(@RequestParam String userId, @RequestParam Role role) {
+    public ResponseEntity<?> updateUserRole(@PathVariable String userId, @RequestParam Role role) {
             userService.updateRoleForUser(userId, role);
             return ResponseEntity.ok("User role updated successfully");
     }
@@ -129,5 +130,21 @@ public class UserController {
     })
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok(userService.getAll());
+    }
+
+    @PatchMapping("/active/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Update user active status",
+            description = "API to update a user's active status based on their ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User active status updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found with the provided ID"),
+            @ApiResponse(responseCode = "400", description = "Invalid request or active status value")
+    })
+    public ResponseEntity<?> updateUserActiveStatus(@PathVariable String userId, @RequestParam boolean active) {
+        userService.updateActiveStatus(userId, active);
+        return ResponseEntity.ok("User active status updated successfully");
     }
 }

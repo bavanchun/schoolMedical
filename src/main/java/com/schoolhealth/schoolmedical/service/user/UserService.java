@@ -28,4 +28,5 @@ public interface UserService {
     void updateRoleForUser(String userId, Role role);
 
     List<UserResponse> getAll();
+    void updateActiveStatus(String userId, boolean active);
 }

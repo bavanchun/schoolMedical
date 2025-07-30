@@ -136,4 +136,12 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    @Override
+    public void updateActiveStatus(String userId, boolean active) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        user.setActive(active);
+        userRepository.save(user);
+    }
+
 }
