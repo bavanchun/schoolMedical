@@ -349,10 +349,14 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
             throw new IllegalStateException("Campaign can only be deleted when in PENDING or PUBLISHED status. Current status: " + campaign.getStatus());
         }
 
-        // If campaign is PUBLISHED, send cancellation notifications to parents before deleting
         if (campaign.getStatus() == VaccinationCampaignStatus.PUBLISHED) {
+            // Send cancellation notifications to parents before deleting
             sendCancellationNotificationToParents(campaign);
             log.info("Sent cancellation notifications to parents for published campaign: {}", campaignId);
+
+            // Soft delete all consent forms related to this campaign
+            deleteConsentFormsForCampaign(campaign);
+            log.info("Soft deleted all consent forms for published campaign: {}", campaignId);
         }
 
         // Soft delete the campaign
@@ -455,6 +459,31 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
     }
 
 
+    private void deleteConsentFormsForCampaign(VaccinationCampagin campaign) {
+        try {
+            // Find all consent forms for this campaign
+            List<VaccinationConsentForm> consentForms = consentFormRepo.findByCampaign(campaign);
 
+            if (consentForms.isEmpty()) {
+                log.info("No consent forms found for campaign: {}", campaign.getCampaignId());
+                return;
+            }
+
+            // Soft delete all consent forms by setting isActive = false
+            consentForms.forEach(form -> form.setActive(false));
+
+            // Batch update all consent forms
+            consentFormRepo.saveAll(consentForms);
+
+            log.info("Successfully soft deleted {} consent forms for campaign: {}",
+                    consentForms.size(), campaign.getCampaignId());
+
+        } catch (Exception e) {
+            log.error("Failed to delete consent forms for campaign: {}",
+                    campaign.getCampaignId(), e);
+            // Don't fail the entire deletion if consent form cleanup fails
+            throw new RuntimeException("Failed to cleanup consent forms for campaign: " + campaign.getCampaignId(), e);
+        }
+    }
 
 }
