@@ -115,4 +115,19 @@ public class UserController {
             userService.updateRoleForUser(userId, role);
             return ResponseEntity.ok("User role updated successfully");
     }
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Get all users",
+            description = "API to retrieve a list of all users in the system"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
+                    @Content(schema = @Schema(implementation = UserResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Error occurred while retrieving users")
+    })
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
+    }
 }

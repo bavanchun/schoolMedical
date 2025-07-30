@@ -26,4 +26,6 @@ public interface UserService {
 
     TotalUser getTotalUsersGroupedByRole();
     void updateRoleForUser(String userId, Role role);
+
+    List<UserResponse> getAll();
 }

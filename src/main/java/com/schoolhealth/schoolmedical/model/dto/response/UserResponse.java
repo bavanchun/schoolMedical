@@ -31,5 +31,5 @@ public class UserResponse {
     private LocalDate createdAt;
 
     private Role role;
-
+    private boolean active;
 }
