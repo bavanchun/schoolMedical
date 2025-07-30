@@ -1,6 +1,7 @@
 package com.schoolhealth.schoolmedical.controller;
 
 import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.TotalUser;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -82,5 +82,21 @@ public class UserController {
         return isUpdated
             ? ResponseEntity.ok("Device token updated successfully")
             : ResponseEntity.status(500).body("Failed to update device token");
+    }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Get total number of users",
+            description = "API to retrieve the total number of users in the system"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user count", content = {
+                    @Content(schema = @Schema(implementation = TotalUser.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Error occurred while retrieving user count")
+    })
+    public ResponseEntity<?> getUserCount() {
+        return ResponseEntity.ok(userService.getTotalUsersGroupedByRole());
     }
 }
