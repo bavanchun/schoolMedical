@@ -120,4 +120,12 @@ public class UserServiceImpl implements UserService {
         throw new NotFoundException("No user data found to group by role");
     }
 
+    @Override
+    public void updateRoleForUser(String userId, Role role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        user.setRole(role);
+        userRepository.save(user);
+    }
+
 }

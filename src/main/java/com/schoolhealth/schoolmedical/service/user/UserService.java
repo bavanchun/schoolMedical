@@ -25,4 +25,5 @@ public interface UserService {
     boolean changePassword(String userId, ChangePasswordRequest request);
 
     TotalUser getTotalUsersGroupedByRole();
+    void updateRoleForUser(String userId, Role role);
 }

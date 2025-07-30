@@ -1,5 +1,6 @@
 package com.schoolhealth.schoolmedical.controller;
 
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
 import com.schoolhealth.schoolmedical.model.dto.response.TotalUser;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
@@ -98,5 +99,20 @@ public class UserController {
     })
     public ResponseEntity<?> getUserCount() {
         return ResponseEntity.ok(userService.getTotalUsersGroupedByRole());
+    }
+    @PatchMapping("/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Update user role",
+            description = "API to update a user's role based on their ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User role updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request or role value"),
+            @ApiResponse(responseCode = "404", description = "User not found with the provided ID")
+    })
+    public ResponseEntity<?> updateUserRole(@RequestParam String userId, @RequestParam Role role) {
+            userService.updateRoleForUser(userId, role);
+            return ResponseEntity.ok("User role updated successfully");
     }
 }
