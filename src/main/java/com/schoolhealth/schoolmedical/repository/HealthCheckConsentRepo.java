@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.repository;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
+import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckConsentFlatData;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -88,6 +89,13 @@ public interface HealthCheckConsentRepo extends JpaRepository<HealthCheckConsent
 """)
     List<HealthCheckConsentForm> findAllByPupilPupilIdIn(@Param("pupilId") String pupilId );
 
-    @EntityGraph(attributePaths = {"pupil","pupil.parents"})
-    List<HealthCheckConsentForm> findAllByActiveFalseAndHealthCheckCampaign(HealthCheckCampaign healthCheckCampaign);
+
+    @Query("""
+    SELECT p FROM HealthCheckConsentForm hccf
+    JOIN hccf.pupil p
+    join fetch p.parents pp
+    WHERE hccf.healthCheckCampaign.campaignId = :campaignId 
+    and hccf.active = false
+""")
+    List<Pupil> findAllByActiveFalseAndHealthCheckCampaign(@Param("campaignId") Long campaignId);
 }

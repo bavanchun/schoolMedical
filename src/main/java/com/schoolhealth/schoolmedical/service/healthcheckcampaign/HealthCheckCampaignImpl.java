@@ -203,11 +203,11 @@ public class HealthCheckCampaignImpl implements HealthCheckCampaignService {
                     " has been completed.";
 
             userNotificationService.addToNotification(message,campaign1.getCampaignId(), TypeNotification.HEALTH_CHECK_CAMPAIGN, Role.PARENT);
-            List<HealthCheckConsentForm> healthCheckConsentForm = healthCheckConsentService.getHealthCheckConsentByNotYetAndCampaign(campaign1);
+            //List<HealthCheckConsentForm> healthCheckConsentForm = healthCheckConsentService.getHealthCheckConsentByNotYetAndCampaign(campaign1);
+            List<Pupil> pupils = healthCheckConsentService.getHealthCheckConsentByNotYetAndCampaign(campaign1.getCampaignId());
             List<UserNotification> listNotification = new ArrayList<>();
-            if(!healthCheckConsentForm.isEmpty()){
-                for (HealthCheckConsentForm consentForm : healthCheckConsentForm) {
-                    Pupil pupil = consentForm.getPupil();
+            if(!pupils.isEmpty()){
+                for (Pupil pupil : pupils) {
                     // Send notification to parents
                     String messageToParent = "Your child " + pupil.getLastName() + " " + pupil.getFirstName() +
                             " has not yet participated in the health check campaign \"" + campaign1.getTitle() + "\".";

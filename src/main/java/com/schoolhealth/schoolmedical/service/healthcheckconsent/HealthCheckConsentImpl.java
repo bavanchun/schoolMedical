@@ -2,6 +2,7 @@ package com.schoolhealth.schoolmedical.service.healthcheckconsent;
 
 import com.schoolhealth.schoolmedical.entity.HealthCheckCampaign;
 import com.schoolhealth.schoolmedical.entity.HealthCheckConsentForm;
+import com.schoolhealth.schoolmedical.entity.Pupil;
 import com.schoolhealth.schoolmedical.entity.enums.GradeLevel;
 import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.response.*;
@@ -169,8 +170,8 @@ public class HealthCheckConsentImpl implements HealthCheckConsentService {
     }
 
     @Override
-    public List<HealthCheckConsentForm> getHealthCheckConsentByNotYetAndCampaign(HealthCheckCampaign healthCheckCampaign) {
-        return healthCheckConsentRepo.findAllByActiveFalseAndHealthCheckCampaign(healthCheckCampaign);
+    public List<Pupil> getHealthCheckConsentByNotYetAndCampaign(Long campaignId) {
+        return healthCheckConsentRepo.findAllByActiveFalseAndHealthCheckCampaign(campaignId);
     }
 
 }
