@@ -48,6 +48,16 @@ WHERE parent.userId = :parentId AND pg.startYear = Year(CURRENT_DATE)
             "WHERE vh.pupil = p AND vh.disease.diseaseId = :diseaseId AND vh.isActive = true) < :doseNumber")
     List<Pupil> findPupilsNeedingVaccination(@Param("diseaseId") Long diseaseId, @Param("doseNumber") int doseNumber);
 
+    @Query("""
+        SELECT p FROM Pupil p 
+        JOIN p.pupilGrade pg 
+        WHERE p.isActive = true 
+        AND pg.startYear = YEAR(CURRENT_DATE)
+        AND (SELECT COUNT(vh.historyId) FROM VaccinationHistory vh 
+             WHERE vh.pupil = p AND vh.disease.diseaseId = :diseaseId AND vh.isActive = true) < :doseNumber
+        """)
+    List<Pupil> findPupilsNeedingVaccinationCurrentYear(@Param("diseaseId") Long diseaseId, @Param("doseNumber") int doseNumber);
+
     @Query("SELECT p FROM Pupil p JOIN p.parents parent WHERE parent = :parent")
     List<Pupil> findByParent(@Param("parent") User parent);
         @Query("""

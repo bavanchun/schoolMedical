@@ -118,7 +118,7 @@ public class VaccinationCampaignServiceImpl implements  VaccinationCampaignServi
         }
 
         // 2. Find eligible pupils - check pupils who haven't completed all doses for this disease
-        List<Pupil> eligiblePupils = pupilRepo.findPupilsNeedingVaccination(
+        List<Pupil> eligiblePupils = pupilRepo.findPupilsNeedingVaccinationCurrentYear(
                 campaign.getDisease().getDiseaseId(),
                 campaign.getDisease().getDoseQuantity()  // Use disease's max dose count, not campaign's
         );
