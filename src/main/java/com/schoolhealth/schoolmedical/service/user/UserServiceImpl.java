@@ -6,6 +6,8 @@ import com.schoolhealth.schoolmedical.exception.NotFoundException;
 import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
 import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.TotalUser;
+import com.schoolhealth.schoolmedical.model.dto.response.TotalUserRole;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 import com.schoolhealth.schoolmedical.model.mapper.UserMapper;
 import com.schoolhealth.schoolmedical.repository.UserRepository;
@@ -101,6 +103,45 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return true;
+    }
+
+
+
+    @Override
+    public TotalUser getTotalUsersGroupedByRole() {
+        List<TotalUserRole> totalUserRoles = userRepository.countTotalUserByRole();
+        if( totalUserRoles != null && !totalUserRoles.isEmpty()) {
+            long total = totalUserRoles.stream().mapToLong(TotalUserRole::getTotalUser).sum();
+            return TotalUser.builder()
+                    .total(total)
+                    .totalUserRoles(totalUserRoles)
+                    .build();
+        }
+        throw new NotFoundException("No user data found to group by role");
+    }
+
+    @Override
+    public void updateRoleForUser(String userId, Role role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        user.setRole(role);
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<UserResponse> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toUserResponse)
+                .toList();
+    }
+
+    @Override
+    public void updateActiveStatus(String userId, boolean active) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        user.setActive(active);
+        userRepository.save(user);
     }
 
 }

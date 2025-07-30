@@ -1,6 +1,8 @@
 package com.schoolhealth.schoolmedical.controller;
 
+import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.TotalUser;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 import com.schoolhealth.schoolmedical.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -82,5 +83,68 @@ public class UserController {
         return isUpdated
             ? ResponseEntity.ok("Device token updated successfully")
             : ResponseEntity.status(500).body("Failed to update device token");
+    }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Get total number of users",
+            description = "API to retrieve the total number of users in the system"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user count", content = {
+                    @Content(schema = @Schema(implementation = TotalUser.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Error occurred while retrieving user count")
+    })
+    public ResponseEntity<?> getUserCount() {
+        return ResponseEntity.ok(userService.getTotalUsersGroupedByRole());
+    }
+
+    @PatchMapping("/role/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Update user role",
+            description = "API to update a user's role based on their ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User role updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request or role value"),
+            @ApiResponse(responseCode = "404", description = "User not found with the provided ID")
+    })
+    public ResponseEntity<?> updateUserRole(@PathVariable String userId, @RequestParam Role role) {
+            userService.updateRoleForUser(userId, role);
+            return ResponseEntity.ok("User role updated successfully");
+    }
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Get all users",
+            description = "API to retrieve a list of all users in the system"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved all users", content = {
+                    @Content(schema = @Schema(implementation = UserResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Error occurred while retrieving users")
+    })
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
+    }
+
+    @PatchMapping("/active/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Update user active status",
+            description = "API to update a user's active status based on their ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User active status updated successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found with the provided ID"),
+            @ApiResponse(responseCode = "400", description = "Invalid request or active status value")
+    })
+    public ResponseEntity<?> updateUserActiveStatus(@PathVariable String userId, @RequestParam boolean active) {
+        userService.updateActiveStatus(userId, active);
+        return ResponseEntity.ok("User active status updated successfully");
     }
 }

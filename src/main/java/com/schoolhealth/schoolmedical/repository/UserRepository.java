@@ -3,6 +3,7 @@ package com.schoolhealth.schoolmedical.repository;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
+import com.schoolhealth.schoolmedical.model.dto.response.TotalUserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,4 +41,13 @@ public interface UserRepository extends JpaRepository<User, String> {
             "join fetch p.pupils " +
             "where p.role = com.schoolhealth.schoolmedical.entity.enums.Role.PARENT")
     List<User> findAllWithPupilsByParent();
+
+
+    @Query("""
+    select new com.schoolhealth.schoolmedical.model.dto.response.TotalUserRole(u.role,count(*))
+        from User u
+    where u.active = true
+    group by u.role
+""")
+    List<TotalUserRole> countTotalUserByRole();
 }

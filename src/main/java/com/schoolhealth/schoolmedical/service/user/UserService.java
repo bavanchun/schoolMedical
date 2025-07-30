@@ -3,13 +3,12 @@ package com.schoolhealth.schoolmedical.service.user;
 import com.schoolhealth.schoolmedical.entity.User;
 import com.schoolhealth.schoolmedical.entity.enums.Role;
 import com.schoolhealth.schoolmedical.model.dto.request.ChangePasswordRequest;
-import com.schoolhealth.schoolmedical.model.dto.request.UserDeviceToken;
 import com.schoolhealth.schoolmedical.model.dto.request.UserRequest;
+import com.schoolhealth.schoolmedical.model.dto.response.TotalUser;
 import com.schoolhealth.schoolmedical.model.dto.response.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
     UserResponse getUserById(String userId);
@@ -25,4 +24,9 @@ public interface UserService {
 
     boolean changePassword(String userId, ChangePasswordRequest request);
 
+    TotalUser getTotalUsersGroupedByRole();
+    void updateRoleForUser(String userId, Role role);
+
+    List<UserResponse> getAll();
+    void updateActiveStatus(String userId, boolean active);
 }
