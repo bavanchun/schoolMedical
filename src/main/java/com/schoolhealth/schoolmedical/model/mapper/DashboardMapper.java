@@ -1,85 +1,113 @@
 package com.schoolhealth.schoolmedical.model.mapper;
 
-import com.schoolhealth.schoolmedical.model.dto.response.CampaignStatisticsDto;
 import com.schoolhealth.schoolmedical.model.dto.response.EventStatisticsDto;
-import com.schoolhealth.schoolmedical.model.dto.response.VaccinationStatisticsDto;
-import org.springframework.stereotype.Component;
+import com.schoolhealth.schoolmedical.model.dto.response.VaccinationCampaignStatisticsDto;
+import com.schoolhealth.schoolmedical.model.dto.response.HealthCheckCampaignStatisticsDto;
+import com.schoolhealth.schoolmedical.entity.enums.ConsentFormStatus;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Spring component for dashboard statistics data transformation
- */
-@Component
-public class DashboardMapper {
 
-    /**
-     * Map campaign query results to CampaignStatisticsDto list
-     * @param campaignData List of Object arrays [title, pupilCount]
-     * @return List of CampaignStatisticsDto
-     */
-    public List<CampaignStatisticsDto> mapToCampaignStatistics(List<Object[]> campaignData) {
+@Mapper(componentModel = "spring")
+public interface DashboardMapper {
+
+
+    default List<HealthCheckCampaignStatisticsDto> mapToHealthCheckCampaignStatistics(List<Object[]> campaignData) {
         return campaignData.stream()
-                .map(this::mapToCampaignStatistic)
+                .map(data -> {
+                    String campaignTitle = (String) data[0];
+                    Long totalConsentForms = ((Number) data[1]).longValue();
+                    Long totalExaminations = ((Number) data[2]).longValue();
+
+
+
+                    Long totalPupils = totalConsentForms;  // Total pupils notified
+                    Long examinedCount = totalExaminations;  // Pupils who completed health check
+                    Long absentCount = totalPupils - examinedCount;  // Notified but not examined
+
+
+                    Long agreedCount = totalPupils;
+                    Long disagreedCount = 0L;
+
+                    return HealthCheckCampaignStatisticsDto.builder()
+                            .campaignTitle(campaignTitle)
+                            .agreedCount(agreedCount)
+                            .disagreedCount(disagreedCount)
+                            .examinedCount(examinedCount)
+                            .absentCount(absentCount)
+                            .totalPupils(totalPupils)
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Map single campaign Object array to CampaignStatisticsDto
-     * @param data Object array [title, pupilCount]
-     * @return CampaignStatisticsDto
-     */
-    public CampaignStatisticsDto mapToCampaignStatistic(Object[] data) {
-        return CampaignStatisticsDto.builder()
-                .title((String) data[0])
-                .pupilCount(((Number) data[1]).longValue())
-                .build();
-    }
 
-    /**
-     * Map vaccination query results to VaccinationStatisticsDto list
-     * @param vaccinationData List of Object arrays [vaccineName, count]
-     * @return List of VaccinationStatisticsDto
-     */
-    public List<VaccinationStatisticsDto> mapToVaccinationStatistics(List<Object[]> vaccinationData) {
-        return vaccinationData.stream()
-                .map(this::mapToVaccinationStatistic)
-                .collect(Collectors.toList());
-    }
 
-    /**
-     * Map single vaccination Object array to VaccinationStatisticsDto
-     * @param data Object array [vaccineName, count]
-     * @return VaccinationStatisticsDto
-     */
-    public VaccinationStatisticsDto mapToVaccinationStatistic(Object[] data) {
-        return VaccinationStatisticsDto.builder()
-                .vaccine((String) data[0])
-                .count(((Number) data[1]).longValue())
-                .build();
-    }
-
-    /**
-     * Map event query results to EventStatisticsDto list
-     * @param eventData List of Object arrays [monthName, eventCount]
-     * @return List of EventStatisticsDto
-     */
-    public List<EventStatisticsDto> mapToEventStatistics(List<Object[]> eventData) {
+    default List<EventStatisticsDto> mapToEventStatistics(List<Object[]> eventData) {
         return eventData.stream()
                 .map(this::mapToEventStatistic)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Map single event Object array to EventStatisticsDto
-     * @param data Object array [monthName, eventCount]
-     * @return EventStatisticsDto
-     */
-    public EventStatisticsDto mapToEventStatistic(Object[] data) {
+
+    @Named("mapEventStatistic")
+    default EventStatisticsDto mapToEventStatistic(Object[] data) {
         return EventStatisticsDto.builder()
                 .date((String) data[0])
                 .eventCount(((Number) data[1]).longValue())
                 .build();
+    }
+
+
+    default List<VaccinationCampaignStatisticsDto> mapToVaccinationCampaignStatistics(List<Object[]> vaccinationCampaignData) {
+        // Group by campaign (title, disease, vaccine) and aggregate counts by status
+        Map<String, Map<ConsentFormStatus, Long>> campaignStatsMap = vaccinationCampaignData.stream()
+                .collect(Collectors.groupingBy(
+                        data -> (String) data[0] + "|" + (String) data[1] + "|" + (String) data[2], // campaign key
+                        Collectors.groupingBy(
+                                data -> (ConsentFormStatus) data[3], // status
+                                Collectors.summingLong(data -> ((Number) data[4]).longValue()) // count
+                        )
+                ));
+
+        // Convert to DTO list
+        return campaignStatsMap.entrySet().stream()
+                .map(entry -> {
+                    String[] campaignInfo = entry.getKey().split("\\|");
+                    String campaignTitle = campaignInfo[0];
+                    String diseaseName = campaignInfo[1];
+                    String vaccineName = campaignInfo[2];
+
+                    Map<ConsentFormStatus, Long> statusCounts = entry.getValue();
+
+                    // Calculate statistics based on business logic
+                    Long approvedCount = statusCounts.getOrDefault(ConsentFormStatus.APPROVED, 0L);
+                    Long injectedCount = statusCounts.getOrDefault(ConsentFormStatus.INJECTED, 0L);
+                    Long noShowCount = statusCounts.getOrDefault(ConsentFormStatus.NO_SHOW, 0L);
+                    Long rejectedCount = statusCounts.getOrDefault(ConsentFormStatus.REJECTED, 0L);
+                    Long waitingCount = statusCounts.getOrDefault(ConsentFormStatus.WAITING, 0L);
+
+
+                    Long totalPupils = approvedCount + injectedCount + noShowCount + rejectedCount + waitingCount;
+                    Long agreedCount = approvedCount + injectedCount + noShowCount;
+                    Long disagreedCount = rejectedCount + waitingCount;
+
+                    return VaccinationCampaignStatisticsDto.builder()
+                            .campaignTitle(campaignTitle)
+                            .diseaseName(diseaseName)
+                            .vaccineName(vaccineName)
+                            .agreedCount(agreedCount)
+                            .disagreedCount(disagreedCount)
+                            .vaccinatedCount(injectedCount)
+                            .absentCount(noShowCount)
+                            .totalPupils(totalPupils)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }

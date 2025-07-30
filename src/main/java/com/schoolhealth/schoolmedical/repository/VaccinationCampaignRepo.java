@@ -41,4 +41,21 @@ public interface VaccinationCampaignRepo extends JpaRepository<VaccinationCampag
     // Find active campaign by ID (for delete operations)
     @Query("SELECT v FROM VaccinationCampagin v WHERE v.campaignId = :campaignId AND v.isActive = true")
     Optional<VaccinationCampagin> findByIdAndIsActiveTrue(@Param("campaignId") Long campaignId);
+
+    @Query("""
+        SELECT
+            vc.titleCampaign,
+            d.name,
+            v.name,
+            vcf.status,
+            COUNT(vcf.consentFormId)
+        FROM VaccinationCampagin vc
+        JOIN vc.disease d
+        JOIN vc.vaccine v
+        LEFT JOIN VaccinationConsentForm vcf ON vc.campaignId = vcf.campaign.campaignId
+        WHERE vc.isActive = true AND YEAR(vc.startDate) = :year
+        GROUP BY vc.campaignId, vc.titleCampaign, d.name, v.name, vcf.status
+        ORDER BY vc.startDate ASC, vcf.status
+    """)
+    List<Object[]> getVaccinationCampaignStatsByYear(@Param("year") int year);
 }

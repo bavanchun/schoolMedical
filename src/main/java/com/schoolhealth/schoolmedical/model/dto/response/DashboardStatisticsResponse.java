@@ -28,11 +28,11 @@ public class DashboardStatisticsResponse {
     @Schema(description = "Prescription statistics for the year")
     private PrescriptionStatsDto prescriptionsLastMonth;
 
-    @Schema(description = "Campaign statistics")
-    private List<CampaignStatisticsDto> campaigns;
+    @Schema(description = "Health check campaign detailed statistics")
+    private List<HealthCheckCampaignStatisticsDto> campaigns;
 
-    @Schema(description = "Vaccination statistics by vaccine type")
-    private List<VaccinationStatisticsDto> vaccinations;
+    @Schema(description = "Vaccination campaign detailed statistics")
+    private List<VaccinationCampaignStatisticsDto> vaccinations;
 
     @Schema(description = "Medical events statistics by month")
     private List<EventStatisticsDto> events;

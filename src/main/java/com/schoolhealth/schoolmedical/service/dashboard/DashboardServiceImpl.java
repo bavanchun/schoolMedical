@@ -19,6 +19,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final PupilRepo pupilRepo;
     private final HealthCheckHistoryRepo healthCheckHistoryRepo;
     private final VaccinationHistoryRepo vaccinationHistoryRepo;
+    private final VaccinationCampaignRepo vaccinationCampaignRepo;
     private final MedicalEventRepository medicalEventRepository;
     private final SendMedicationRepo sendMedicationRepo;
     private final HealthCheckCampaignRepo healthCheckCampaignRepo;
@@ -33,6 +34,7 @@ public class DashboardServiceImpl implements DashboardService {
             Long totalPupils = pupilRepo.countActivePupilsByYear(year);
             Long totalHealthChecks = healthCheckHistoryRepo.countCompletedHealthCheckCampaignsByYear(year);
             Long totalVaccinations = vaccinationHistoryRepo.countCompletedVaccinationCampaignsByYear(year);
+            // TODO: Clarify if totalMedicalEvents should count individual events or some kind of medical campaigns
             Long totalMedicalEvents = medicalEventRepository.countMedicalEventsByYear(year);
 
             log.debug("Basic counts - Pupils: {}, Health Check Campaigns: {}, Vaccination Campaigns: {}, Medical Events: {}",
@@ -51,13 +53,13 @@ public class DashboardServiceImpl implements DashboardService {
                     .commonTypes(topCommonTypes)
                     .build();
 
-            // Get campaign statistics
-            List<Object[]> campaignData = healthCheckCampaignRepo.getCampaignStatsByYear(year);
-            List<CampaignStatisticsDto> campaigns = dashboardMapper.mapToCampaignStatistics(campaignData);
+            // Get health check campaign statistics with detailed information
+            List<Object[]> campaignData = healthCheckCampaignRepo.getHealthCheckCampaignStatsByYear(year);
+            List<HealthCheckCampaignStatisticsDto> campaigns = dashboardMapper.mapToHealthCheckCampaignStatistics(campaignData);
 
-            // Get vaccination statistics
-            List<Object[]> vaccinationData = vaccinationHistoryRepo.getVaccinationStatsByYear(year);
-            List<VaccinationStatisticsDto> vaccinations = dashboardMapper.mapToVaccinationStatistics(vaccinationData);
+            // Get vaccination campaign statistics with detailed information
+            List<Object[]> vaccinationCampaignData = vaccinationCampaignRepo.getVaccinationCampaignStatsByYear(year);
+            List<VaccinationCampaignStatisticsDto> vaccinations = dashboardMapper.mapToVaccinationCampaignStatistics(vaccinationCampaignData);
 
             // Get medical event statistics by month
             List<Object[]> eventData = medicalEventRepository.getEventStatsByMonthAndYear(year);
